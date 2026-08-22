@@ -726,10 +726,10 @@ function nav(){
   syncMenuLinks();
 }
 function chrome(show){ $('#nav').classList.toggle('hidden',!show) }
-function milepost(){
+function milepost(target=$('#topslot')){
   const raw=pct((readiness(SIGN_ITEMS)+readiness(RULE_ITEMS))/2);
   const m=raw||68;
-  $('#topslot').innerHTML=`<div class="milepost">
+  target.innerHTML=`<div class="milepost">
     <div class="mp-label"><span>Route to test-ready</span><b>MILE ${m} OF 100 TO TEST-READY</b></div>
     <div class="road" style="--mile:${m}"><b class="mile-pin">${m}</b><div class="road-fill" style="width:${m}%"></div><div class="road-line"></div>
       <div class="road-mark" data-m="25" style="left:25%"></div><div class="road-mark" data-m="50" style="left:50%"></div><div class="road-mark" data-m="75" style="left:75%"></div></div></div>`;
@@ -744,13 +744,14 @@ function gauge(p,label,sub){
    SCREENS
    ============================================================ */
 function screenHome(){
-  chrome(true); milepost(); TAB='home'; nav();
+  chrome(true); $('#topslot').innerHTML=''; TAB='home'; nav();
   const sp=pct(readiness(SIGN_ITEMS))||75, rp=pct(readiness(RULE_ITEMS))||75;
   const tr=trouble(5);
   const acc=P.answered?Math.round(P.correct/P.answered*100):0;
   const featured=tr.filter(id=>byId[id].kind==='sign').slice(0,2);
   if(!featured.length) featured.push('s:stop','s:schoolzone');
   view().innerHTML=`<div class="screen mock-home">
+    <div id="home-milepost"></div>
     <div class="gauges">
       ${gauge(sp,'Road Signs',mastered(SIGN_ITEMS)+' of '+SIGN_ITEMS.length+' locked')}
       ${gauge(rp,'Road Rules',mastered(RULE_ITEMS)+' of '+RULE_ITEMS.length+' locked')}
@@ -762,6 +763,7 @@ function screenHome(){
       ${tr.length?'<button class="mock-focus" data-go="focus">Drill these only</button>':''}
     </div>
   </div>`;
+  milepost($('#home-milepost'));
 }
 
 function screenDrills(){
