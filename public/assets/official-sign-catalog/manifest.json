@@ -1,0 +1,422 @@
+{
+  "source": "Wikimedia Commons MUTCD artwork",
+  "generatedAt": "2026-08-22T00:50:03.652Z",
+  "signs": [
+    {
+      "id": "stop",
+      "name": "Stop",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD R1-1.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20R1-1.svg?width=1280",
+      "output": "official-sign-catalog/stop.png"
+    },
+    {
+      "id": "yield",
+      "name": "Yield",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD R1-2.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20R1-2.svg?width=1280",
+      "output": "official-sign-catalog/yield.png"
+    },
+    {
+      "id": "donotenter",
+      "name": "Do Not Enter",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD R5-1.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20R5-1.svg?width=1280",
+      "output": "official-sign-catalog/donotenter.png"
+    },
+    {
+      "id": "wrongway",
+      "name": "Wrong Way",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD R5-1a.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20R5-1a.svg?width=1280",
+      "output": "official-sign-catalog/wrongway.png"
+    },
+    {
+      "id": "oneway",
+      "name": "One Way",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD R6-1L.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20R6-1L.svg?width=1280",
+      "output": "official-sign-catalog/oneway.png"
+    },
+    {
+      "id": "speedlimit",
+      "name": "Speed Limit 55",
+      "status": "official-mutcd",
+      "sourceTitle": "File:Speed Limit 55 sign.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Speed%20Limit%2055%20sign.svg?width=1280",
+      "output": "official-sign-catalog/speedlimit.png"
+    },
+    {
+      "id": "schoolspeed",
+      "name": "School Speed Limit",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD S5-1.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20S5-1.svg?width=1280",
+      "output": "official-sign-catalog/schoolspeed.png"
+    },
+    {
+      "id": "nouturn",
+      "name": "No U-Turn",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD R3-4.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20R3-4.svg?width=1280",
+      "output": "official-sign-catalog/nouturn.png"
+    },
+    {
+      "id": "norightturn",
+      "name": "No Right Turn",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD R3-1.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20R3-1.svg?width=1280",
+      "output": "official-sign-catalog/norightturn.png"
+    },
+    {
+      "id": "noturnonred",
+      "name": "No Turn on Red",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD R10-11.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20R10-11.svg?width=1280",
+      "output": "official-sign-catalog/noturnonred.png"
+    },
+    {
+      "id": "keepright",
+      "name": "Keep Right",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD R4-7.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20R4-7.svg?width=1280",
+      "output": "official-sign-catalog/keepright.png"
+    },
+    {
+      "id": "slowerkeepright",
+      "name": "Slower Traffic Keep Right",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD R4-3.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20R4-3.svg?width=1280",
+      "output": "official-sign-catalog/slowerkeepright.png"
+    },
+    {
+      "id": "notrucks",
+      "name": "No Trucks",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD R5-2.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20R5-2.svg?width=1280",
+      "output": "official-sign-catalog/notrucks.png"
+    },
+    {
+      "id": "nobicycles",
+      "name": "No Bicycles",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD R5-6.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20R5-6.svg?width=1280",
+      "output": "official-sign-catalog/nobicycles.png"
+    },
+    {
+      "id": "noparking",
+      "name": "No Parking",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD R7-1.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20R7-1.svg?width=1280",
+      "output": "official-sign-catalog/noparking.png"
+    },
+    {
+      "id": "leftturnonly",
+      "name": "Left Turn Only",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD R3-5L.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20R3-5L.svg?width=1280",
+      "output": "official-sign-catalog/leftturnonly.png"
+    },
+    {
+      "id": "curveright",
+      "name": "Curve Right",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W1-2R.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W1-2R.svg?width=1280",
+      "output": "official-sign-catalog/curveright.png"
+    },
+    {
+      "id": "sharpright",
+      "name": "Sharp Right Turn",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W1-1R.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W1-1R.svg?width=1280",
+      "output": "official-sign-catalog/sharpright.png"
+    },
+    {
+      "id": "windingroad",
+      "name": "Winding Road",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W1-5R.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W1-5R.svg?width=1280",
+      "output": "official-sign-catalog/windingroad.png"
+    },
+    {
+      "id": "crossroad",
+      "name": "Crossroad",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W2-1.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W2-1.svg?width=1280",
+      "output": "official-sign-catalog/crossroad.png"
+    },
+    {
+      "id": "sideroad",
+      "name": "Side Road",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W2-2R.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W2-2R.svg?width=1280",
+      "output": "official-sign-catalog/sideroad.png"
+    },
+    {
+      "id": "merge",
+      "name": "Merge",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W4-1R.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W4-1R.svg?width=1280",
+      "output": "official-sign-catalog/merge.png"
+    },
+    {
+      "id": "lanesreduced",
+      "name": "Lanes Reduced",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W4-2R.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W4-2R.svg?width=1280",
+      "output": "official-sign-catalog/lanesreduced.png"
+    },
+    {
+      "id": "dividedbegins",
+      "name": "Divided Highway Begins",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W6-1.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W6-1.svg?width=1280",
+      "output": "official-sign-catalog/dividedbegins.png"
+    },
+    {
+      "id": "dividedends",
+      "name": "Divided Highway Ends",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W6-2.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W6-2.svg?width=1280",
+      "output": "official-sign-catalog/dividedends.png"
+    },
+    {
+      "id": "twoway",
+      "name": "Two-Way Traffic",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W6-3.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W6-3.svg?width=1280",
+      "output": "official-sign-catalog/twoway.png"
+    },
+    {
+      "id": "signalahead",
+      "name": "Signal Ahead",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W3-3.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W3-3.svg?width=1280",
+      "output": "official-sign-catalog/signalahead.png"
+    },
+    {
+      "id": "stopahead",
+      "name": "Stop Ahead",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W3-1.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W3-1.svg?width=1280",
+      "output": "official-sign-catalog/stopahead.png"
+    },
+    {
+      "id": "yieldahead",
+      "name": "Yield Ahead",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W3-2.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W3-2.svg?width=1280",
+      "output": "official-sign-catalog/yieldahead.png"
+    },
+    {
+      "id": "slippery",
+      "name": "Slippery When Wet",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W8-5.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W8-5.svg?width=1280",
+      "output": "official-sign-catalog/slippery.png"
+    },
+    {
+      "id": "hill",
+      "name": "Steep Hill",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W7-1.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W7-1.svg?width=1280",
+      "output": "official-sign-catalog/hill.png"
+    },
+    {
+      "id": "bump",
+      "name": "Bump",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W8-1.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W8-1.svg?width=1280",
+      "output": "official-sign-catalog/bump.png"
+    },
+    {
+      "id": "dip",
+      "name": "Dip",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W8-2.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W8-2.svg?width=1280",
+      "output": "official-sign-catalog/dip.png"
+    },
+    {
+      "id": "narrowbridge",
+      "name": "Narrow Bridge",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W5-2.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W5-2.svg?width=1280",
+      "output": "official-sign-catalog/narrowbridge.png"
+    },
+    {
+      "id": "softshoulder",
+      "name": "Soft Shoulder",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W8-4.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W8-4.svg?width=1280",
+      "output": "official-sign-catalog/softshoulder.png"
+    },
+    {
+      "id": "lowclearance",
+      "name": "Low Clearance",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W12-2.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W12-2.svg?width=1280",
+      "output": "official-sign-catalog/lowclearance.png"
+    },
+    {
+      "id": "roadends",
+      "name": "Road Ends",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W8-26.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W8-26.svg?width=1280",
+      "output": "official-sign-catalog/roadends.png"
+    },
+    {
+      "id": "deer",
+      "name": "Deer Crossing",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W11-3.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W11-3.svg?width=1280",
+      "output": "official-sign-catalog/deer.png"
+    },
+    {
+      "id": "pedcross",
+      "name": "Pedestrian Crossing",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W11-2.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W11-2.svg?width=1280",
+      "output": "official-sign-catalog/pedcross.png"
+    },
+    {
+      "id": "schoolzone",
+      "name": "School Zone",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD S1-1.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20S1-1.svg?width=1280",
+      "output": "official-sign-catalog/schoolzone.png"
+    },
+    {
+      "id": "rradvance",
+      "name": "Railroad Crossing Ahead",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W10-1.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W10-1.svg?width=1280",
+      "output": "official-sign-catalog/rradvance.png"
+    },
+    {
+      "id": "nopassing",
+      "name": "No Passing Zone",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD W14-3.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20W14-3.svg?width=1280",
+      "output": "official-sign-catalog/nopassing.png"
+    },
+    {
+      "id": "roadwork",
+      "name": "Road Work Ahead",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD CW20-1.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20CW20-1.svg?width=1280",
+      "output": "official-sign-catalog/roadwork.png"
+    },
+    {
+      "id": "flagger",
+      "name": "Flagger Ahead",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD CW20-7a.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20CW20-7a.svg?width=1280",
+      "output": "official-sign-catalog/flagger.png"
+    },
+    {
+      "id": "detour",
+      "name": "Detour",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD M4-8P.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20M4-8P.svg?width=1280",
+      "output": "official-sign-catalog/detour.png"
+    },
+    {
+      "id": "slowmoving",
+      "name": "Slow Moving Vehicle",
+      "status": "official-mutcd",
+      "sourceTitle": "File:Slow moving vehicle.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Slow%20moving%20vehicle.svg?width=1280",
+      "output": "official-sign-catalog/slowmoving.png"
+    },
+    {
+      "id": "crossbuck",
+      "name": "Railroad Crossbuck",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD R15-1.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20R15-1.svg?width=1280",
+      "output": "official-sign-catalog/crossbuck.png"
+    },
+    {
+      "id": "exit",
+      "name": "Exit Sign",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD E5-1.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20E5-1.svg?width=1280",
+      "output": "official-sign-catalog/exit.png"
+    },
+    {
+      "id": "milemarker",
+      "name": "Mile Marker",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD D10-1.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20D10-1.svg?width=1280",
+      "output": "official-sign-catalog/milemarker.png"
+    },
+    {
+      "id": "hospital",
+      "name": "Hospital",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD D9-2.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20D9-2.svg?width=1280",
+      "output": "official-sign-catalog/hospital.png"
+    },
+    {
+      "id": "bikeroute",
+      "name": "Bike Route",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD M1-8.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20M1-8.svg?width=1280",
+      "output": "official-sign-catalog/bikeroute.png"
+    },
+    {
+      "id": "parking",
+      "name": "Public Parking",
+      "status": "official-mutcd",
+      "sourceTitle": "File:MUTCD D4-1.svg",
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/MUTCD%20D4-1.svg?width=1280",
+      "output": "official-sign-catalog/parking.png"
+    }
+  ]
+}

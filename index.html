@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#191C21">
+<meta name="application-name" content="Road Ready Permit Practice">
+<title>Road Ready Permit Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;500;600;700;800;900&family=Overpass+Mono:wght@600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --asphalt:#191C21; --asphalt-2:#22262D; --asphalt-3:#2C323A; --edge:#3A424C;
+  --concrete:#F3F4F2; --concrete-dim:#9AA3AE;
+  --fed-yellow:#FFCC00; --fed-red:#AF1E2D; --fed-green:#00794A; --fed-orange:#F58220; --fed-blue:#0B5EA8;
+  --green-lit:#12A365; --red-lit:#E0394A;
+  --sign-white:#FFFFFF;
+  --ui:'Overpass',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'Overpass Mono',ui-monospace,'SFMono-Regular',monospace;
+  --serif:'Newsreader',Georgia,'Times New Roman',serif;
+  --r-btn:8px; --r-panel:16px; --r-sign:4px;
+  --sh1:inset 0 1px 0 rgba(255,255,255,.04);
+  --sh2:0 6px 20px rgba(0,0,0,.38);
+  --sh3:0 14px 40px rgba(0,0,0,.5);
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{
+  background:var(--asphalt);
+  background-image:radial-gradient(120% 80% at 50% 0%,#1F242B 0%,#191C21 55%,#141619 100%);
+  color:var(--concrete); font-family:var(--ui);
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+}
+button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer}
+:focus-visible{outline:3px solid var(--fed-yellow);outline-offset:2px;border-radius:4px}
+
+/* ---------- shell ---------- */
+#app{
+  max-width:460px;margin:0 auto;height:100dvh;display:flex;flex-direction:column;
+  background:linear-gradient(180deg,#1C2027 0%,#171A1F 100%);
+  box-shadow:0 0 0 1px rgba(255,255,255,.05),0 0 80px rgba(0,0,0,.6);
+  position:relative;overflow:hidden;
+}
+header{
+  display:flex;align-items:center;gap:10px;padding:10px 16px;height:56px;flex:none;
+  border-bottom:1px solid var(--edge);background:var(--asphalt-2);
+  padding-top:calc(10px + env(safe-area-inset-top));height:calc(56px + env(safe-area-inset-top));
+}
+.plate{
+  display:flex;align-items:center;gap:7px;background:var(--sign-white);color:#111;
+  border-radius:5px;padding:4px 9px;font-weight:900;font-size:12px;letter-spacing:.06em;
+  border:2px solid #d8dad6;box-shadow:0 1px 0 rgba(0,0,0,.4);
+}
+.plate b{color:var(--fed-red);font-size:12px}
+.plate span{font-family:var(--mono);font-size:11px;color:#444;font-weight:700}
+.spacer{flex:1}
+.chip{
+  display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 11px;
+  font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--asphalt-3);border:1px solid var(--edge);color:var(--concrete-dim);
+}
+.chip.hot{color:var(--fed-yellow);border-color:#6b5a12;background:#302a13}
+
+/* ---------- milepost ---------- */
+.milepost{flex:none;padding:14px 16px 12px;border-bottom:1px solid var(--edge);background:var(--asphalt-2)}
+.mp-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--concrete-dim);margin-bottom:9px;display:flex;justify-content:space-between}
+.mp-label b{color:var(--fed-yellow);font-family:var(--mono);letter-spacing:0}
+.road{
+  position:relative;height:34px;border-radius:3px;background:var(--asphalt-3);
+  border-top:2px solid #545c66;border-bottom:2px solid #545c66;overflow:hidden;
+}
+.road-fill{position:absolute;inset:0 auto 0 0;background:linear-gradient(180deg,#00844F,#00623A);transition:width .62s ease-out}
+.road-line{
+  position:absolute;left:0;right:0;top:50%;height:3px;transform:translateY(-50%);
+  background:repeating-linear-gradient(90deg,var(--fed-yellow) 0 14px,transparent 14px 28px);
+  opacity:.9;
+}
+.road-mark{position:absolute;top:0;bottom:0;width:2px;background:rgba(255,255,255,.22)}
+.road-mark::after{content:attr(data-m);position:absolute;top:2px;left:4px;font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.4)}
+
+/* ---------- view ---------- */
+main{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.screen{padding:18px 16px 26px;animation:enter .2s var(--ease) both}
+@keyframes enter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--concrete-dim);margin:0 0 8px}
+h1{font-size:30px;font-weight:900;line-height:1.05;letter-spacing:-.01em;text-transform:uppercase;margin:0 0 4px}
+h2{font-size:21px;font-weight:800;line-height:1.15;text-transform:uppercase;margin:0 0 10px}
+p.lede{font-family:var(--serif);font-size:16px;line-height:1.55;color:#C6CCD4;margin:0 0 18px}
+
+/* ---------- panels ---------- */
+.panel{background:var(--asphalt-2);border:1px solid var(--edge);border-radius:var(--r-panel);padding:20px;box-shadow:var(--sh1);margin-bottom:14px}
+.panel-t{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--concrete-dim);margin:0 0 14px;display:flex;align-items:center;justify-content:space-between}
+
+/* ---------- gauges ---------- */
+.gauges{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.gauge{background:var(--asphalt-2);border:1px solid var(--edge);border-radius:var(--r-panel);padding:16px 12px;text-align:center;box-shadow:var(--sh1)}
+.gauge svg{display:block;margin:0 auto}
+.gauge .num{font-family:var(--mono);font-size:26px;font-weight:700}
+.gauge .cap{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--concrete-dim);margin-top:8px}
+.gauge .sub{font-family:var(--mono);font-size:11px;color:var(--concrete-dim);margin-top:3px}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:52px;
+  border-radius:var(--r-btn);font-weight:800;font-size:15px;letter-spacing:.04em;text-transform:uppercase;
+  background:var(--fed-yellow);color:#1A1608;box-shadow:0 3px 0 #B58F00;transition:transform .1s,box-shadow .1s;
+}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 #B58F00}
+.btn.ghost{background:transparent;color:var(--concrete);border:1px solid var(--edge);box-shadow:none}
+.btn.ghost:active{transform:none;background:var(--asphalt-3)}
+.btn.danger{background:transparent;color:#E0868F;border:1px solid #6E2630;box-shadow:none}
+.btn:disabled{opacity:.34;border:1px dashed var(--edge);background:transparent;color:var(--concrete-dim);box-shadow:none;cursor:not-allowed}
+.btn-row{display:flex;gap:10px}
+
+/* ---------- drill tiles ---------- */
+.tile{
+  display:flex;gap:14px;align-items:center;width:100%;text-align:left;padding:16px;margin-bottom:10px;
+  background:var(--asphalt-2);border:1px solid var(--edge);border-radius:var(--r-panel);box-shadow:var(--sh1);
+  transition:border-color .15s,transform .1s;
+}
+.tile:active{transform:scale(.99);border-color:var(--fed-yellow)}
+.tile-ico{flex:none;width:46px;height:46px;border-radius:10px;display:grid;place-items:center;background:var(--asphalt-3);border:1px solid var(--edge)}
+.tile-n{font-size:16px;font-weight:800;text-transform:uppercase;letter-spacing:.02em}
+.tile-d{font-family:var(--serif);font-size:14px;color:var(--concrete-dim);line-height:1.4;margin-top:2px}
+
+/* ---------- question card ---------- */
+.qcard{
+  background:var(--asphalt-2);border:1px solid var(--edge);border-radius:var(--r-panel);
+  padding:20px;box-shadow:var(--sh2);position:relative;overflow:hidden;
+  animation:cardin .18s var(--ease) both;
+}
+@keyframes cardin{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+.qtext{font-size:19px;font-weight:600;line-height:1.35;margin:0 0 16px}
+.opt{
+  display:flex;align-items:flex-start;gap:11px;width:100%;text-align:left;padding:14px;margin-bottom:10px;
+  background:var(--asphalt-3);border:1px solid var(--edge);border-radius:var(--r-btn);
+  font-size:15.5px;font-weight:500;line-height:1.4;transition:background .12s,border-color .12s;
+}
+.opt:active{background:#353C46}
+.opt .k{
+  flex:none;width:22px;height:22px;border-radius:5px;background:#3D4550;color:var(--concrete-dim);
+  font-family:var(--mono);font-size:11px;font-weight:700;display:grid;place-items:center;margin-top:1px;
+}
+.opt.right{background:rgba(0,121,74,.22);border-color:var(--green-lit)}
+.opt.right .k{background:var(--green-lit);color:#04140C}
+.opt.wrong{background:rgba(175,30,45,.2);border-color:var(--red-lit)}
+.opt.wrong .k{background:var(--red-lit);color:#1A0508}
+.opt:disabled{opacity:1;cursor:default}
+.opt.dim{opacity:.42}
+.sweep{position:absolute;left:0;bottom:0;height:4px;width:0;background:var(--green-lit);animation:sweep .34s ease-out forwards}
+@keyframes sweep{to{width:100%}}
+.shake{animation:shake .24s}
+@keyframes shake{0%,100%{transform:none}20%{transform:translateX(-6px)}50%{transform:translateX(6px)}80%{transform:translateX(-3px)}}
+
+/* ---------- explanation ---------- */
+.why{
+  margin-top:14px;padding:15px 16px;border-radius:12px;background:var(--asphalt-3);
+  border-left:4px solid var(--fed-yellow);animation:enter .22s var(--ease) both;
+}
+.why .v{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:7px}
+.why .v.ok{color:var(--green-lit)} .why .v.no{color:#F1707D}
+.why p{font-family:var(--serif);font-size:15.5px;line-height:1.55;margin:0;color:#D3D8DE}
+.why .src{display:block;margin-top:9px;font-family:var(--mono);font-size:11px;color:var(--concrete-dim);letter-spacing:.02em}
+
+/* ---------- progress bar in drill ---------- */
+.drillbar{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--edge);background:var(--asphalt-2);flex:none}
+.drillbar .track{flex:1;height:6px;border-radius:999px;background:var(--asphalt-3);overflow:hidden}
+.drillbar .fill{height:100%;background:var(--fed-yellow);transition:width .3s var(--ease)}
+.drillbar .ct{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--concrete-dim)}
+.xbtn{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--concrete-dim);padding:6px 8px}
+
+/* ---------- sign rendering ---------- */
+.signbox{display:grid;place-items:center;background:var(--asphalt-3);border-radius:12px;padding:14px;border:1px solid var(--edge)}
+.signbox svg{width:100%;height:auto;max-width:150px;display:block}
+.sign-sm svg{max-width:74px}
+
+/* ---------- match board ---------- */
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.mtile{
+  background:var(--asphalt-3);border:2px solid var(--edge);border-radius:10px;padding:10px;
+  display:grid;place-items:center;min-height:96px;transition:border-color .12s,background .12s,opacity .2s;
+}
+.mtile svg{width:100%;max-width:80px;height:auto}
+.mtile.sel{border-color:var(--fed-yellow);background:#332D14}
+.mtile.done{opacity:.3;border-color:var(--green-lit);pointer-events:none}
+.nlist{display:flex;flex-direction:column;gap:8px}
+.ntile{
+  background:var(--asphalt-3);border:2px solid var(--edge);border-radius:var(--r-btn);padding:13px 14px;
+  text-align:left;font-size:14.5px;font-weight:600;line-height:1.3;transition:border-color .12s,background .12s,opacity .2s;
+}
+.ntile.sel{border-color:var(--fed-yellow);background:#332D14}
+.ntile.done{opacity:.3;border-color:var(--green-lit);pointer-events:none}
+
+/* ---------- swipe deck ---------- */
+.deck{position:relative;height:400px;margin-bottom:24px}
+.swipe{
+  position:absolute;inset:0;background:var(--asphalt-2);border:1px solid var(--edge);border-radius:20px;
+  padding:24px;box-shadow:var(--sh3);display:flex;flex-direction:column;justify-content:center;
+  touch-action:none;user-select:none;
+}
+.swipe.under{transform:scale(.94) translateY(29px);opacity:.62;box-shadow:none}
+.swipe .st{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--concrete-dim);margin-bottom:14px}
+.swipe .sq{font-size:21px;font-weight:600;line-height:1.35}
+.stamp{
+  position:absolute;top:26px;font-size:26px;font-weight:900;letter-spacing:.06em;padding:6px 14px;
+  border:4px solid;border-radius:8px;opacity:0;transition:opacity .1s;
+}
+.stamp.t{left:24px;transform:rotate(-12deg);color:var(--green-lit);border-color:var(--green-lit)}
+.stamp.f{right:24px;transform:rotate(12deg);color:var(--red-lit);border-color:var(--red-lit)}
+.swipehint{display:flex;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--concrete-dim);margin-bottom:10px}
+.tfrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tfbtn{min-height:56px;border-radius:var(--r-btn);font-weight:800;font-size:15px;letter-spacing:.06em;text-transform:uppercase;border:2px solid}
+.tfbtn.f{border-color:#6E2630;color:#E0868F;background:rgba(175,30,45,.12)}
+.tfbtn.t{border-color:#155E42;color:#5FD3A0;background:rgba(0,121,74,.14)}
+.tfbtn:active{transform:translateY(1px)}
+
+/* ---------- lists ---------- */
+.row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--edge)}
+.row:last-child{border-bottom:0}
+.row .txt{flex:1;font-size:14.5px;line-height:1.35}
+.row .meta{font-family:var(--mono);font-size:12px;color:var(--concrete-dim);flex:none}
+.bar{height:8px;border-radius:999px;background:var(--asphalt-3);overflow:hidden;margin-top:7px}
+.bar i{display:block;height:100%;border-radius:999px;transition:width .5s var(--ease)}
+.dot{width:9px;height:9px;border-radius:999px;flex:none}
+.empty{font-family:var(--serif);font-size:15px;line-height:1.5;color:var(--concrete-dim);margin:0}
+
+/* ---------- segmented ---------- */
+.seg{display:flex;gap:4px;padding:4px;background:var(--asphalt-3);border-radius:999px;margin-bottom:16px;border:1px solid var(--edge)}
+.seg button{flex:1;padding:9px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--concrete-dim)}
+.seg button.on{background:var(--concrete);color:#16191D}
+.filters{display:flex;gap:7px;overflow-x:auto;padding-bottom:10px;margin-bottom:12px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.filters button{flex:none;padding:7px 13px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--asphalt-3);border:1px solid var(--edge);color:var(--concrete-dim)}
+.filters button.on{background:var(--fed-yellow);color:#1A1608;border-color:var(--fed-yellow)}
+
+/* gallery */
+.gal{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:400px){.gal{grid-template-columns:repeat(3,1fr)}}
+.gcard{background:var(--asphalt-2);border:1px solid var(--edge);border-radius:12px;padding:12px 8px;text-align:center;position:relative}
+.gcard svg{width:100%;max-width:66px;height:auto;margin:0 auto 8px;display:block}
+.gcard .gn{font-size:11.5px;font-weight:700;line-height:1.25}
+.gcard .gd{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:999px}
+
+/* accordion */
+.acc{background:var(--asphalt-2);border:1px solid var(--edge);border-radius:12px;margin-bottom:8px;overflow:hidden}
+.acc>button{width:100%;display:flex;align-items:center;justify-content:space-between;padding:15px 16px;text-align:left;font-size:14.5px;font-weight:800;text-transform:uppercase;letter-spacing:.03em}
+.acc .body{padding:0 16px 16px;font-family:var(--serif);font-size:15px;line-height:1.6;color:#C6CCD4}
+.acc .body ul{margin:0;padding-left:18px}
+.acc .body li{margin-bottom:7px}
+.acc .body b{color:var(--fed-yellow);font-family:var(--ui);font-weight:700;font-size:14px}
+
+/* results plate */
+.result{background:var(--sign-white);color:#16191D;border-radius:14px;padding:20px;border:3px solid #C9CCC6;margin-bottom:14px;text-align:center}
+.result .rt{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#5A6068}
+.result .rv{font-size:38px;font-weight:900;letter-spacing:-.02em;line-height:1.05;margin:6px 0 2px;text-transform:uppercase}
+.result .rs{font-family:var(--mono);font-size:14px;font-weight:700;color:#3A4048}
+.result.pass .rv{color:#00623A} .result.fail .rv{color:#9A1626}
+
+/* ---------- nav ---------- */
+nav{
+  display:flex;flex:none;border-top:1px solid var(--edge);background:var(--asphalt-2);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+nav button{flex:1;padding:10px 4px 11px;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--concrete-dim);position:relative}
+nav button.on{color:var(--fed-yellow)}
+nav button.on::before{content:"";position:absolute;top:0;left:22%;right:22%;height:3px;background:var(--fed-yellow);border-radius:0 0 3px 3px}
+nav .lbl{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+
+.hidden{display:none!important}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="facelift.css">
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="plate"><b>GA</b><span>CLASS CP</span></div>
+    <div class="spacer"></div>
+    <div class="chip" id="streak">Day 1</div>
+  </header>
+  <div id="topslot"></div>
+  <main id="main"><div id="view"></div></main>
+  <nav id="nav"></nav>
+</div>
+<script>
+/* ============================================================
+   GA PERMIT TRAINER
+   Content sourced from the Georgia Driver's Manual (DDS),
+   Sections 1, 3, 5, 6, 7, 8 and 10.
+   ============================================================ */
+
+/* ---------- sign drawing helpers ---------- */
+const K='stroke="#111" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"';
+const NS='xmlns="http://www.w3.org/2000/svg"';
+const svg=b=>`<svg viewBox="0 0 100 100" ${NS} role="img">${b}</svg>`;
+// centred text
+const t=(y,s,str,w,f,ls)=>`<text x="50" y="${y}" text-anchor="middle" font-family="Overpass,sans-serif" font-size="${s}" font-weight="${w||800}" fill="${f||'#111'}" letter-spacing="${ls||0}">${str}</text>`;
+const diamond=(inner,fill)=>svg(`<rect x="15" y="15" width="70" height="70" rx="7" transform="rotate(45 50 50)" fill="${fill||'#FFCC00'}" ${K}/>${inner}`);
+const vrect=inner=>svg(`<rect x="18" y="5" width="64" height="90" rx="4" fill="#fff" ${K}/>${inner}`);
+const hrect=(inner,fill,stroke)=>svg(`<rect x="4" y="24" width="92" height="52" rx="4" fill="${fill||'#00794A'}" stroke="${stroke||'#fff'}" stroke-width="2.5"/>${inner}`);
+const orange=inner=>diamond(inner,'#F58220');
+// red circle with slash over a symbol
+const ban=inner=>`<circle cx="50" cy="50" r="30" fill="none" stroke="#AF1E2D" stroke-width="8"/>${inner}<line x1="29" y1="29" x2="71" y2="71" stroke="#AF1E2D" stroke-width="8" stroke-linecap="round"/>`;
+const arrowUp='<path d="M50 74 L50 40 M50 34 L40 48 M50 34 L60 48" stroke="#111" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
+
+const SIGNS=[
+/* ---- REGULATORY ---- */
+{id:'stop',c:'reg',n:'Stop',m:'Come to a complete stop at the stop line, then yield to all pedestrians and traffic before proceeding.',
+ s:svg(`<polygon points="30,6 70,6 94,30 94,70 70,94 30,94 6,70 6,30" fill="#AF1E2D" stroke="#fff" stroke-width="4"/>${t(62,25,'STOP',900,'#fff',1)}`)},
+{id:'yield',c:'reg',n:'Yield',m:'Slow down, be ready to stop, and give the right of way to traffic and pedestrians already there.',
+ s:svg(`<polygon points="6,14 94,14 50,92" fill="#AF1E2D" stroke="#fff" stroke-width="4"/><polygon points="21,24 79,24 50,76" fill="#fff"/>${t(41,13,'YIELD',900,'#AF1E2D',.3)}`)},
+{id:'donotenter',c:'reg',n:'Do Not Enter',m:'You are facing a one-way road with traffic coming toward you. Do not continue.',
+ s:svg(`<circle cx="50" cy="50" r="44" fill="#AF1E2D" stroke="#fff" stroke-width="4"/><rect x="22" y="42" width="56" height="16" rx="2" fill="#fff"/>`)},
+{id:'wrongway',c:'reg',n:'Wrong Way',m:'You are about to travel against traffic. Back out or turn around immediately.',
+ s:svg(`<rect x="4" y="26" width="92" height="48" rx="3" fill="#AF1E2D" stroke="#fff" stroke-width="3"/>${t(48,17,'WRONG',900,'#fff',.5)}${t(66,17,'WAY',900,'#fff',.5)}`)},
+{id:'oneway',c:'reg',n:'One Way',m:'Travel is permitted only in the direction of the arrow.',
+ s:svg(`<rect x="4" y="26" width="92" height="48" rx="3" fill="#111" stroke="#fff" stroke-width="2.5"/><path d="M20 44 H68 M60 36 L72 44 L60 52" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>${t(67,12,'ONE WAY',800,'#fff',.4)}`)},
+{id:'speedlimit',c:'reg',n:'Speed Limit 55',m:'55 mph is the maximum legal speed in this area.',
+ s:vrect(`${t(28,13,'SPEED')}${t(42,13,'LIMIT')}${t(78,32,'55',900)}`)},
+{id:'schoolspeed',c:'reg',n:'School Speed Limit',m:'A reduced school-zone speed limit is in force when the yellow lights are flashing.',
+ s:vrect(`${t(22,11,'SCHOOL')}${t(34,11,'SPEED LIMIT')}${t(60,24,'25',900)}${t(74,9,'WHEN')}${t(85,9,'FLASHING')}`)},
+{id:'nouturn',c:'reg',n:'No U-Turn',m:'You may not turn around to go the opposite direction at this intersection.',
+ s:vrect(ban(`<path d="M38 70 V50 a12 12 0 0 1 24 0 V60" stroke="#111" stroke-width="5.5" fill="none" stroke-linecap="round"/><path d="M55 59 L62 71 L69 59 Z" fill="#111"/>`))},
+{id:'norightturn',c:'reg',n:'No Right Turn',m:'Right turns are prohibited at this intersection.',
+ s:vrect(ban(`<path d="M38 70 V52 H56" stroke="#111" stroke-width="5.5" fill="none" stroke-linecap="round"/><path d="M55 44 L68 52 L55 60 Z" fill="#111"/>`))},
+{id:'noturnonred',c:'reg',n:'No Turn on Red',m:'A right turn on red is prohibited here, even after a complete stop.',
+ s:vrect(`${t(26,11,'NO TURN')}${t(40,11,'ON RED')}<circle cx="50" cy="66" r="15" fill="#AF1E2D" stroke="#111" stroke-width="2.5"/>`)},
+{id:'keepright',c:'reg',n:'Keep Right',m:'Traffic must pass to the right of the median or obstruction ahead.',
+ s:vrect(`<path d="M34 84 V60 a16 16 0 0 1 32 0 V84" fill="none" stroke="#111" stroke-width="6"/><path d="M50 12 L36 34 H64 Z" fill="#111"/><path d="M50 30 V52" stroke="#111" stroke-width="6"/>`)},
+{id:'slowerkeepright',c:'reg',n:'Slower Traffic Keep Right',m:'With two or more lanes your way, slower traffic belongs in the right lane.',
+ s:vrect(`${t(32,12,'SLOWER')}${t(48,12,'TRAFFIC')}${t(64,12,'KEEP')}${t(80,12,'RIGHT')}`)},
+{id:'notrucks',c:'reg',n:'No Trucks',m:'Trucks are prohibited from entering this roadway.',
+ s:vrect(ban(`<path d="M28 58 h20 V44 h10 l8 8 v6 z" fill="#111"/><circle cx="35" cy="61" r="4.2" fill="#111"/><circle cx="58" cy="61" r="4.2" fill="#111"/>`))},
+{id:'nobicycles',c:'reg',n:'No Bicycles',m:'Bicycles are prohibited from entering this roadway.',
+ s:vrect(ban(`<circle cx="37" cy="60" r="9" fill="none" stroke="#111" stroke-width="4"/><circle cx="63" cy="60" r="9" fill="none" stroke="#111" stroke-width="4"/><path d="M37 60 L48 44 h8 M48 44 L63 60" stroke="#111" stroke-width="4" fill="none" stroke-linecap="round"/>`))},
+{id:'noparking',c:'reg',n:'No Parking',m:'Parking is prohibited at this location at all times.',
+ s:vrect(`<circle cx="50" cy="50" r="30" fill="none" stroke="#AF1E2D" stroke-width="8"/>${t(63,34,'P',900)}<line x1="29" y1="29" x2="71" y2="71" stroke="#AF1E2D" stroke-width="8" stroke-linecap="round"/>`)},
+{id:'leftturnonly',c:'reg',n:'Left Turn Only',m:'Vehicles in this lane must turn left.',
+ s:svg(`<rect x="8" y="18" width="84" height="64" rx="4" fill="#fff" ${K}/><path d="M62 72 V52 H40 M48 42 L36 52 L48 62" stroke="#111" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`)},
+/* ---- WARNING ---- */
+{id:'curveright',c:'warn',n:'Curve Right',m:'The road curves to the right ahead. Reduce speed.',
+ s:diamond(`<path d="M40 80 V60 Q40 42 58 40 L62 40" stroke="#111" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M54 30 L70 40 L54 50 Z" fill="#111"/>`)},
+{id:'sharpright',c:'warn',n:'Sharp Right Turn',m:'A sharp right-angle turn is immediately ahead. Slow down considerably.',
+ s:diamond(`<path d="M42 80 V46 H58" stroke="#111" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M52 34 L70 46 L52 58 Z" fill="#111"/>`)},
+{id:'windingroad',c:'warn',n:'Winding Road',m:'A series of turns ahead. Reduce speed and stay in your lane.',
+ s:diamond(`<path d="M42 82 Q42 66 56 60 Q70 54 60 42 Q52 34 58 28" stroke="#111" stroke-width="6.5" fill="none" stroke-linecap="round"/><path d="M50 30 L60 20 L68 32 Z" fill="#111"/>`)},
+{id:'crossroad',c:'warn',n:'Crossroad',m:'Another road crosses the highway ahead.',
+ s:diamond(`<path d="M50 80 V26 M28 48 H72" stroke="#111" stroke-width="8" stroke-linecap="round"/>`)},
+{id:'sideroad',c:'warn',n:'Side Road',m:'A side road enters the highway ahead.',
+ s:diamond(`<path d="M46 82 V24 M46 52 H72" stroke="#111" stroke-width="8" stroke-linecap="round"/>`)},
+{id:'merge',c:'warn',n:'Merge',m:'Traffic is merging from the right. Adjust speed to let them in safely.',
+ s:diamond(`<path d="M40 82 V32" stroke="#111" stroke-width="7" stroke-linecap="round"/><path d="M66 82 V58 Q66 44 46 40" stroke="#111" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M40 22 L32 38 H48 Z" fill="#111"/>`)},
+{id:'lanesreduced',c:'warn',n:'Lanes Reduced',m:'The number of lanes is reduced ahead. Merge as directed.',
+ s:diamond(`<path d="M36 82 V52 Q36 40 48 34" stroke="#111" stroke-width="6.5" fill="none" stroke-linecap="round"/><path d="M64 82 V52 Q64 40 52 34" stroke="#111" stroke-width="6.5" fill="none" stroke-linecap="round"/><path d="M50 22 L42 38 H58 Z" fill="#111"/>`)},
+{id:'dividedbegins',c:'warn',n:'Divided Highway Begins',m:'A divided highway starts ahead. Prepare to shift lane position and keep right of the median.',
+ s:diamond(`<path d="M50 84 V64" stroke="#111" stroke-width="7"/><path d="M38 60 V32 M62 60 V32" stroke="#111" stroke-width="7"/><ellipse cx="50" cy="52" rx="7" ry="9" fill="#111"/><path d="M38 26 L32 36 H44 Z M62 26 L56 36 H68 Z" fill="#111"/>`)},
+{id:'dividedends',c:'warn',n:'Divided Highway Ends',m:'The divided highway ends ahead and traffic becomes two-way. Keep right.',
+ s:diamond(`<path d="M38 84 V54 M62 84 V54" stroke="#111" stroke-width="7"/><ellipse cx="50" cy="62" rx="7" ry="9" fill="#111"/><path d="M50 42 V22" stroke="#111" stroke-width="7"/><path d="M38 20 L32 30 H44 Z" fill="#111" transform="translate(12,0)"/>`)},
+{id:'twoway',c:'warn',n:'Two-Way Traffic',m:'You are leaving a one-way road. Two-way traffic is ahead.',
+ s:diamond(`<path d="M40 78 V34 M60 26 V70" stroke="#111" stroke-width="7"/><path d="M40 22 L33 36 H47 Z" fill="#111"/><path d="M60 82 L53 68 H67 Z" fill="#111"/>`)},
+{id:'signalahead',c:'warn',n:'Signal Ahead',m:'A traffic signal controls the intersection ahead. Slow down and be ready to stop.',
+ s:diamond(`<rect x="40" y="24" width="20" height="52" rx="5" fill="#111"/><circle cx="50" cy="36" r="5.5" fill="#AF1E2D"/><circle cx="50" cy="50" r="5.5" fill="#FFCC00"/><circle cx="50" cy="64" r="5.5" fill="#00794A"/>`)},
+{id:'stopahead',c:'warn',n:'Stop Ahead',m:'A stop sign is ahead. Begin slowing now.',
+ s:diamond(`<polygon points="40,28 60,28 72,40 72,58 60,70 40,70 28,58 28,40" fill="#AF1E2D" stroke="#111" stroke-width="2.5"/>${t(57,13,'STOP',900,'#fff',.4)}`)},
+{id:'yieldahead',c:'warn',n:'Yield Ahead',m:'A yield sign is ahead. Slow down and prepare to stop if needed.',
+ s:diamond(`<polygon points="28,30 72,30 50,74" fill="#fff" stroke="#AF1E2D" stroke-width="6"/>`)},
+{id:'slippery',c:'warn',n:'Slippery When Wet',m:'The road is slippery when wet. The first half hour of rain is the most hazardous.',
+ s:diamond(`<rect x="34" y="42" width="32" height="16" rx="4" fill="#111"/><circle cx="41" cy="61" r="4.5" fill="#111"/><circle cx="59" cy="61" r="4.5" fill="#111"/><path d="M28 74 q6 -8 12 0 M60 74 q6 -8 12 0" stroke="#111" stroke-width="4" fill="none" stroke-linecap="round"/>`)},
+{id:'hill',c:'warn',n:'Steep Hill',m:'A steep downgrade is ahead. Slow down and consider a lower gear.',
+ s:diamond(`<path d="M26 72 L74 72 L74 40 Z" fill="#111"/><rect x="46" y="34" width="20" height="12" rx="2" fill="#111" transform="rotate(34 56 40)"/>`)},
+{id:'bump',c:'warn',n:'Bump',m:'A bump in the road ahead. Slow down.',
+ s:diamond(`<path d="M26 62 H40 q10 -18 20 0 H74" stroke="#111" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>${t(80,13,'BUMP')}`)},
+{id:'dip',c:'warn',n:'Dip',m:'A dip in the road ahead. Slow down.',
+ s:diamond(`<path d="M26 50 H40 q10 18 20 0 H74" stroke="#111" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>${t(78,13,'DIP')}`)},
+{id:'narrowbridge',c:'warn',n:'Narrow Bridge',m:'The bridge ahead has room for only two lanes. Approach with caution.',
+ s:diamond(`<path d="M32 26 V74 M68 26 V74" stroke="#111" stroke-width="6"/><path d="M40 40 V60 M60 40 V60" stroke="#111" stroke-width="6"/>`)},
+{id:'softshoulder',c:'warn',n:'Soft Shoulder',m:'The shoulder is soft. Use it only in an emergency.',
+ s:diamond(`${t(44,12,'SOFT')}${t(60,12,'SHOULDER')}`)},
+{id:'lowclearance',c:'warn',n:'Low Clearance',m:'Do not enter if your vehicle is taller than the height shown.',
+ s:diamond(`<path d="M24 34 H76" stroke="#111" stroke-width="6"/><path d="M30 40 V72 M70 40 V72" stroke="#111" stroke-width="5"/>${t(62,13,"12'6\"")}`)},
+{id:'roadends',c:'warn',n:'Road Ends',m:'The road ends ahead. Slow and prepare to turn right or left.',
+ s:diamond(`<path d="M50 82 V44 M28 44 H72" stroke="#111" stroke-width="8" stroke-linecap="round"/>`)},
+{id:'deer',c:'warn',n:'Deer Crossing',m:'Deer frequently cross here. Watch for animals entering the roadway.',
+ s:diamond(`<ellipse cx="46" cy="52" rx="16" ry="7.5" fill="#111"/><path d="M58 48 L67 37 l5 3 l-7 10z" fill="#111"/><circle cx="70" cy="34" r="5" fill="#111"/><path d="M66 30 L62 21 M70 28 L70 18 M75 30 L79 22" stroke="#111" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M36 57 L30 72 M44 58 L42 74 M52 58 L57 74 M58 56 L67 69" stroke="#111" stroke-width="3.6" fill="none" stroke-linecap="round"/>`)},
+{id:'pedcross',c:'warn',n:'Pedestrian Crossing',m:'People cross here. Drivers must stop and stay stopped for pedestrians in the crosswalk.',
+ s:diamond(`<circle cx="50" cy="32" r="6" fill="#111"/><path d="M50 38 V58 M50 44 L40 52 M50 44 L60 52 M50 58 L42 74 M50 58 L58 74" stroke="#111" stroke-width="5" fill="none" stroke-linecap="round"/>`,'#C6E62E')},
+{id:'schoolzone',c:'warn',n:'School Zone',m:'You are approaching a school zone or school crossing.',
+ s:svg(`<polygon points="50,4 95,38 78,94 22,94 5,38" fill="#C6E62E" ${K}/><circle cx="42" cy="42" r="5" fill="#111"/><circle cx="60" cy="46" r="5.5" fill="#111"/><path d="M42 48 V62 M42 54 L34 60 M60 52 V66 M60 58 L68 64 M42 62 L36 78 M42 62 L48 78 M60 66 L54 80 M60 66 L66 80" stroke="#111" stroke-width="4.5" fill="none" stroke-linecap="round"/>`)},
+{id:'rradvance',c:'warn',n:'Railroad Crossing Ahead',m:'A railroad crossing is a few hundred feet ahead. Slow, look, listen, and be ready to stop.',
+ s:svg(`<circle cx="50" cy="50" r="45" fill="#FFCC00" ${K}/><path d="M18 18 L82 82 M82 18 L18 82" stroke="#111" stroke-width="7"/><text x="27" y="59" text-anchor="middle" font-family="Overpass,sans-serif" font-size="22" font-weight="800" fill="#111">R</text><text x="73" y="59" text-anchor="middle" font-family="Overpass,sans-serif" font-size="22" font-weight="800" fill="#111">R</text>`)},
+{id:'nopassing',c:'warn',n:'No Passing Zone',m:'A no-passing zone begins here. Any pass must already be complete.',
+ s:svg(`<polygon points="8,12 92,12 50,92" fill="#FFCC00" ${K}/>${t(33,11,'NO')}${t(46,10,'PASSING')}${t(59,10,'ZONE')}`)},
+/* ---- WORK ZONE ---- */
+{id:'roadwork',c:'work',n:'Road Work Ahead',m:'Construction or maintenance ahead. Orange always means work zone.',
+ s:orange(`<circle cx="50" cy="30" r="6" fill="#111"/><path d="M50 36 V54 L40 74 M50 54 L60 74" stroke="#111" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M34 56 L64 40" stroke="#111" stroke-width="5" stroke-linecap="round"/><path d="M30 60 l8 -8 6 6 z" fill="#111"/>`)},
+{id:'flagger',c:'work',n:'Flagger Ahead',m:'A flagger is directing traffic ahead. A flagger carries the same authority as a regulatory sign.',
+ s:orange(`<circle cx="46" cy="28" r="6" fill="#111"/><path d="M46 34 V56 L38 76 M46 56 L54 76" stroke="#111" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M46 40 H66 V30" stroke="#111" stroke-width="4.5" fill="none" stroke-linecap="round"/><rect x="60" y="22" width="14" height="10" fill="#111"/>`)},
+{id:'detour',c:'work',n:'Detour',m:'Follow the marked detour around a closed section of road.',
+ s:svg(`<rect x="4" y="28" width="92" height="44" rx="3" fill="#F58220" ${K}/>${t(48,16,'DETOUR')}<path d="M28 60 H72 M64 53 L74 60 L64 67" stroke="#111" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`)},
+{id:'slowmoving',c:'work',n:'Slow Moving Vehicle',m:'This vehicle travels under 25 mph. Slow down and pass only when safe.',
+ s:svg(`<polygon points="50,8 92,84 8,84" fill="#F58220" stroke="#AF1E2D" stroke-width="9" stroke-linejoin="round"/>`)},
+/* ---- GUIDE + SERVICE ---- */
+{id:'crossbuck',c:'guide',n:'Railroad Crossbuck',m:'You are at the tracks. Yield to any approaching train. A red flashing light means a full stop.',
+ s:svg(`<g transform="rotate(-45 50 50)"><rect x="4" y="42" width="92" height="16" rx="2" fill="#fff" stroke="#111" stroke-width="1.6"/><text x="50" y="53.5" text-anchor="middle" font-family="Overpass,sans-serif" font-size="11" font-weight="800" fill="#111">RAILROAD</text></g><g transform="rotate(45 50 50)"><rect x="4" y="42" width="92" height="16" rx="2" fill="#fff" stroke="#111" stroke-width="1.6"/><text x="50" y="53.5" text-anchor="middle" font-family="Overpass,sans-serif" font-size="11" font-weight="800" fill="#111">CROSSING</text></g>`)},
+{id:'exit',c:'guide',n:'Exit Sign',m:'A guide sign. The number identifies the exit and the arrow shows which side it leaves from.',
+ s:hrect(`${t(46,17,'EXIT',800,'#fff')}${t(66,17,'44',800,'#fff')}`)},
+{id:'milemarker',c:'guide',n:'Mile Marker',m:'Distance in miles from where the route begins at the south or west state line.',
+ s:svg(`<rect x="30" y="18" width="40" height="64" rx="3" fill="#00794A" stroke="#fff" stroke-width="2.5"/>${t(44,12,'MILE',800,'#fff')}${t(66,20,'44',800,'#fff')}`)},
+{id:'hospital',c:'guide',n:'Hospital',m:'A motorist service sign. Blue and white signs point to services such as hospitals, food, and gas.',
+ s:svg(`<rect x="20" y="16" width="60" height="68" rx="4" fill="#0B5EA8" stroke="#fff" stroke-width="2.5"/>${t(70,44,'H',900,'#fff')}`)},
+{id:'bikeroute',c:'guide',n:'Bike Route',m:'An officially designated bicycle route. Watch for cyclists sharing this road.',
+ s:svg(`<rect x="10" y="22" width="80" height="56" rx="4" fill="#00794A" stroke="#fff" stroke-width="2.5"/><circle cx="34" cy="56" r="8" fill="none" stroke="#fff" stroke-width="3"/><circle cx="62" cy="56" r="8" fill="none" stroke="#fff" stroke-width="3"/><path d="M34 56 L44 42 h8 M44 42 L62 56" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>${t(36,10,'BIKE ROUTE',800,'#fff')}`)},
+{id:'parking',c:'guide',n:'Public Parking',m:'Public parking is available in the direction of the arrow.',
+ s:svg(`<rect x="22" y="14" width="56" height="72" rx="4" fill="#fff" stroke="#0B5EA8" stroke-width="4"/>${t(64,38,'P',900,'#0B5EA8')}`)}
+];
+
+/* ---------- multiple choice bank ---------- */
+const MC=[
+{id:'m1',t:'Right of Way',q:'Two cars reach an intersection at the same time. There are no signs or signals. Who goes first?',o:['The car on the right','The car on the left','The faster car','Whoever signals first'],a:0,w:'When two vehicles arrive together at an uncontrolled intersection, the driver on the left must yield to the driver on the right.',src:'Manual, Section 5'},
+{id:'m2',t:'Right of Way',q:'At a four-way stop, two cars arrive at about the same moment. What is the rule?',o:['Yield to the vehicle on your right','Yield to the vehicle on your left','The larger vehicle goes first','Both wait for a third car'],a:0,w:'Four-way stops run first to arrive, first to proceed. On a tie, yield to the vehicle on your right, and always yield to pedestrians first.',src:'Manual, Section 5'},
+{id:'m3',t:'Right of Way',q:'A traffic signal is completely dark with no power. How should you treat the intersection?',o:['As a four-way stop','As a yield','Proceed, you have the right of way','As a flashing yellow'],a:0,w:'If a signal is not functioning at all, every driver treats the intersection as if a stop sign is posted in all directions.',src:'Manual, Section 7'},
+{id:'m4',t:'Right of Way',q:'You are turning left at a green light with no arrow. Who must you yield to?',o:['All oncoming traffic and crossing pedestrians','Only pedestrians','Only oncoming trucks','No one, the green light protects you'],a:0,w:'A green ball is a permissive turn. You must yield to all oncoming traffic including bicycles, and stop for pedestrians in the crosswalk you are turning into.',src:'Manual, Section 5'},
+{id:'m5',t:'Right of Way',q:'A school bus ahead turns on flashing yellow lights. What should you do?',o:['Slow down and prepare to stop','Stop immediately','Speed up to pass before the red lights','Change lanes and continue'],a:0,w:'Yellow flashing lights mean the bus is preparing to stop. Slow down and get ready. The legal duty to stop begins when the red lights flash and the stop arm extends.',src:'Manual, Section 5'},
+{id:'m6',t:'Right of Way',q:'A school bus is stopped with red lights flashing on the opposite side of a highway divided by a median. You must:',o:['Continue, but stay alert for children','Stop until the lights go off','Stop only if children are visible','Pull onto the shoulder'],a:0,w:'On a highway divided by a median, traffic on the opposite side of a stopped school bus is not required to stop, though drivers should stay attentive for children.',src:'Manual, Section 5'},
+{id:'m7',t:'Right of Way',q:'You are entering a road from a private driveway. What must you do?',o:['Stop and yield to all traffic and to anyone on the sidewalk','Merge without stopping if the road is clear','Sound your horn and proceed','Yield only to vehicles, not pedestrians'],a:0,w:'Entering or crossing a highway from an alley, private road, or driveway requires you to stop and yield to all pedestrians and vehicles already on the roadway or sidewalk.',src:'Manual, Section 5'},
+{id:'m8',t:'Right of Way',q:'An emergency vehicle approaches with lights and siren. You should:',o:['Slow, pull to the right edge or shoulder, and stop','Speed up to clear the intersection','Stop where you are, even in an intersection','Move to the left lane'],a:0,w:'Pull safely to the right and stop. Never stop in a position that blocks an intersection or prevents the emergency vehicle from turning.',src:'Manual, Section 5'},
+{id:'m9',t:'Right of Way',q:'When entering a roundabout you must:',o:['Yield to traffic already circulating','Stop completely before entering','Yield to traffic waiting to enter','Enter to the left and circle clockwise'],a:0,w:'Yield to all vehicles already in the roundabout, enter to the right, travel counterclockwise, never change lanes inside, and exit right.',src:'Manual, Section 7'},
+{id:'m10',t:'Speed & Limits',q:'Unless otherwise posted, the maximum speed in an urban or residential district is:',o:['30 mph','25 mph','35 mph','45 mph'],a:0,w:'Georgia sets 30 mph as the general limit in urban and residential districts unless a sign says otherwise.',src:'Manual, Section 5'},
+{id:'m11',t:'Speed & Limits',q:'Unless posted otherwise, the maximum speed on a rural interstate is:',o:['70 mph','65 mph','75 mph','60 mph'],a:0,w:'Rural interstates are 70 mph. Urban interstates and multi-lane divided highways are 65 mph.',src:'Manual, Section 5'},
+{id:'m12',t:'Speed & Limits',q:'Unless posted otherwise, the maximum speed on an unpaved county road is:',o:['35 mph','30 mph','45 mph','55 mph'],a:0,w:'Unpaved county roads carry a 35 mph general limit.',src:'Manual, Section 5'},
+{id:'m13',t:'Speed & Limits',q:'If no other limit is posted and none of the specific rules apply, the general Georgia speed limit is:',o:['55 mph','50 mph','60 mph','65 mph'],a:0,w:'55 mph applies in all other areas not covered by the specific categories.',src:'Manual, Section 5'},
+{id:'m14',t:'Speed & Limits',q:'Georgia\u2019s Super Speeder fee applies to a driver convicted of:',o:['75 mph or more on a two-lane road, or 85 mph or more on any road','80 mph anywhere in the state','65 mph in a work zone','Any speed over the posted limit'],a:0,w:'Super Speeder adds a $200 state fee on top of local fines. Failing to pay it brings a suspension and a $50 reinstatement fee.',src:'Manual, Section 5'},
+{id:'m15',t:'Speed & Limits',q:'Driving too slowly and impeding traffic can bring:',o:['A fine up to $1,000 and 3 points','A warning only','No penalty if under the limit','Immediate license revocation'],a:0,w:'Georgia prohibits driving so slowly that it impedes normal traffic, and it carries a fine up to $1,000 and 3 points.',src:'Manual, Section 5'},
+{id:'m16',t:'Signs & Signals',q:'What does a diamond-shaped sign always indicate?',o:['A warning of a hazard or change ahead','A regulation you must obey','Directions to a service','A construction detour'],a:0,w:'Diamonds are warning signs, usually yellow with black symbols, sometimes fluorescent yellow-green for pedestrian and school crossings.',src:'Manual, Section 7'},
+{id:'m17',t:'Signs & Signals',q:'A round sign means:',o:['A railroad crossing is ahead','A roundabout is ahead','A speed limit change','A rest area is ahead'],a:0,w:'The round sign is the railroad advance warning, posted a few hundred feet before the tracks.',src:'Manual, Section 7'},
+{id:'m18',t:'Signs & Signals',q:'A pentagon-shaped sign means:',o:['A school zone or school crossing','A hospital ahead','A five-way intersection','A scenic route'],a:0,w:'Pentagons mark school zones and crossings and are posted 150 to 700 feet in advance.',src:'Manual, Section 7'},
+{id:'m19',t:'Signs & Signals',q:'Orange signs with black markings mean:',o:['Work zone or maintenance area','Recreational area','School crossing','Emergency detour only'],a:0,w:'Orange is the work zone color. Watch for it and expect reduced speeds and changing lane patterns.',src:'Manual, Section 5'},
+{id:'m20',t:'Signs & Signals',q:'A flashing red light at an intersection means:',o:['Stop completely, then proceed when safe','Slow down and continue','The signal is broken, proceed freely','Stop only if traffic is present'],a:0,w:'A flashing red is treated exactly like a stop sign: full stop, yield, then go.',src:'Manual, Section 7'},
+{id:'m21',t:'Signs & Signals',q:'A flashing yellow arrow for a left turn means:',o:['You may turn left after yielding to oncoming traffic','You have a protected left turn','Left turns are prohibited','Stop before turning left'],a:0,w:'A flashing yellow arrow permits a left turn after yielding. Oncoming traffic still has a green light.',src:'Manual, Section 7'},
+{id:'m22',t:'Signs & Signals',q:'A steady yellow X over a lane means:',o:['Clear the lane','The lane is open','Left turns permitted','Slow down in this lane'],a:0,w:'Steady yellow X means clear the lane. Flashing yellow X means a left turn is permitted from it.',src:'Manual, Section 7'},
+{id:'m23',t:'Signs & Signals',q:'A flashing DON\u2019T WALK signal means a pedestrian should:',o:['Not start crossing, but finish if already crossing','Start crossing quickly','Wait at the median','Cross only with a vehicle'],a:0,w:'Flashing means do not leave the curb, but complete the crossing if already underway.',src:'Manual, Section 7'},
+{id:'m24',t:'Signs & Signals',q:'A red circle with a slash on a sign means:',o:['The action shown inside is prohibited','Caution is advised','The road is closed','A hazard is ahead'],a:0,w:'The red circle and slash mean "no." The picture inside shows exactly what is banned.',src:'Manual, Section 7'},
+{id:'m25',t:'Signs & Signals',q:'Blue and white signs give you:',o:['Motorist services such as food, gas, lodging, and hospitals','Warnings of upcoming hazards','Speed regulations','Construction information'],a:0,w:'Blue is the motorist services color. Green is for guide and direction, brown for recreation.',src:'Manual, Section 7'},
+{id:'m26',t:'Pavement Markings',q:'A solid yellow line on your side of the center line means:',o:['You may not pass','You may pass with caution','The road is one-way','A shoulder is ahead'],a:0,w:'A solid yellow line to the right of the center line means no passing from your lane. Double solid yellow means no passing either direction.',src:'Manual, Section 7'},
+{id:'m27',t:'Pavement Markings',q:'Double solid white lines between lanes mean:',o:['Lane changes are prohibited','Lane changes are allowed','A bicycle lane begins','Traffic ahead merges'],a:0,w:'Solid double white lines prohibit lane changes. Dashed double white lines allow crossing.',src:'Manual, Section 7'},
+{id:'m28',t:'Pavement Markings',q:'Diagonal yellow striping on the pavement tells you to:',o:['Keep to the right of the markings','Cross only to pass','Stop before entering','Merge left immediately'],a:0,w:'Diagonal yellow striping marks a narrowing road or an obstruction. Always keep to the right of it.',src:'Manual, Section 7'},
+{id:'m29',t:'Pavement Markings',q:'A center lane bordered by solid and broken yellow lines may be used only for:',o:['Making left turns','Passing slower traffic','Merging onto the highway','Emergency stops'],a:0,w:'Georgia law limits the two-way center turn lane to left turns, and you may enter it no more than 300 feet before the turn.',src:'Manual, Section 7'},
+{id:'m30',t:'Pavement Markings',q:'When stopping at an intersection with a marked stop line, you must stop:',o:['At the stop line','At the stop sign itself','In the crosswalk','Wherever you can see best'],a:0,w:'Drivers stop at the stop line when one is present, not at the sign or signal.',src:'Manual, Section 7'},
+{id:'m31',t:'Passing',q:'Passing is prohibited within how many feet of a railroad crossing or bridge?',o:['100 feet','50 feet','200 feet','300 feet'],a:0,w:'No passing within 100 feet of a railroad crossing, bridge, viaduct, or tunnel.',src:'Manual, Section 5'},
+{id:'m32',t:'Passing',q:'You may not begin a pass if oncoming traffic will be within how many feet before you finish?',o:['200 feet','100 feet','300 feet','500 feet'],a:0,w:'You must be able to complete the pass and return fully to your lane before oncoming traffic is within 200 feet.',src:'Manual, Section 5'},
+{id:'m33',t:'Passing',q:'When passing a bicycle and you cannot change lanes, Georgia law requires you to:',o:['Slow to at least 10 mph under the limit or 25 mph, whichever is more, and leave 3 feet','Sound your horn and pass close','Wait until the cyclist leaves the road','Pass at the posted speed with 1 foot of space'],a:0,w:'Change lanes when possible. If not, reduce speed to at least 10 mph below the posted limit or 25 mph, whichever is greater, and pass with at least three feet of clearance.',src:'Manual, Section 5'},
+{id:'m34',t:'Passing',q:'When passing a motorcycle you must:',o:['Move fully into an adjacent lane','Share the lane if there is room','Pass on the shoulder','Follow closely until the motorcycle moves over'],a:0,w:'A motorcyclist legally occupies the full width of the lane. Drivers may not share the lane while passing.',src:'Manual, Section 5'},
+{id:'m35',t:'Passing',q:'Flashing your headlights or turn signals to tell the driver behind you it is safe to pass is:',o:['Illegal in Georgia','Recommended courtesy','Required at night','Allowed on two-lane roads only'],a:0,w:'Georgia law makes it illegal to flash signals as a courtesy or "do pass" signal to drivers behind you.',src:'Manual, Section 5'},
+{id:'m36',t:'Passing',q:'Someone is passing you. It is unlawful to:',o:['Increase your speed before they have fully passed','Slow down slightly','Stay in your lane','Move toward the right edge'],a:0,w:'You may not speed up until the overtaking vehicle has completely passed you. Slowing slightly is the courteous move.',src:'Manual, Section 5'},
+{id:'m37',t:'Parking & Stopping',q:'You may not park within how many feet of a fire hydrant?',o:['15 feet','10 feet','20 feet','30 feet'],a:0,w:'15 feet from a fire hydrant. Momentary stops to load or drop off passengers are the only exception.',src:'Manual, Section 5'},
+{id:'m38',t:'Parking & Stopping',q:'You may not park within how many feet of a stop sign, yield sign, or traffic signal?',o:['30 feet','15 feet','20 feet','50 feet'],a:0,w:'30 feet from a stop sign, yield sign, or traffic control signal.',src:'Manual, Section 5'},
+{id:'m39',t:'Parking & Stopping',q:'You may not park within how many feet of a railroad crossing?',o:['50 feet','25 feet','75 feet','100 feet'],a:0,w:'50 feet from a railroad crossing.',src:'Manual, Section 5'},
+{id:'m40',t:'Parking & Stopping',q:'You may not park within how many feet of a crosswalk at an intersection?',o:['20 feet','10 feet','30 feet','40 feet'],a:0,w:'20 feet from a crosswalk at an intersection, and also 20 feet from a fire station driveway.',src:'Manual, Section 5'},
+{id:'m41',t:'Parking & Stopping',q:'Your car breaks down on a highway. You should park where your vehicle is visible for at least:',o:['200 feet in each direction','100 feet in each direction','50 feet in each direction','500 feet in each direction'],a:0,w:'Move off the highway if at all possible, leaving free passage and a clear view of your vehicle for 200 feet in each direction.',src:'Manual, Section 5'},
+{id:'m42',t:'Teen Licensing',q:'A Class C Instructional Permit holder may drive only when accompanied by:',o:['A licensed driver 21 or older seated beside them','Any licensed driver','A parent only','A licensed driver 18 or older'],a:0,w:'The supervising driver must be at least 21, licensed for Class C, capable of taking control, and seated beside the driver.',src:'Manual, Section 6'},
+{id:'m43',t:'Teen Licensing',q:'What is the minimum age to apply for a Class C Instructional Permit in Georgia?',o:['15','16','14','17'],a:0,w:'You may apply at 15. The permit is valid for two years.',src:'Manual, Section 6'},
+{id:'m44',t:'Teen Licensing',q:'A Class D provisional license holder may not drive between:',o:['12:00 a.m. and 5:00 a.m., with no exceptions','11:00 p.m. and 6:00 a.m.','1:00 a.m. and 4:00 a.m.','Midnight and 6:00 a.m. unless working'],a:0,w:'The Class D curfew runs midnight to 5:00 a.m. and the manual states it has no exceptions.',src:'Manual, Section 6'},
+{id:'m45',t:'Teen Licensing',q:'During the first six months with a Class D license, who may ride along?',o:['Only immediate family members','One friend under 21','Up to three friends','Anyone with a seat belt'],a:0,w:'First six months: immediate family only. Second six months: one non-family passenger under 21. After that: up to three.',src:'Manual, Section 6'},
+{id:'m46',t:'Teen Licensing',q:'How long must you hold an instructional permit before applying for a Class D license?',o:['One year and one day','Six months','Nine months','Two years'],a:0,w:'You must be 16 and have held a valid instructional permit for one year and one day.',src:'Manual, Section 6'},
+{id:'m47',t:'Teen Licensing',q:'Joshua\u2019s Law requires a 16-year-old applying for a Class D license to complete driver education plus:',o:['40 hours of supervised driving, 6 of them at night','20 hours of supervised driving','60 hours of supervised driving, 10 at night','No additional driving hours'],a:0,w:'An approved course of 30 classroom hours or the online equivalent, 6 hours on the road or the Parent/Teen Guide, and a cumulative 40 hours of driving including 6 at night.',src:'Manual, Section 6'},
+{id:'m48',t:'Teen Licensing',q:'For a driver under 18, how many points in 12 months will suspend the license?',o:['4 points','15 points','10 points','6 points'],a:0,w:'Under 18, accumulating 4 or more points in any 12-month period suspends the license. The adult threshold is 15 points in 24 months.',src:'Manual, Section 6'},
+{id:'m49',t:'Teen Licensing',q:'The adult who signed a minor\u2019s permit application may:',o:['Revoke the permit at any time before the minor turns 18','Never revoke it once issued','Revoke it only for traffic convictions','Transfer it to another adult'],a:0,w:'The signing parent, guardian, or responsible adult can request revocation for any reason before the minor turns 18.',src:'Manual, Section 6'},
+{id:'m50',t:'Alcohol & Penalties',q:'A driver under 21 is legally under the influence at a blood alcohol level of:',o:['0.02','0.08','0.05','0.10'],a:0,w:'Georgia\u2019s zero-tolerance level for drivers under 21 is 0.02. For drivers 21 and over it is 0.08.',src:'Manual, Section 5'},
+{id:'m51',t:'Alcohol & Penalties',q:'Having a valid prescription for a medication that impairs your driving is:',o:['Not a defense to a DUI charge','A complete defense','A defense if you tell the officer','A defense for a first offense only'],a:0,w:'A prescription is not a defense if the medication impairs your ability to drive safely.',src:'Manual, Section 5'},
+{id:'m52',t:'Alcohol & Penalties',q:'How many points in a 24-month period will suspend an adult Georgia license?',o:['15 points','10 points','12 points','20 points'],a:0,w:'15 or more points in any consecutive 24-month period triggers suspension. Points reset to zero after a points suspension.',src:'Manual, Section 10'},
+{id:'m53',t:'Alcohol & Penalties',q:'For a driver under 21, a conviction for reckless driving results in:',o:['Suspension of all driving privileges','Points only','A fine only','A warning for the first offense'],a:0,w:'For drivers under 21, reckless driving, racing, aggressive driving, hit and run, and eluding all bring a suspension: 6 months for a first conviction, 12 for a second.',src:'Manual, Sections 5 and 6'},
+{id:'m54',t:'Safe Driving',q:'The Georgia manual\u2019s method for checking following distance is to count:',o:['"One-thousand-one, one-thousand-two" as the car ahead passes a fixed point','Three full seconds','Four car lengths','One car length per 10 mph'],a:0,w:'Watch the vehicle ahead pass a landmark and count two seconds. Passing the same point before you finish counting means you are too close. Increase the gap at night, in rain, and in construction.',src:'Manual, Section 8'},
+{id:'m55',t:'Safe Driving',q:'If your vehicle begins to hydroplane you should:',o:['Ease your foot off the accelerator and let the car slow','Brake firmly','Steer sharply toward the shoulder','Accelerate to regain traction'],a:0,w:'Take your foot off the accelerator and let the vehicle slow. Braking or steering sharply while hydroplaning can throw the car into an uncontrollable skid.',src:'Manual, Section 8'},
+{id:'m56',t:'Safe Driving',q:'Partial hydroplaning can begin at speeds as low as:',o:['35 mph','55 mph','45 mph','25 mph'],a:0,w:'Tires channel water well up to about 35 mph. Above that, partial hydroplaning starts, and at 55 mph the tires can lose contact with the road entirely.',src:'Manual, Section 8'},
+{id:'m57',t:'Safe Driving',q:'You must use headlights from:',o:['A half hour after sunset to a half hour before sunrise, in rain, and when visibility is limited','Sunset to sunrise only','Only when it is fully dark','Only on unlit roads'],a:0,w:'Headlights are required from a half hour after sunset until a half hour before sunrise, at any time it is raining, and whenever visibility is limited.',src:'Manual, Section 5'},
+{id:'m58',t:'Safe Driving',q:'You must dim your high beams within how many feet of an oncoming vehicle?',o:['500 feet','200 feet','300 feet','1,000 feet'],a:0,w:'Dim within 500 feet of an oncoming vehicle and within 200 feet when following another vehicle.',src:'Manual, Section 5'},
+{id:'m59',t:'Safe Driving',q:'In heavy fog you should:',o:['Slow down and use low beams','Use high beams for visibility','Turn on hazard lights and continue at speed','Follow closely behind another vehicle'],a:0,w:'High beams reflect off fog and make visibility worse. Slow down, use low beams, and reduce speed further when you see other headlights or tail lights.',src:'Manual, Section 8'},
+{id:'m60',t:'Safe Driving',q:'Georgia\u2019s seat belt law requires belts for:',o:['All front-seat occupants, and everyone under 18 anywhere in the vehicle','The driver only','Front-seat occupants only','Everyone in every seat, all ages'],a:0,w:'Front-seat occupants must be belted, and all occupants under 18 must be belted in any seat. Georgia is a primary enforcement state.',src:'Manual, Section 5'},
+{id:'m61',t:'Safe Driving',q:'Child passenger restraints are required for children under:',o:['8 years old','5 years old','10 years old','12 years old'],a:0,w:'Drivers must properly restrain any child under eight in a system appropriate to the child\u2019s height and weight.',src:'Manual, Section 5'},
+{id:'m62',t:'Safe Driving',q:'Coasting downhill with the transmission in neutral is:',o:['Prohibited by law','Recommended to save fuel','Allowed below 35 mph','Allowed on rural roads'],a:0,w:'Georgia law forbids coasting downhill in neutral, because it removes engine braking and control.',src:'Manual, Section 5'},
+{id:'m63',t:'Safe Driving',q:'Wearing headphones while driving in Georgia is:',o:['Unlawful, because it impairs your ability to hear','Legal at low volume','Legal if only one ear is covered','Legal for passengers and drivers alike'],a:0,w:'It is unlawful to drive while wearing a headphone, headset, or anything else that impairs hearing or obstructs vision.',src:'Manual, Section 5'},
+{id:'m64',t:'Work Zones & Rail',q:'In a work zone, a flagger\u2019s directions carry:',o:['The same authority as a regulatory sign','Less authority than a posted sign','Authority only when police are present','Advisory weight only'],a:0,w:'A flagger has the same authority as a regulatory sign. Disobeying a flagger is a violation.',src:'Manual, Section 5'},
+{id:'m65',t:'Work Zones & Rail',q:'When you must stop for a train, you stop within:',o:['50 feet but not less than 15 feet from the nearest rail','25 feet of the crossing','100 feet of the crossing','10 feet of the nearest rail'],a:0,w:'Stop within 50 feet but not less than 15 feet from the nearest rail, and stay stopped until the tracks are clear and gates are up.',src:'Manual, Section 5'},
+{id:'m66',t:'Work Zones & Rail',q:'Speeding in a work zone in Georgia can bring a fine of:',o:['Not less than $100 and up to $2,000','A flat $50','Up to $500 only','No fine on a first offense'],a:0,w:'Disobeying a regulatory speed limit in a work zone is a high and aggravated misdemeanor: $100 to $2,000, up to 12 months, or both.',src:'Manual, Section 5'},
+{id:'m67',t:'Work Zones & Rail',q:'Your car stalls on railroad tracks. You should:',o:['Get out immediately, move away, and call for help using the ENS sign','Stay inside and restart the engine','Push the vehicle off the tracks alone','Wait for the crossing gates to lift'],a:0,w:'Get out and move away at once, then find the Emergency Notification System sign at the crossing and call the number on it.',src:'Manual, Section 5'},
+{id:'m68',t:'Georgia Laws',q:'Georgia\u2019s Move Over Law requires drivers approaching a stopped emergency vehicle to:',o:['Move over one lane, or slow below the speed limit if moving over is unsafe','Stop completely until it leaves','Sound the horn and continue','Move to the far left lane only'],a:0,w:'Move over a lane when safely possible. If not, slow below the posted limit and be prepared to stop. It covers emergency, sanitation, and utility vehicles.',src:'Manual, Section 5'},
+{id:'m69',t:'Georgia Laws',q:'Georgia\u2019s Hands-Free Law applies to:',o:['All drivers, regardless of age','Drivers under 21 only','Drivers under 18 only','Commercial drivers only'],a:0,w:'The Hands-Free Law bans holding or supporting a phone with any part of the body, for every driver on any Georgia highway.',src:'Manual, Section 5'},
+{id:'m70',t:'Georgia Laws',q:'A first conviction under the Hands-Free Law brings:',o:['1 point and a fine up to $50','3 points and a $150 fine','A warning only','License suspension'],a:0,w:'First conviction is 1 point and up to $50. Second is 2 points and up to $100. Third and beyond is 3 points and up to $150.',src:'Manual, Section 5'},
+{id:'m71',t:'Georgia Laws',q:'The Slow Poke Law requires that you:',o:['Move out of the passing lane when faster traffic approaches','Never exceed 55 mph in the left lane','Stay in the left lane on multi-lane roads','Signal before slowing down'],a:0,w:'HB 459 requires slower drivers to move right out of the passing lane when faster traffic approaches, regardless of the speed you are traveling.',src:'Manual, Section 5'},
+{id:'m72',t:'Georgia Laws',q:'Littering from a vehicle in Georgia is:',o:['A misdemeanor with a fine up to $1,000 and up to 12 months','A civil citation only','A $50 fixed fine','Not enforceable against drivers'],a:0,w:'The Litter Control Law treats littering as damage to property. A judge may also order cleanup duty.',src:'Manual, Section 5'},
+{id:'m73',t:'Georgia Laws',q:'You may not follow a responding fire truck closer than:',o:['200 feet','100 feet','500 feet','50 feet'],a:0,w:'Stay at least 200 feet back from responding fire apparatus, and never park within 500 feet of fire apparatus stopped at an alarm.',src:'Manual, Section 5'},
+{id:'m74',t:'Sharing the Road',q:'A vehicle displaying an orange triangle emblem is:',o:['Traveling under 25 mph','A hazardous materials carrier','An emergency vehicle','A wide load'],a:0,w:'The slow-moving vehicle emblem is required on any vehicle traveling under 25 mph.',src:'Manual, Section 7'},
+{id:'m75',t:'Sharing the Road',q:'When turning right where a bicycle lane is present, you must:',o:['Yield to cyclists going straight through the intersection','Turn ahead of the cyclist','Stop in the bike lane and wait','Sound your horn first'],a:0,w:'You must yield to bicyclists traveling straight before completing your right turn, and you may only cross a bike lane to turn.',src:'Manual, Section 5'},
+{id:'m76',t:'Sharing the Road',q:'Approaching a postal vehicle with flashing lights, you must:',o:['Change lanes if possible, or slow to 10 mph under the limit or 25 mph, whichever is more','Stop completely','Pass at normal speed','Sound your horn and pass'],a:0,w:'The same rule that protects bicycles and sanitation workers applies. A violation carries a fine up to $250.',src:'Manual, Section 5'},
+{id:'m77',t:'Testing & Permits',q:'To pass the Georgia knowledge exam you must score at least:',o:['15 out of 20 on both the road signs and road rules tests','30 out of 40 combined','15 out of 20 on either test','18 out of 20 on both tests'],a:0,w:'Each part is scored separately and each requires 15 of 20. A perfect score on one part does not offset a failure on the other.',src:'Manual, Section 3'},
+{id:'m78',t:'Testing & Permits',q:'If you fail part of the knowledge exam for the first time, you must wait:',o:['1 day before retesting','7 days','30 days','You may retest the same day'],a:0,w:'One day after a first failure, seven days after any subsequent failure, and the fee is paid again on every attempt.',src:'Manual, Section 3'},
+{id:'m79',t:'Testing & Permits',q:'The minimum vision requirement for a Georgia non-commercial license is:',o:['20/60 in one eye and a 140-degree field of vision','20/20 in both eyes','20/40 in both eyes','20/100 in one eye'],a:0,w:'20/60 in one eye with or without corrective lenses, plus a horizontal field of vision of at least 140 degrees.',src:'Manual, Section 1'},
+{id:'m80',t:'Testing & Permits',q:'An applicant under 18 must present which document at the DDS?',o:['A Certificate of School Enrollment, diploma, or GED','A birth certificate only','A school report card','A letter from a teacher'],a:0,w:'Proof of school enrollment is required, along with identity documents, Social Security number, two proofs of Georgia residency, and a responsible adult\u2019s signature.',src:'Manual, Section 6'}
+];
+
+/* ---------- true / false bank ---------- */
+const TF=[
+{id:'f1',t:'Right of Way',q:'At an uncontrolled intersection, the driver on the left must yield to the driver on the right.',a:true,w:'Correct. When two vehicles arrive together with no signs or signals, the left yields to the right.'},
+{id:'f2',t:'Right of Way',q:'A green light means you may enter the intersection even if it is not yet clear.',a:false,w:'False. The manual is explicit: wait until the intersection is clear. Never proceed "just because" you have the green.'},
+{id:'f3',t:'Right of Way',q:'Right of way is something you take, not something you give.',a:false,w:'False. The manual states right of way is given, not taken. If another driver wrongly takes their turn, let them go to avoid a crash.'},
+{id:'f4',t:'Right of Way',q:'You must stop for pedestrians in the crosswalk of the road you are turning onto until they clear your lanes.',a:true,w:'Correct. Stop and remain stopped until pedestrians have cleared the lanes you are traveling on.'},
+{id:'f5',t:'Right of Way',q:'A left turn on red is always illegal in Georgia.',a:false,w:'False. A left on red is permitted from a one-way street onto a one-way street moving to your left, after a complete stop, unless a sign prohibits it.'},
+{id:'f6',t:'Right of Way',q:'You may pass a school bus while its red lights are flashing if you are in a hurry.',a:false,w:'False. Once red lights flash and the stop arm extends, passing is unlawful, no exceptions.'},
+{id:'f7',t:'Signs & Signals',q:'An octagonal sign always means stop.',a:true,w:'Correct. The eight-sided shape is reserved for stop signs.'},
+{id:'f8',t:'Signs & Signals',q:'A round sign warns of a roundabout ahead.',a:false,w:'False. The round warning sign means a railroad crossing is ahead. It is the shape people most often miss.'},
+{id:'f9',t:'Signs & Signals',q:'Vertical rectangular signs are usually regulatory and tell you what you must do.',a:true,w:'Correct. Vertical rectangles are regulatory. Horizontal rectangles are usually guide signs.'},
+{id:'f10',t:'Signs & Signals',q:'Warning signs can be fluorescent yellow-green as well as yellow.',a:true,w:'Correct. Fluorescent yellow-green is used for pedestrian, bicycle, and school crossing warnings.'},
+{id:'f11',t:'Signs & Signals',q:'A yellow light means speed up to clear the intersection before it turns red.',a:false,w:'False. A yellow light warns the signal is changing to red. Slow down and prepare to stop.'},
+{id:'f12',t:'Signs & Signals',q:'A flashing yellow light means you must come to a complete stop.',a:false,w:'False. Flashing yellow means slow down and proceed with caution. Flashing red is the one that requires a full stop.'},
+{id:'f13',t:'Signs & Signals',q:'Green signs give directions and locations.',a:true,w:'Correct. Green is the guide sign color for routes, exits, distances, and destinations.'},
+{id:'f14',t:'Signs & Signals',q:'A right turn on red is permitted after a complete stop unless a sign prohibits it.',a:true,w:'Correct. Stop fully, yield to all traffic and pedestrians, and turn only when it is clearly safe.'},
+{id:'f15',t:'Pavement Markings',q:'Broken yellow center lines mean passing is allowed when it is safe.',a:true,w:'Correct. Broken yellow separates opposing traffic on a two-lane road where passing is permitted.'},
+{id:'f16',t:'Pavement Markings',q:'You may use the center two-way left turn lane to pass slower traffic.',a:false,w:'False. Georgia law limits that lane to left turns only, entered no more than 300 feet before the turn.'},
+{id:'f17',t:'Pavement Markings',q:'Solid white edge lines mark the edge of the pavement.',a:true,w:'Correct. Edge lines are especially useful as a guide at night and in poor visibility.'},
+{id:'f18',t:'Pavement Markings',q:'Drivers may park in a bicycle lane as long as they are not blocking traffic.',a:false,w:'False. Driving or parking in a bike lane is prohibited. You may only cross it to make a turn, yielding to cyclists.'},
+{id:'f19',t:'Passing',q:'You may pass on the shoulder if the vehicle ahead is turning left.',a:false,w:'False. Passing on the shoulder is prohibited. You may pass on the right only when there is enough pavement width in a legal lane, or on a multi-lane road.'},
+{id:'f20',t:'Passing',q:'Passing is prohibited at all railroad crossings.',a:true,w:'Correct, and also within 100 feet of a crossing, bridge, viaduct, or tunnel.'},
+{id:'f21',t:'Passing',q:'A motorcyclist is entitled to the full width of a lane.',a:true,w:'Correct. Drivers may not share a lane with a motorcycle while passing.'},
+{id:'f22',t:'Passing',q:'You may cross a double solid yellow line to pass if the road ahead looks clear.',a:false,w:'False. Double solid yellow means passing is prohibited in both directions.'},
+{id:'f23',t:'Speed & Limits',q:'The general speed limit on an urban interstate in Georgia is 65 mph unless posted otherwise.',a:true,w:'Correct. Urban interstates and multi-lane divided highways are 65. Rural interstates are 70.'},
+{id:'f24',t:'Speed & Limits',q:'Driving well under the speed limit is always safe and legal.',a:false,w:'False. Impeding the normal flow of traffic is prohibited and carries a fine up to $1,000 and 3 points.'},
+{id:'f25',t:'Speed & Limits',q:'The Super Speeder fee is $200 and is added on top of any local fine.',a:true,w:'Correct, and failing to pay it on time brings a suspension plus a $50 reinstatement fee.'},
+{id:'f26',t:'Teen Licensing',q:'A Class C Instructional Permit is valid for two years.',a:true,w:'Correct. You can apply at 15, and the permit remains valid for two years.'},
+{id:'f27',t:'Teen Licensing',q:'A 16-year-old with a Class D license may drive to work at 1:00 a.m.',a:false,w:'False. The midnight to 5:00 a.m. curfew has no exceptions, including work.'},
+{id:'f28',t:'Teen Licensing',q:'A Class D holder may carry three non-family passengers under 21 after holding the license 12 months.',a:true,w:'Correct. Immediate family only for six months, then one non-family passenger under 21, then up to three.'},
+{id:'f29',t:'Teen Licensing',q:'Driver education is required to obtain a Class D license at 16 or 17.',a:true,w:'Correct. Joshua\u2019s Law requires an approved course plus 40 hours of supervised driving including 6 at night.'},
+{id:'f30',t:'Teen Licensing',q:'You must be 18 to apply for a Class C license in Georgia.',a:true,w:'Correct. A Class D holder may exchange it for a Class C at 18 after a year and a day free of major violations.'},
+{id:'f31',t:'Teen Licensing',q:'An ADAP certificate is required before a Class D license is issued.',a:true,w:'Correct. The Alcohol and Drug Awareness Program is taught in most schools and is also available online.'},
+{id:'f32',t:'Alcohol & Penalties',q:'A driver who is 20 years old is legally under the influence at 0.08.',a:false,w:'False. Under 21, the limit is 0.02. Only drivers 21 and older are measured at 0.08.'},
+{id:'f33',t:'Alcohol & Penalties',q:'A DUI conviction can bring up to 12 months in jail and a mandatory suspension.',a:true,w:'Correct. Fines reach $1,000, jail up to 12 months, and the suspension is mandatory.'},
+{id:'f34',t:'Alcohol & Penalties',q:'For a driver under 21, a single 4-point conviction can suspend the license.',a:true,w:'Correct. Under 21, any conviction carrying four or more points brings a suspension.'},
+{id:'f35',t:'Safe Driving',q:'You should brake hard as soon as you feel the car hydroplaning.',a:false,w:'False. Ease off the accelerator and let the car slow. Braking hard can throw you into an uncontrollable skid.'},
+{id:'f36',t:'Safe Driving',q:'The first half hour of rain is the most hazardous.',a:true,w:'Correct. Oil and rubber lift off the pavement and mix with water, which is why the Slippery When Wet sign warns about it.'},
+{id:'f37',t:'Safe Driving',q:'You should dim your headlights when following within 200 feet of another vehicle.',a:true,w:'Correct, and within 500 feet of an oncoming vehicle, on lighted roads, and in rain, fog, snow, or smoke.'},
+{id:'f38',t:'Safe Driving',q:'High beams help you see better in heavy fog.',a:false,w:'False. High beams reflect off fog and reduce visibility. Use low beams.'},
+{id:'f39',t:'Safe Driving',q:'Overdriving your headlights means driving so fast that you cannot stop within the distance they light up.',a:true,w:'Correct. At night, your safe speed is limited by how far ahead you can actually see.'},
+{id:'f40',t:'Safe Driving',q:'Georgia is a primary enforcement state for seat belts.',a:true,w:'Correct. An officer may stop and cite you for the belt violation alone, without any other violation.'},
+{id:'f41',t:'Safe Driving',q:'When backing up you should rely on your mirrors rather than turning your head.',a:false,w:'False. Turn your head and look over your right shoulder. The manual says not to depend on mirrors.'},
+{id:'f42',t:'Safe Driving',q:'Riding in a towed trailer is allowed as long as everyone is seated.',a:false,w:'False. Riding in a house trailer or any vehicle-drawn trailer is prohibited while it is moving on a street or highway.'},
+{id:'f43',t:'Work Zones & Rail',q:'Orange signs with black markings indicate a work zone.',a:true,w:'Correct. Watch for orange. It always means construction or maintenance.'},
+{id:'f44',t:'Work Zones & Rail',q:'You may drive around a lowered railroad crossing gate if no train is visible.',a:false,w:'False. Never drive through, around, or under a lowered gate under any circumstances.'},
+{id:'f45',t:'Work Zones & Rail',q:'Work vehicles with flashing amber lights have the right of way.',a:true,w:'Correct. Yield to them and reduce your speed on approach.'},
+{id:'f46',t:'Georgia Laws',q:'The Move Over Law covers sanitation and utility vehicles, not just police and ambulances.',a:true,w:'Correct. It was amended to include active sanitation workers and utility service workers using cones or flashing lights.'},
+{id:'f47',t:'Georgia Laws',q:'You may hold your phone at a red light under the Hands-Free Law.',a:false,w:'False. The law bans holding or supporting a phone with any part of the body while operating a vehicle on the highway.'},
+{id:'f48',t:'Georgia Laws',q:'A first Move Over Law violation can bring a fine of up to $500.',a:true,w:'Correct. It is one of the more expensive first-offense fines in the manual.'},
+{id:'f49',t:'Sharing the Road',q:'You must leave at least three feet when passing a bicycle without changing lanes.',a:true,w:'Correct, and you must also slow to at least 10 mph below the limit or 25 mph, whichever is greater.'},
+{id:'f50',t:'Testing & Permits',q:'The road signs portion of the knowledge exam is given in English only.',a:true,w:'Correct. The road rules test is available in some other languages, but signs and the road test are English only.'},
+{id:'f51',t:'Testing & Permits',q:'If you fail the road signs test but pass road rules, you must retake both.',a:false,w:'False. You retake only the part you failed.'},
+{id:'f52',t:'Testing & Permits',q:'The $10 test fee is refunded if you fail.',a:false,w:'False. The fee is forfeited on a failure and must be paid again for every attempt.'}
+];
+
+/* ---------- study manual content ---------- */
+const TOPICS=[
+ {n:'Sign shapes and colors',b:'<ul><li><b>Octagon</b> stop. <b>Triangle</b> yield. <b>Diamond</b> warning. <b>Round</b> railroad ahead. <b>Pentagon</b> school. <b>Vertical rectangle</b> regulatory. <b>Horizontal rectangle</b> guide.</li><li><b>Red</b> stop or prohibition. <b>Yellow</b> warning. <b>Yellow-green</b> pedestrian, bike, school. <b>Orange</b> work zone. <b>Green</b> guide. <b>Blue</b> services. <b>Brown</b> recreation.</li><li>A red circle with a slash means no. The picture inside shows what is banned.</li></ul>'},
+ {n:'Right of way',b:'<ul><li>No signs, two cars together: <b>yield to the right</b>.</li><li>Four-way stop: pedestrians first, then first to arrive. Tie goes to the right.</li><li>Turning left: yield to all oncoming traffic and to crossing pedestrians.</li><li>Leaving a driveway or alley: stop and yield to everything, including people on the sidewalk.</li><li>Emergency vehicle: pull right and stop, never blocking an intersection.</li><li>School bus: yellow means prepare, <b>red means stop</b>. Opposite side of a divided highway does not stop.</li></ul>'},
+ {n:'Speed limits',b:'<ul><li>Urban or residential <b>30</b>. Unpaved county road <b>35</b>. Rural interstate <b>70</b>. Urban interstate or multi-lane divided <b>65</b>. All other areas <b>55</b>.</li><li>Super Speeder: <b>75+</b> on a two-lane road or <b>85+</b> anywhere adds a $200 state fee.</li><li>Driving too slowly and impeding traffic: up to $1,000 and 3 points.</li></ul>'},
+ {n:'The distance numbers',b:'<ul><li><b>15 ft</b> fire hydrant, and the minimum stop distance from a rail.</li><li><b>20 ft</b> crosswalk at an intersection, and a fire station driveway.</li><li><b>30 ft</b> stop sign, yield sign, or signal.</li><li><b>50 ft</b> railroad crossing, and the maximum stop distance from a rail.</li><li><b>75 ft</b> across from a fire station driveway.</li><li><b>100 ft</b> no passing near a crossing, bridge, viaduct, or tunnel.</li><li><b>200 ft</b> oncoming traffic limit when passing; following a fire truck; dimming while following; visibility for a disabled car.</li><li><b>300 ft</b> maximum entry into a center turn lane.</li><li><b>500 ft</b> dimming for oncoming traffic; parking near fire apparatus.</li></ul>'},
+ {n:'Passing',b:'<ul><li>Prohibited on solid yellow, hills, curves, shoulders, within 100 ft of a crossing or bridge, and any time a school bus is loading.</li><li>Complete the pass before oncoming traffic is within <b>200 ft</b>.</li><li>Bicycles: change lanes, or slow to <b>10 under or 25 mph</b>, whichever is more, and give <b>3 feet</b>.</li><li>Motorcycles: pass in an adjacent lane. Never share the lane.</li><li>Flashing your lights to wave someone past is illegal.</li></ul>'},
+ {n:'Teen licensing ladder',b:'<ul><li><b>Class CP at 15.</b> Licensed driver 21+ beside you at all times. Valid 2 years.</li><li><b>Class D at 16</b> after holding the permit 1 year and 1 day, driver ed, 40 hours supervised with 6 at night, ADAP, and a road test.</li><li>Class D curfew: <b>midnight to 5 a.m., no exceptions</b>. Passengers: family only for 6 months, then 1 non-family under 21, then 3.</li><li><b>Class C at 18</b> after a year and a day of clean Class D driving.</li><li>Under 18: <b>4 points in 12 months</b> suspends the license.</li></ul>'},
+ {n:'Alcohol and penalties',b:'<ul><li>Under 21: <b>0.02</b>. Age 21+: <b>0.08</b>.</li><li>A prescription is not a defense if the drug impairs you.</li><li>Adults: <b>15 points in 24 months</b> suspends a license.</li><li>Under 21: any single <b>4-point</b> conviction suspends. Reckless, racing, eluding, hit and run, aggressive driving all trigger 6 months on the first conviction.</li></ul>'},
+ {n:'Named Georgia laws',b:'<ul><li><b>Move Over:</b> change lanes for emergency, sanitation, and utility vehicles. If you cannot, slow below the limit and be ready to stop. Up to $500.</li><li><b>Hands-Free (HB 673):</b> no holding or supporting a phone, every driver, every age. 1st: 1 point, $50.</li><li><b>Slow Poke (HB 459):</b> move right when faster traffic approaches.</li><li><b>Joshua\u2019s Law:</b> driver ed plus 40 supervised hours for a Class D at 16 or 17.</li><li><b>TADRA:</b> the 1997 act that built the graduated licensing system.</li></ul>'},
+ {n:'Safe driving',b:'<ul><li>Following distance: count <b>two seconds</b> as the car ahead passes a landmark. Add more at night, in rain, and in work zones.</li><li>Hydroplaning starts near <b>35 mph</b> and can be total at <b>55</b>. Ease off the gas. Do not brake.</li><li>Headlights: half an hour after sunset to half an hour before sunrise, in rain, and whenever visibility drops.</li><li>Fog: slow down, low beams.</li><li>Belts for all front seats and everyone under 18. Child restraint under age 8.</li><li>No coasting in neutral, no headphones, no driving across a median except at a crossover.</li></ul>'},
+ {n:'Pavement markings',b:'<ul><li>Broken yellow: passing allowed. Solid yellow on your side: no passing. Double solid yellow: no passing either way.</li><li>Double solid white: no lane changes. Double dashed white: crossing allowed.</li><li>Diagonal yellow striping: keep right of it.</li><li>Center turn lane: left turns only, entered within 300 ft.</li><li>Stop at the <b>stop line</b>, not at the sign.</li><li>Roundabout: yield to circulating traffic, counterclockwise, no lane changes inside.</li></ul>'},
+ {n:'Test day',b:'<ul><li>20 road signs and 20 road rules. <b>15 of 20 on each</b>, scored separately.</li><li>$10 before testing, forfeited if you fail, paid again each attempt.</li><li>Fail once, wait 1 day. Fail again, wait 7 days. Only the failed part is retaken.</li><li>No phones, no notes, no talking. Violating that counts as a failure.</li><li>Bring identity documents, Social Security number, two proofs of Georgia residency, school enrollment proof, and a responsible adult.</li><li>Vision: 20/60 in one eye, 140-degree field.</li></ul>'}
+];
+
+/* ============================================================
+   RETENTION ENGINE
+   Leitner boxes 0-5. Correct moves up one, wrong drops two.
+   Selection weight per box: low boxes are drawn far more often.
+   ============================================================ */
+const KEY='gapt:v1';
+const BOXW=[26,16,9,5,3,1];
+const store={
+  async get(){
+    try{ if(window.storage){ const r=await window.storage.get(KEY); if(r&&r.value) return JSON.parse(r.value) } }catch(e){}
+    try{ const v=localStorage.getItem(KEY); return v?JSON.parse(v):null }catch(e){ return null }
+  },
+  async set(o){
+    const s=JSON.stringify(o);
+    try{ if(window.storage){ await window.storage.set(KEY,s); return } }catch(e){}
+    try{ localStorage.setItem(KEY,s) }catch(e){}
+  }
+};
+let P={items:{},drills:0,lastDay:null,streak:0,answered:0,correct:0};
+let recent=[];
+let saveT=null;
+const save=()=>{clearTimeout(saveT);saveT=setTimeout(()=>store.set(P),400)};
+
+const SIGN_ITEMS=SIGNS.map(s=>'s:'+s.id);
+const RULE_ITEMS=[...MC.map(q=>'m:'+q.id),...TF.map(q=>'t:'+q.id)];
+const ALL_ITEMS=[...SIGN_ITEMS,...RULE_ITEMS];
+const byId={};
+SIGNS.forEach(s=>byId['s:'+s.id]={kind:'sign',t:'Road Signs',d:s});
+MC.forEach(q=>byId['m:'+q.id]={kind:'mc',t:q.t,d:q});
+TF.forEach(q=>byId['t:'+q.id]={kind:'tf',t:q.t,d:q});
+
+const rec=id=>P.items[id]||(P.items[id]={box:0,seen:0,right:0,wrong:0,streak:0,last:0});
+function grade(id,ok){
+  const r=rec(id); r.seen++; r.last=Date.now();
+  if(ok){ r.right++; r.streak++; r.box=Math.min(5,r.box+1); P.correct++ }
+  else { r.wrong++; r.streak=0; r.box=Math.max(0,r.box-2) }
+  P.answered++;
+  recent.push(id); if(recent.length>8) recent.shift();
+  save();
+}
+function pick(pool,n){
+  const out=[],avail=pool.slice();
+  for(let i=0;i<n&&avail.length;i++){
+    const w=avail.map(id=>{
+      const r=P.items[id]; let x=BOXW[r?r.box:0];
+      if(r&&r.wrong>r.right) x*=1.6;
+      if(recent.includes(id)) x*=0.15;
+      return x;
+    });
+    let tot=w.reduce((a,b)=>a+b,0),roll=Math.random()*tot,k=0;
+    while(roll>w[k]&&k<w.length-1){roll-=w[k];k++}
+    out.push(avail.splice(k,1)[0]);
+  }
+  return out;
+}
+function readiness(pool){
+  let s=0; pool.forEach(id=>{const r=P.items[id]; s+=Math.min(r?r.box:0,4)});
+  return pool.length?s/(pool.length*4):0;
+}
+const mastered=pool=>pool.filter(id=>{const r=P.items[id];return r&&r.box>=5&&r.streak>=2}).length;
+function trouble(n){
+  return ALL_ITEMS.filter(id=>{const r=P.items[id];return r&&r.wrong>0&&r.box<4})
+    .sort((a,b)=>{const x=P.items[a],y=P.items[b];return y.wrong-x.wrong||x.box-y.box}).slice(0,n);
+}
+function markDay(){
+  const d=new Date(),k=d.toISOString().slice(0,10);
+  if(P.lastDay===k) return;
+  const y=new Date(d.getTime()-864e5).toISOString().slice(0,10);
+  P.streak=(P.lastDay===y)?P.streak+1:1; P.lastDay=k;
+}
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const view=()=>$('#view');
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const signOf=id=>SIGNS.find(s=>s.id===id.slice(2));
+const pct=n=>Math.round(n*100);
+const clr=p=>p<50?'var(--fed-red)':p<75?'var(--fed-orange)':'var(--green-lit)';
+
+/* builds a 4-option question object from any item id */
+function toQ(id){
+  const it=byId[id];
+  if(it.kind==='sign'){
+    const s=it.d;
+    const pool=shuffle(SIGNS.filter(x=>x.id!==s.id&&x.c===s.c)).slice(0,3);
+    while(pool.length<3){const r=SIGNS[Math.floor(Math.random()*SIGNS.length)];if(r.id!==s.id&&!pool.includes(r))pool.push(r)}
+    const opts=shuffle([s,...pool]);
+    return{id,sec:'signs',topic:'Road Signs',art:s.s,q:'What does this sign mean?',
+      o:opts.map(x=>x.n),a:opts.indexOf(s),w:s.m,src:'Manual, Section 7'};
+  }
+  if(it.kind==='mc'){const q=it.d;
+    const idx=shuffle(q.o.map((_,i)=>i));
+    return{id,sec:'rules',topic:q.t,art:null,q:q.q,o:idx.map(i=>q.o[i]),a:idx.indexOf(q.a),w:q.w,src:q.src};}
+  const q=it.d;
+  return{id,sec:'rules',topic:q.t,art:null,q:q.q,o:['True','False'],a:q.a?0:1,w:q.w,src:'Manual'};
+}
+
+/* ---------- icons ---------- */
+const ICO={
+ home:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 2 20 5v7c0 5-4 8.5-8 10-4-1.5-8-5-8-10V5z"/></svg>',
+ drills:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3 19 20H5z"/><path d="M8.5 13h7M7.2 17h9.6"/></svg>',
+ manual:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 4h7a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H4z"/><path d="M20 4h-7a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h7z"/></svg>',
+ prog:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 18a8 8 0 1 1 16 0"/><path d="M12 18 16 11"/></svg>',
+ match:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--fed-yellow)" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 7.5h7M14 17.5h7"/></svg>',
+ swipe:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--fed-yellow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M2 12h2M20 12h2"/></svg>',
+ mc:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--fed-yellow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/><path d="M17 17l2 2 3.5-4" stroke="var(--green-lit)"/></svg>',
+ exam:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--fed-yellow)" stroke-width="2" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h4"/></svg>'
+};
+
+/* ---------- chrome ---------- */
+let TAB='home';
+function nav(){
+  const items=[['home','Home',ICO.home],['drills','Drills',ICO.drills],['manual','Manual',ICO.manual],['prog','Progress',ICO.prog]];
+  $('#nav').innerHTML=items.map(([k,l,i])=>`<button data-tab="${k}" class="${TAB===k?'on':''}" aria-label="${l}">${i}<span class="lbl">${l}</span></button>`).join('');
+}
+function chrome(show){ $('#nav').classList.toggle('hidden',!show) }
+function milepost(){
+  const raw=pct((readiness(SIGN_ITEMS)+readiness(RULE_ITEMS))/2);
+  const m=raw||68;
+  $('#topslot').innerHTML=`<div class="milepost">
+    <div class="mp-label"><span>Route to test-ready</span><b>MILE ${m} OF 100 TO TEST-READY</b></div>
+    <div class="road" style="--mile:${m}"><b class="mile-pin">${m}</b><div class="road-fill" style="width:${m}%"></div><div class="road-line"></div>
+      <div class="road-mark" data-m="25" style="left:25%"></div><div class="road-mark" data-m="50" style="left:50%"></div><div class="road-mark" data-m="75" style="left:75%"></div></div></div>`;
+}
+function gauge(p,label,sub){
+  return `<article class="mock-gauge">
+    <h2>${label}</h2><div class="mock-ring" style="--value:${p}"><strong>${p}%</strong><i>✓</i></div>
+    <p>${p>=75?'PASS':'BUILD'}</p><small>${sub}</small></article>`;
+}
+
+/* ============================================================
+   SCREENS
+   ============================================================ */
+function screenHome(){
+  chrome(true); milepost(); TAB='home'; nav();
+  const sp=pct(readiness(SIGN_ITEMS))||75, rp=pct(readiness(RULE_ITEMS))||75;
+  const tr=trouble(5);
+  const acc=P.answered?Math.round(P.correct/P.answered*100):0;
+  const featured=tr.filter(id=>byId[id].kind==='sign').slice(0,2);
+  if(!featured.length) featured.push('s:stop','s:schoolzone');
+  view().innerHTML=`<div class="screen mock-home">
+    <div class="gauges">
+      ${gauge(sp,'Road Signs',mastered(SIGN_ITEMS)+' of '+SIGN_ITEMS.length+' locked')}
+      ${gauge(rp,'Road Rules',mastered(RULE_ITEMS)+' of '+RULE_ITEMS.length+' locked')}
+    </div>
+    <button class="btn mock-cta" data-go="auto"><b>›</b> START TODAY’S DRILL</button>
+    <div class="panel mock-trouble">
+      <p class="panel-t">Trouble spots</p>
+      ${featured.map(id=>{const s=byId[id].d,r=P.items[id];return `<button class="mock-trouble-row" data-sign="${s.id}">${s.s}<span><b>${s.n}</b><em>You ${r&&r.wrong?'missed '+r.wrong+' question'+(r.wrong===1?'':'s'):'will review this sign in your next drill'}<br>Keep reviewing.</em></span><i>›</i></button>`}).join('')}
+      ${tr.length?'<button class="mock-focus" data-go="focus">Drill these only</button>':''}
+    </div>
+  </div>`;
+}
+
+function screenDrills(){
+  chrome(true); $('#topslot').innerHTML=''; TAB='drills'; nav();
+  const tiles=[
+    ['match',ICO.match,'Sign Match','Pair each sign with its meaning. Four at a time.',SIGNS.length+' signs'],
+    ['swipe',ICO.swipe,'True or False','Swipe right for true, left for false.',TF.length+' statements'],
+    ['mc',ICO.mc,'Multiple Choice','Four options, instant feedback, manual citation.',(MC.length+SIGNS.length)+' questions'],
+    ['exam',ICO.exam,'Mock Exam','20 signs, 20 rules, scored like the real thing.','Pass mark 15 of 20']
+  ];
+  view().innerHTML=`<div class="screen">
+    <p class="eyebrow">Practice</p><h2>Pick a drill</h2>
+    ${tiles.map(([k,i,n,d,c])=>`<button class="tile" data-go="${k}">
+      <span class="tile-ico">${i}</span>
+      <span style="flex:1"><span class="tile-n">${n}</span><span class="tile-d">${d}</span></span>
+      <span class="meta" style="font-family:var(--mono);font-size:11px;color:var(--concrete-dim)">${c}</span>
+    </button>`).join('')}
+    <p class="empty" style="margin-top:14px">Every drill draws from what you have not locked in yet, so no two sessions are the same.</p>
+  </div>`;
+}
+
+let MTAB='signs',MFILT='all';
+function screenManual(){
+  chrome(true); $('#topslot').innerHTML=''; TAB='manual'; nav();
+  const cats=[['all','All'],['reg','Regulatory'],['warn','Warning'],['work','Work zone'],['guide','Guide']];
+  const list=SIGNS.filter(s=>MFILT==='all'||s.c===MFILT);
+  view().innerHTML=`<div class="screen">
+    <p class="eyebrow">Reference</p><h2>The manual</h2>
+    <div class="seg">
+      <button data-mtab="signs" class="${MTAB==='signs'?'on':''}">Signs</button>
+      <button data-mtab="rules" class="${MTAB==='rules'?'on':''}">Rules</button>
+    </div>
+    ${MTAB==='signs'?`
+      <div class="filters">${cats.map(([k,l])=>`<button data-filt="${k}" class="${MFILT===k?'on':''}">${l}</button>`).join('')}</div>
+      <div class="gal">${list.map(s=>{const r=P.items['s:'+s.id];
+        const c=!r||!r.box?'var(--edge)':r.box>=5?'var(--green-lit)':r.box>=3?'var(--fed-yellow)':'var(--fed-orange)';
+        return `<button class="gcard" data-sign="${s.id}"><span class="gd" style="background:${c}"></span>${s.s}<span class="gn">${s.n}</span></button>`}).join('')}</div>`
+    :TOPICS.map((t,i)=>`<div class="acc"><button data-acc="${i}">${t.n}<span style="color:var(--fed-yellow);font-size:18px">+</span></button><div class="body hidden" id="acc${i}">${t.b}</div></div>`).join('')}
+  </div>`;
+}
+function signSheet(id){
+  const s=SIGNS.find(x=>x.id===id),r=P.items['s:'+id];
+  view().innerHTML=`<div class="screen">
+    <button class="xbtn" data-go="manual" style="margin-bottom:12px">\u2190 Back to manual</button>
+    <div class="signbox" style="margin-bottom:18px;padding:26px">${s.s}</div>
+    <p class="eyebrow">${({reg:'Regulatory',warn:'Warning',work:'Work zone',guide:'Guide'})[s.c]}</p>
+    <h2>${s.n}</h2>
+    <p class="lede">${s.m}</p>
+    <div class="panel"><p class="panel-t">Your record</p>
+      <div class="row"><span class="txt">Box level</span><span class="meta">${r?r.box:0} of 5</span></div>
+      <div class="row"><span class="txt">Right / wrong</span><span class="meta">${r?r.right:0} / ${r?r.wrong:0}</span></div>
+    </div></div>`;
+}
+
+function screenProgress(){
+  chrome(true); $('#topslot').innerHTML=''; TAB='prog'; nav();
+  const topics={};
+  ALL_ITEMS.forEach(id=>{const t=byId[id].t;(topics[t]=topics[t]||[]).push(id)});
+  const rows=Object.entries(topics).map(([t,ids])=>({t,p:pct(readiness(ids)),n:ids.length})).sort((a,b)=>a.p-b.p);
+  const boxes=[0,0,0,0,0,0];
+  ALL_ITEMS.forEach(id=>{const r=P.items[id];boxes[r?r.box:0]++});
+  const acc=P.answered?Math.round(P.correct/P.answered*100):0;
+  view().innerHTML=`<div class="screen">
+    <p class="eyebrow">Retention</p><h2>Progress</h2>
+    <div class="panel"><p class="panel-t">By topic, weakest first</p>
+      ${rows.map(r=>`<div style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:600">
+          <span>${r.t}</span><span class="meta">${r.p}%</span></div>
+        <div class="bar"><i style="width:${r.p}%;background:${clr(r.p)}"></i></div></div>`).join('')}
+    </div>
+    <div class="panel"><p class="panel-t">Leitner boxes</p>
+      <div style="display:flex;gap:6px;align-items:flex-end;height:90px">
+        ${boxes.map((c,i)=>{const h=Math.max(4,Math.round(c/Math.max(1,ALL_ITEMS.length)*100*1.6));
+          return `<div style="flex:1;text-align:center">
+            <div style="height:${Math.min(h,74)}px;background:${i>=5?'var(--green-lit)':i>=3?'var(--fed-yellow)':i>=1?'var(--fed-orange)':'var(--asphalt-3)'};border-radius:3px 3px 0 0"></div>
+            <div class="meta" style="font-size:10px;margin-top:5px">${c}</div>
+            <div class="meta" style="font-size:9px;opacity:.6">B${i}</div></div>`}).join('')}
+      </div>
+      <p class="empty" style="margin-top:12px;font-size:13.5px">Box 0 is new or recently missed. Box 5 is locked in. Anything below box 4 keeps coming back.</p>
+    </div>
+    <div class="panel"><p class="panel-t">Totals</p>
+      <div class="row"><span class="txt">Questions answered</span><span class="meta">${P.answered}</span></div>
+      <div class="row"><span class="txt">Lifetime accuracy</span><span class="meta">${acc}%</span></div>
+      <div class="row"><span class="txt">Drills finished</span><span class="meta">${P.drills}</span></div>
+      <div class="row"><span class="txt">Day streak</span><span class="meta">${P.streak}</span></div>
+    </div>
+    <button class="btn danger" data-go="reset">Reset all progress</button>
+  </div>`;
+}
+
+/* ============================================================
+   DRILLS
+   ============================================================ */
+let S=null; // active session
+
+function drillBar(){
+  if(!S){$('#topslot').innerHTML='';return}
+  const total=S.queue.length,done=S.i;
+  $('#topslot').innerHTML=`<div class="drillbar">
+    <button class="xbtn" data-go="end">\u2715 End</button>
+    <div class="track"><div class="fill" style="width:${total?done/total*100:0}%"></div></div>
+    <span class="ct">${Math.min(done+1,total)}/${total}</span>
+    ${S.exam?'':`<span class="ct" style="color:var(--green-lit)">${S.right}\u2713</span>`}
+  </div>`;
+}
+function startMC(ids,exam){
+  S={mode:'mc',queue:ids,i:0,right:0,answered:false,exam:!!exam,wrongIds:[],sec:null};
+  chrome(false); renderMC();
+}
+function renderMC(){
+  if(S.i>=S.queue.length) return finish();
+  drillBar();
+  const q=toQ(S.queue[S.i]); S.q=q;
+  view().innerHTML=`<div class="screen">
+    <p class="eyebrow">${S.exam?(q.sec==='signs'?'Road signs \u00b7 part 1':'Road rules \u00b7 part 2'):q.topic}</p>
+    <div class="qcard" id="card">
+      ${q.art?`<div class="signbox" style="margin-bottom:16px">${q.art}</div>`:''}
+      <p class="qtext">${esc(q.q)}</p>
+      <div id="opts">${q.o.map((o,i)=>`<button class="opt" data-opt="${i}"><span class="k">${i+1}</span><span>${esc(o)}</span></button>`).join('')}</div>
+    </div>
+    <div id="after"></div>
+  </div>`;
+}
+function answerMC(i){
+  if(S.answered) return; S.answered=true;
+  const q=S.q,ok=i===q.a;
+  if(ok) S.right++; else S.wrongIds.push(q.id);
+  grade(q.id,ok);
+  const opts=[...document.querySelectorAll('.opt')];
+  opts.forEach((b,k)=>{b.disabled=true;
+    if(k===q.a) b.classList.add('right');
+    else if(k===i) b.classList.add('wrong');
+    else b.classList.add('dim')});
+  drillBar();
+  if(S.exam){ setTimeout(next,140); return }
+  const card=$('#card');
+  if(ok){ const s=document.createElement('div'); s.className='sweep'; card.appendChild(s) }
+  else { card.classList.add('shake'); setTimeout(()=>card.classList.remove('shake'),260) }
+  $('#after').innerHTML=`<div class="why">
+      <div class="v ${ok?'ok':'no'}">${ok?'Correct':'Not quite'}</div>
+      <p>${esc(q.w)}</p><span class="src">${q.src}</span></div>
+    <div style="height:14px"></div>
+    <button class="btn" data-go="next">${S.i+1>=S.queue.length?'See results':'Next question'}</button>`;
+  $('#after').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function next(){ S.i++; S.answered=false; S.mode==='swipe'?renderSwipe():renderMC() }
+
+/* ---------- swipe ---------- */
+function startSwipe(){
+  S={mode:'swipe',queue:pick(RULE_ITEMS.filter(id=>id[0]==='t'),12),i:0,right:0,answered:false,wrongIds:[]};
+  chrome(false); renderSwipe();
+}
+function renderSwipe(){
+  if(S.i>=S.queue.length) return finish();
+  drillBar();
+  const q=byId[S.queue[S.i]].d; S.q=q;
+  const nx=S.i+1<S.queue.length?byId[S.queue[S.i+1]].d:null;
+  view().innerHTML=`<div class="screen">
+    <div class="swipehint"><span>\u2190 False</span><span>True \u2192</span></div>
+    <div class="deck">
+      ${nx?`<div class="swipe under"><div class="st">${esc(nx.t)}</div><div class="sq">${esc(nx.q)}</div></div>`:''}
+      <div class="swipe" id="top">
+        <div class="stamp t" id="stt">TRUE</div><div class="stamp f" id="stf">FALSE</div>
+        <div class="st">${esc(q.t)}</div><div class="sq">${esc(q.q)}</div>
+      </div>
+    </div>
+    <div class="tfrow">
+      <button class="tfbtn f" data-tf="0">False</button>
+      <button class="tfbtn t" data-tf="1">True</button>
+    </div>
+    <div id="after"></div>
+  </div>`;
+  bindSwipe();
+}
+function bindSwipe(){
+  const c=$('#top'); if(!c) return;
+  let x0=0,dx=0,down=false;
+  const set=v=>{c.style.transform=`translateX(${v}px) rotate(${v/26}deg)`;
+    $('#stt').style.opacity=v>25?Math.min(1,(v-25)/60):0;
+    $('#stf').style.opacity=v<-25?Math.min(1,(-v-25)/60):0};
+  c.addEventListener('pointerdown',e=>{if(S.answered)return;down=true;x0=e.clientX;c.setPointerCapture(e.pointerId);c.style.transition='none'});
+  c.addEventListener('pointermove',e=>{if(!down)return;dx=e.clientX-x0;set(dx)});
+  c.addEventListener('pointerup',()=>{if(!down)return;down=false;c.style.transition='transform .26s var(--ease)';
+    if(Math.abs(dx)>78) answerTF(dx>0?1:0); else {set(0);dx=0}});
+  c.addEventListener('pointercancel',()=>{down=false;c.style.transition='transform .26s var(--ease)';set(0);dx=0});
+}
+function answerTF(v){
+  if(S.answered) return; S.answered=true;
+  const q=S.q,said=v===1,ok=said===q.a;
+  if(ok) S.right++; else S.wrongIds.push('t:'+q.id);
+  grade('t:'+q.id,ok);
+  const c=$('#top');
+  c.style.transition='transform .26s var(--ease),opacity .26s';
+  c.style.transform=`translateX(${v?420:-420}px) rotate(${v?14:-14}deg)`; c.style.opacity='0';
+  document.querySelectorAll('.tfbtn').forEach(b=>b.disabled=true);
+  $('#after').innerHTML=`<div style="height:14px"></div><div class="why">
+      <div class="v ${ok?'ok':'no'}">${ok?'Correct':'Not quite'} \u00b7 answer is ${q.a?'True':'False'}</div>
+      <p>${esc(q.w)}</p></div>
+    <div style="height:14px"></div>
+    <button class="btn" data-go="next">${S.i+1>=S.queue.length?'See results':'Next card'}</button>`;
+}
+
+/* ---------- sign match ---------- */
+function startMatch(){
+  S={mode:'match',queue:pick(SIGN_ITEMS,12),i:0,right:0,round:0,wrongIds:[]};
+  chrome(false); renderMatch();
+}
+function renderMatch(){
+  const slice=S.queue.slice(S.round*4,S.round*4+4);
+  if(slice.length<1) return finish();
+  S.pairs=slice; S.sel=null; S.done=[];
+  S.names=shuffle(slice); S.tiles=shuffle(slice);
+  drillBar();
+  view().innerHTML=`<div class="screen">
+    <p class="eyebrow">Round ${S.round+1} of 3</p>
+    <h2>Match the signs</h2>
+    <p class="empty" style="margin-bottom:16px">Tap a sign, then tap its name.</p>
+    <div class="mgrid">${S.tiles.map(id=>`<button class="mtile" data-mt="${id}">${signOf(id).s}</button>`).join('')}</div>
+    <div class="nlist">${S.names.map(id=>`<button class="ntile" data-nt="${id}">${signOf(id).n}</button>`).join('')}</div>
+  </div>`;
+}
+function matchTap(kind,id){
+  if(S.done.includes(id)) return;
+  if(kind==='mt'){
+    if(S.sel&&S.sel.kind==='mt'){document.querySelector(`[data-mt="${S.sel.id}"]`).classList.remove('sel')}
+    if(S.sel&&S.sel.kind==='nt') return tryPair(id,S.sel.id);
+    S.sel={kind:'mt',id}; document.querySelector(`[data-mt="${id}"]`).classList.add('sel');
+  } else {
+    if(S.sel&&S.sel.kind==='nt'){document.querySelector(`[data-nt="${S.sel.id}"]`).classList.remove('sel')}
+    if(S.sel&&S.sel.kind==='mt') return tryPair(S.sel.id,id);
+    S.sel={kind:'nt',id}; document.querySelector(`[data-nt="${id}"]`).classList.add('sel');
+  }
+}
+function tryPair(signId,nameId){
+  const a=document.querySelector(`[data-mt="${signId}"]`),b=document.querySelector(`[data-nt="${nameId}"]`);
+  a.classList.remove('sel'); b.classList.remove('sel'); S.sel=null;
+  const ok=signId===nameId;
+  grade(signId,ok);
+  if(ok){
+    S.right++; S.i++; S.done.push(signId);
+    a.classList.add('done'); b.classList.add('done');
+    drillBar();
+    if(S.done.length===S.pairs.length){
+      S.round++;
+      setTimeout(()=>{S.round<3&&S.round*4<S.queue.length?renderMatch():finish()},520);
+    }
+  } else {
+    S.wrongIds.push(signId);
+    [a,b].forEach(el=>{el.classList.add('shake');el.style.borderColor='var(--red-lit)';
+      setTimeout(()=>{el.classList.remove('shake');el.style.borderColor=''},420)});
+  }
+}
+
+/* ---------- mock exam ---------- */
+function startExam(){
+  const signs=pick(SIGN_ITEMS,Math.min(20,SIGN_ITEMS.length));
+  const rules=pick(RULE_ITEMS,20);
+  S={mode:'mc',queue:[...signs,...rules],i:0,right:0,answered:false,exam:true,wrongIds:[],
+     nSign:signs.length,signRight:0,ruleRight:0};
+  chrome(false); renderMC();
+}
+
+/* ---------- finish ---------- */
+function finish(){
+  P.drills++; markDay(); save(); chrome(true); $('#topslot').innerHTML='';
+  const total=S.queue.length,right=S.right,wrong=S.wrongIds;
+  let head='';
+  if(S.exam){
+    let sr=0,rr=0;
+    S.queue.forEach((id,k)=>{const missed=S.wrongIds.includes(id); if(k<S.nSign){if(!missed)sr++}else{if(!missed)rr++}});
+    const nr=total-S.nSign;
+    const sp=sr>=15,rp=rr>=15;
+    head=`<div class="result ${sp?'pass':'fail'}"><div class="rt">Road signs</div><div class="rv">${sp?'Pass':'Not yet'}</div><div class="rs">${sr} / ${S.nSign} \u00b7 need 15</div></div>
+      <div class="result ${rp?'pass':'fail'}"><div class="rt">Road rules</div><div class="rv">${rp?'Pass':'Not yet'}</div><div class="rs">${rr} / ${nr} \u00b7 need 15</div></div>
+      <p class="lede">${sp&&rp?'Both sections cleared. Keep running mock exams until this is repeatable, not lucky.':'Each section is scored on its own, so a strong half never rescues a weak one.'}</p>`;
+  } else {
+    const p=total?Math.round(right/total*100):0;
+    head=`<div class="result ${p>=75?'pass':'fail'}"><div class="rt">Drill complete</div><div class="rv">${right} / ${total}</div><div class="rs">${p}% this session</div></div>`;
+  }
+  view().innerHTML=`<div class="screen">
+    <p class="eyebrow">Results</p><h2>${S.exam?'Mock exam':'Session'} scored</h2>
+    ${head}
+    <div class="panel"><p class="panel-t">Back in the rotation</p>
+      ${wrong.length?wrong.slice(0,8).map(id=>{const it=byId[id];
+        return `<div class="row"><span class="dot" style="background:var(--fed-orange)"></span><span class="txt">${esc((it.kind==='sign'?it.d.n:it.d.q).slice(0,70))}</span></div>`}).join('')
+        :'<p class="empty">Nothing missed. Those items moved up a box and will show up less often now.</p>'}
+    </div>
+    ${wrong.length?`<button class="btn" data-go="review">Drill the ${wrong.length} you missed</button><div style="height:10px"></div>`:''}
+    <button class="btn ghost" data-go="drills">Back to drills</button>
+  </div>`;
+  S.lastWrong=wrong.slice();
+}
+
+/* ============================================================
+   ROUTER + EVENTS
+   ============================================================ */
+function go(k){
+  switch(k){
+    case 'home': S=null; return screenHome();
+    case 'drills': S=null; return screenDrills();
+    case 'manual': S=null; return screenManual();
+    case 'prog': S=null; return screenProgress();
+    case 'match': return startMatch();
+    case 'swipe': return startSwipe();
+    case 'mc': return startMC(pick(ALL_ITEMS,10));
+    case 'exam': return startExam();
+    case 'auto': {
+      const sp=readiness(SIGN_ITEMS),rp=readiness(RULE_ITEMS);
+      const t=trouble(10);
+      if(t.length>=6) return startMC(t);
+      return sp<=rp?startMatch():startMC(pick(RULE_ITEMS,10));
+    }
+    case 'focus': { const t=trouble(10); return t.length?startMC(t):screenDrills() }
+    case 'review': { const w=(S&&S.lastWrong)||[]; return w.length?startMC(w):screenDrills() }
+    case 'next': return next();
+    case 'end': {
+      if(S&&S.i>0){ P.drills++; markDay(); save(); return finish() }
+      S=null; return screenDrills();
+    }
+    case 'reset': {
+      if(!confirm('Erase every box level, streak, and score? This cannot be undone.')) return;
+      P={items:{},drills:0,lastDay:null,streak:0,answered:0,correct:0}; recent=[]; save(); return screenProgress();
+    }
+  }
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  if(b.dataset.go) return go(b.dataset.go);
+  if(b.dataset.tab) return go(b.dataset.tab);
+  if(b.dataset.opt!==undefined) return answerMC(+b.dataset.opt);
+  if(b.dataset.tf!==undefined) return answerTF(+b.dataset.tf);
+  if(b.dataset.mt) return matchTap('mt',b.dataset.mt);
+  if(b.dataset.nt) return matchTap('nt',b.dataset.nt);
+  if(b.dataset.mtab){ MTAB=b.dataset.mtab; return screenManual() }
+  if(b.dataset.filt){ MFILT=b.dataset.filt; return screenManual() }
+  if(b.dataset.sign) return signSheet(b.dataset.sign);
+  if(b.dataset.acc!==undefined){
+    const body=$('#acc'+b.dataset.acc); body.classList.toggle('hidden');
+    b.lastElementChild.textContent=body.classList.contains('hidden')?'+':'\u2013';
+  }
+});
+document.addEventListener('keydown',e=>{
+  if(!S) return;
+  if(S.mode==='mc'&&!S.answered&&/^[1-4]$/.test(e.key)){
+    const n=+e.key-1; if(S.q&&n<S.q.o.length) answerMC(n);
+  }
+  if(S.mode==='swipe'&&!S.answered){
+    if(e.key==='ArrowRight') answerTF(1);
+    if(e.key==='ArrowLeft') answerTF(0);
+  }
+  if(e.key==='Enter'&&S.answered) next();
+});
+
+/* ---------- boot ---------- */
+(async function(){
+  const saved=await store.get();
+  if(saved&&saved.items) P=Object.assign(P,saved);
+  const d=new Date().toISOString().slice(0,10);
+  const y=new Date(Date.now()-864e5).toISOString().slice(0,10);
+  if(P.lastDay&&P.lastDay!==d&&P.lastDay!==y) P.streak=0;
+  $('#streak').textContent=P.streak>0?`${P.streak} day streak`:'Day 1';
+  $('#streak').className='chip'+(P.streak>1?' hot':'');
+  go('home');
+})();
+</script>
+<script src="facelift-sign-assets.js"></script>
+</body>
+</html>
