@@ -277,6 +277,9 @@ nav .lbl{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppe
 <body>
 <div id="app">
   <header>
+    <button class="menu-toggle" type="button" data-menu-toggle aria-label="Open primary navigation" aria-controls="app-menu" aria-expanded="false">
+      <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+    </button>
     <div class="plate road-ready-plate" role="img" aria-label="Road Ready Georgia license plate-style logo">
       <img class="road-ready-plate-template" src="./public/assets/georgia-road-ready-plate-template.png" alt="">
       <span class="road-ready-plate-copy" aria-hidden="true"><span class="road-ready-word-road">ROAD</span><span class="road-ready-word-ready">READY</span></span>
@@ -284,6 +287,20 @@ nav .lbl{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppe
     <div class="spacer"></div>
     <div class="chip" id="streak">Day 1</div>
   </header>
+  <button class="menu-scrim" type="button" data-menu-close aria-label="Close navigation menu" tabindex="-1"></button>
+  <aside class="app-menu" id="app-menu" aria-label="Primary navigation" aria-hidden="true" inert>
+    <div class="app-menu-head">
+      <div><p class="app-menu-kicker">Road Ready</p><p class="app-menu-title">Permit Practice</p></div>
+      <button class="menu-close" type="button" data-menu-close aria-label="Close navigation menu">×</button>
+    </div>
+    <p class="app-menu-copy">Choose where to continue your preparation.</p>
+    <div class="app-menu-links">
+      <button type="button" data-menu-go="home"><span>Home</span><i aria-hidden="true">›</i></button>
+      <button type="button" data-menu-go="drills"><span>Drills</span><i aria-hidden="true">›</i></button>
+      <button type="button" data-menu-go="manual"><span>The Manual</span><i aria-hidden="true">›</i></button>
+      <button type="button" data-menu-go="prog"><span>Progress</span><i aria-hidden="true">›</i></button>
+    </div>
+  </aside>
   <div id="topslot"></div>
   <main id="main"><div id="view"></div></main>
   <nav id="nav"></nav>
@@ -687,9 +704,26 @@ const ICO={
 
 /* ---------- chrome ---------- */
 let TAB='home';
+function syncMenuLinks(){
+  document.querySelectorAll('[data-menu-go]').forEach(b=>b.classList.toggle('on',b.dataset.menuGo===TAB));
+}
+function setMenu(open){
+  const menu=$('#app-menu'),toggle=$('[data-menu-toggle]');
+  if(!menu||!toggle) return;
+  const visible=Boolean(open);
+  $('#app').classList.toggle('menu-open',visible);
+  menu.setAttribute('aria-hidden',String(!visible));
+  menu.inert=!visible;
+  toggle.setAttribute('aria-expanded',String(visible));
+  toggle.setAttribute('aria-label',visible?'Close primary navigation':'Open primary navigation');
+  syncMenuLinks();
+  if(visible) requestAnimationFrame(()=>menu.querySelector('[data-menu-go].on,[data-menu-go]')?.focus());
+  else toggle.focus();
+}
 function nav(){
   const items=[['home','Home',ICO.home],['drills','Drills',ICO.drills],['manual','Manual',ICO.manual],['prog','Progress',ICO.prog]];
   $('#nav').innerHTML=items.map(([k,l,i])=>`<button data-tab="${k}" class="${TAB===k?'on':''}" aria-label="${l}">${i}<span class="lbl">${l}</span></button>`).join('');
+  syncMenuLinks();
 }
 function chrome(show){ $('#nav').classList.toggle('hidden',!show) }
 function milepost(){
@@ -1055,6 +1089,9 @@ function go(k){
 }
 document.addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b) return;
+  if(b.dataset.menuToggle!==undefined) return setMenu(!$('#app').classList.contains('menu-open'));
+  if(b.dataset.menuClose!==undefined) return setMenu(false);
+  if(b.dataset.menuGo){ setMenu(false); return go(b.dataset.menuGo); }
   if(b.dataset.go) return go(b.dataset.go);
   if(b.dataset.tab) return go(b.dataset.tab);
   if(b.dataset.opt!==undefined) return answerMC(+b.dataset.opt);
@@ -1070,6 +1107,9 @@ document.addEventListener('click',e=>{
   }
 });
 document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&$('#app').classList.contains('menu-open')){
+    e.preventDefault(); setMenu(false); return;
+  }
   if(!S) return;
   if(S.mode==='mc'&&!S.answered&&/^[1-4]$/.test(e.key)){
     const n=+e.key-1; if(S.q&&n<S.q.o.length) answerMC(n);
