@@ -272,7 +272,7 @@ nav .lbl{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppe
 .hidden{display:none!important}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
-<link rel="stylesheet" href="facelift.css">
+<link rel="stylesheet" href="facelift.css?v=source-practice-1">
 </head>
 <body>
 <div id="app">
@@ -521,6 +521,20 @@ const MC=[
 {id:'m80',t:'Testing & Permits',q:'An applicant under 18 must present which document at the DDS?',o:['A Certificate of School Enrollment, diploma, or GED','A birth certificate only','A school report card','A letter from a teacher'],a:0,w:'Proof of school enrollment is required, along with identity documents, Social Security number, two proofs of Georgia residency, and a responsible adult\u2019s signature.',src:'Manual, Section 6'}
 ];
 
+/* ---------- supplied practice-test PDF ---------- */
+const SOURCE_TEST=[
+{id:'p1',t:'Supplied Practice Test',q:'A diamond-shaped sign is a:',o:['No Passing Zone sign.','Warning sign.','School Crossing sign.'],a:1,w:'A diamond shape is used for warning signs that alert drivers to conditions or hazards ahead.',src:'Supplied practice-test PDF · question 1'},
+{id:'p2',t:'Supplied Practice Test',q:'When stopping your car on a slippery surface:',o:['Brake hard.','Brake gently.','Do not brake, instead wait for your car to slow down by itself.'],a:1,w:'Gentle braking helps reduce the chance of a skid on a slippery surface.',src:'Supplied practice-test PDF · question 2'},
+{id:'p3',t:'Supplied Practice Test',q:'When you see this sign, you should:',o:['Always stop at the crosswalk.','Slow down, proceed with caution and watch for blind people.','Be prepared to stop if children are in the crosswalk.'],a:2,sign:'schoolzone',w:'This school-area warning sign tells you to slow down and be prepared to stop for children in the crosswalk.',src:'Supplied practice-test PDF · question 3'},
+{id:'p4',t:'Supplied Practice Test',q:'This road sign means:',o:['Bicycle crossing.','Pedestrian crossing.','School crossing.'],a:1,sign:'pedcross',w:'The walking figure identifies a pedestrian crossing.',src:'Supplied practice-test PDF · question 4'},
+{id:'p5',t:'Supplied Practice Test',q:'A vehicle is stopped at a crosswalk to allow a pedestrian to cross the roadway. The driver of the vehicle approaching from the rear should:',o:['Sound the horn.','Not overtake and pass the stopped vehicle.','Overtake and pass the stopped vehicle.'],a:1,w:'Do not pass a vehicle that has stopped at a crosswalk for a pedestrian.',src:'Supplied practice-test PDF · question 5'},
+{id:'p6',t:'Supplied Practice Test',q:'Can you pass a school bus when it displays a stop signal on a two-way street?',o:['No, you must come to a complete stop.','Yes, but you cannot exceed 30 MPH.','Yes, but you must slow down and prepare to stop.'],a:0,w:'On a two-way street, traffic must stop for a school bus that displays its stop signal.',src:'Supplied practice-test PDF · question 6'},
+{id:'p7',t:'Supplied Practice Test',q:"When drivers see a 'Wrong Way' sign:",o:['They are going the wrong way on an expressway exit ramp.','They must not leave the pavement except in an emergency.','They must drive past this sign and reach the next intersection.'],a:0,w:'A Wrong Way sign warns that the vehicle is entering an expressway ramp in the wrong direction.',src:'Supplied practice-test PDF · question 7'},
+{id:'p8',t:'Supplied Practice Test',q:'What should you do if your accelerator pedal gets stuck?',o:['Pump your gas pedal.','Shift to a lower gear.','Shift into neutral.'],a:2,w:'Shifting into neutral disconnects engine power so you can steer and brake safely.',src:'Supplied practice-test PDF · question 8'},
+{id:'p9',t:'Supplied Practice Test',q:'This road sign means:',o:['Work work ahead.','Slippery when wet.','Steep downgrade.'],a:1,sign:'slippery',w:'The skidding-car symbol warns that the roadway may be slippery when wet.',src:'Supplied practice-test PDF · question 9'},
+{id:'p10',t:'Supplied Practice Test',q:'On a two-way roadway with a center lane, drivers from either direction can make ______ on the center lane.',o:['U-turns','right turns','left turns'],a:2,w:'The shared center lane is used for left turns from either direction.',src:'Supplied practice-test PDF · question 10'}
+];
+
 /* ---------- true / false bank ---------- */
 const TF=[
 {id:'f1',t:'Right of Way',q:'At an uncontrolled intersection, the driver on the left must yield to the driver on the right.',a:true,w:'Correct. When two vehicles arrive together with no signs or signals, the left yields to the right.'},
@@ -617,11 +631,13 @@ const save=()=>{clearTimeout(saveT);saveT=setTimeout(()=>store.set(P),400)};
 
 const SIGN_ITEMS=SIGNS.map(s=>'s:'+s.id);
 const RULE_ITEMS=[...MC.map(q=>'m:'+q.id),...TF.map(q=>'t:'+q.id)];
+const SOURCE_ITEMS=SOURCE_TEST.map(q=>'p:'+q.id);
 const ALL_ITEMS=[...SIGN_ITEMS,...RULE_ITEMS];
 const byId={};
 SIGNS.forEach(s=>byId['s:'+s.id]={kind:'sign',t:'Road Signs',d:s});
 MC.forEach(q=>byId['m:'+q.id]={kind:'mc',t:q.t,d:q});
 TF.forEach(q=>byId['t:'+q.id]={kind:'tf',t:q.t,d:q});
+SOURCE_TEST.forEach(q=>byId['p:'+q.id]={kind:'source',t:q.t,d:q});
 
 const rec=id=>P.items[id]||(P.items[id]={box:0,seen:0,right:0,wrong:0,streak:0,last:0});
 function grade(id,ok){
@@ -686,6 +702,9 @@ function toQ(id){
   if(it.kind==='mc'){const q=it.d;
     const idx=shuffle(q.o.map((_,i)=>i));
     return{id,sec:'rules',topic:q.t,art:null,q:q.q,o:idx.map(i=>q.o[i]),a:idx.indexOf(q.a),w:q.w,src:q.src};}
+  if(it.kind==='source'){const q=it.d;
+    const sign=q.sign?SIGNS.find(s=>s.id===q.sign):null;
+    return{id,sec:'source',topic:q.t,art:sign?sign.s:null,q:q.q,o:q.o,a:q.a,w:q.w,src:q.src};}
   const q=it.d;
   return{id,sec:'rules',topic:q.t,art:null,q:q.q,o:['True','False'],a:q.a?0:1,w:q.w,src:'Manual'};
 }
@@ -772,7 +791,8 @@ function screenDrills(){
     ['match',ICO.match,'Sign Match','Pair each sign with its meaning. Four at a time.',SIGNS.length+' signs'],
     ['swipe',ICO.swipe,'True or False','Swipe right for true, left for false.',TF.length+' statements'],
     ['mc',ICO.mc,'Multiple Choice','Four options, instant feedback, manual citation.',(MC.length+SIGNS.length)+' questions'],
-    ['exam',ICO.exam,'Mock Exam','20 signs, 20 rules, scored like the real thing.','Pass mark 15 of 20']
+    ['exam',ICO.exam,'Source Practice Test','The ten questions and choices from your supplied practice-test PDF.','10 questions · 8 to pass'],
+    ['source-train',ICO.mc,'PDF Test Trainer','The same ten source questions with immediate coaching and review.','10 exact questions']
   ];
   view().innerHTML=`<div class="screen">
     <p class="eyebrow">Practice</p><h2>Pick a drill</h2>
@@ -878,7 +898,7 @@ function renderMC(){
   drillBar();
   const q=toQ(S.queue[S.i]); S.q=q;
   view().innerHTML=`<div class="screen">
-    <p class="eyebrow">${S.exam?(q.sec==='signs'?'Road signs \u00b7 part 1':'Road rules \u00b7 part 2'):q.topic}</p>
+    <p class="eyebrow">${S.sourceExam?'Supplied PDF · question '+(S.i+1)+' of '+S.queue.length:S.sourceTrainer?'PDF trainer · question '+(S.i+1)+' of '+S.queue.length:S.exam?(q.sec==='signs'?'Road signs \u00b7 part 1':'Road rules \u00b7 part 2'):q.topic}</p>
     <div class="qcard" id="card">
       ${q.art?`<div class="signbox" style="margin-bottom:16px">${q.art}</div>`:''}
       <p class="qtext">${esc(q.q)}</p>
@@ -1017,12 +1037,13 @@ function tryPair(signId,nameId){
   }
 }
 
-/* ---------- mock exam ---------- */
+/* ---------- supplied practice test ---------- */
 function startExam(){
-  const signs=pick(SIGN_ITEMS,Math.min(20,SIGN_ITEMS.length));
-  const rules=pick(RULE_ITEMS,20);
-  S={mode:'mc',queue:[...signs,...rules],i:0,right:0,answered:false,exam:true,wrongIds:[],
-     nSign:signs.length,signRight:0,ruleRight:0};
+  S={mode:'mc',queue:SOURCE_ITEMS.slice(),i:0,right:0,answered:false,exam:true,sourceExam:true,wrongIds:[]};
+  chrome(false); renderMC();
+}
+function startSourceTrainer(){
+  S={mode:'mc',queue:SOURCE_ITEMS.slice(),i:0,right:0,answered:false,exam:false,sourceTrainer:true,wrongIds:[]};
   chrome(false); renderMC();
 }
 
@@ -1031,7 +1052,15 @@ function finish(){
   P.drills++; markDay(); save(); chrome(true); $('#topslot').innerHTML='';
   const total=S.queue.length,right=S.right,wrong=S.wrongIds;
   let head='',skipped=0;
-  if(S.exam){
+  if(S.sourceExam){
+    const answered=Math.min(total,S.i+(S.answered?1:0));
+    const remaining=total-answered;
+    const need=Math.ceil(total*.75);
+    const pass=remaining===0&&right>=need;
+    skipped=remaining;
+    head=`<div class="result ${pass?'pass':'fail'}"><div class="rt">Source practice test</div><div class="rv">${right} / ${total}</div><div class="rs">${pass?'Pass':'Keep training'} · need ${need}</div></div>
+      <p class="lede">${remaining?`Test ended early. ${remaining} unanswered question${remaining===1?'':'s'} count as incorrect.`:pass?'You cleared the 75% study benchmark for this ten-question source test.':'Review the missed questions, then rerun the same source test in order.'}</p>`;
+  } else if(S.exam){
     const answered=S.queue.slice(0,Math.min(total,S.i+(S.answered?1:0)));
     const answeredSigns=answered.slice(0,S.nSign);
     const answeredRules=answered.slice(S.nSign);
@@ -1049,7 +1078,7 @@ function finish(){
     head=`<div class="result ${p>=75?'pass':'fail'}"><div class="rt">Drill complete</div><div class="rv">${right} / ${total}</div><div class="rs">${p}% this session</div></div>`;
   }
   view().innerHTML=`<div class="screen">
-    <p class="eyebrow">Results</p><h2>${S.exam?'Mock exam':'Session'} scored</h2>
+    <p class="eyebrow">Results</p><h2>${S.sourceExam?'Source practice test':S.sourceTrainer?'PDF test training':S.exam?'Mock exam':'Session'} scored</h2>
     ${head}
     <div class="panel"><p class="panel-t">Back in the rotation</p>
       ${wrong.length?wrong.slice(0,8).map(id=>{const it=byId[id];
@@ -1075,6 +1104,7 @@ function go(k){
     case 'swipe': return startSwipe();
     case 'mc': return startMC(pick(ALL_ITEMS,10));
     case 'exam': return startExam();
+    case 'source-train': return startSourceTrainer();
     case 'auto': {
       const sp=readiness(SIGN_ITEMS),rp=readiness(RULE_ITEMS);
       const t=trouble(10);
