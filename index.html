@@ -1028,15 +1028,20 @@ function startExam(){
 function finish(){
   P.drills++; markDay(); save(); chrome(true); $('#topslot').innerHTML='';
   const total=S.queue.length,right=S.right,wrong=S.wrongIds;
-  let head='';
+  let head='',skipped=0;
   if(S.exam){
-    let sr=0,rr=0;
-    S.queue.forEach((id,k)=>{const missed=S.wrongIds.includes(id); if(k<S.nSign){if(!missed)sr++}else{if(!missed)rr++}});
+    const answered=S.queue.slice(0,Math.min(total,S.i+(S.answered?1:0)));
+    const answeredSigns=answered.slice(0,S.nSign);
+    const answeredRules=answered.slice(S.nSign);
+    const sr=answeredSigns.filter(id=>!S.wrongIds.includes(id)).length;
+    const rr=answeredRules.filter(id=>!S.wrongIds.includes(id)).length;
     const nr=total-S.nSign;
     const sp=sr>=15,rp=rr>=15;
+    const remaining=total-answered.length;
+    skipped=remaining;
     head=`<div class="result ${sp?'pass':'fail'}"><div class="rt">Road signs</div><div class="rv">${sp?'Pass':'Not yet'}</div><div class="rs">${sr} / ${S.nSign} \u00b7 need 15</div></div>
       <div class="result ${rp?'pass':'fail'}"><div class="rt">Road rules</div><div class="rv">${rp?'Pass':'Not yet'}</div><div class="rs">${rr} / ${nr} \u00b7 need 15</div></div>
-      <p class="lede">${sp&&rp?'Both sections cleared. Keep running mock exams until this is repeatable, not lucky.':'Each section is scored on its own, so a strong half never rescues a weak one.'}</p>`;
+      <p class="lede">${remaining?`Exam ended early. ${remaining} unanswered question${remaining===1?'':'s'} count as incorrect.`:sp&&rp?'Both sections cleared. Keep running mock exams until this is repeatable, not lucky.':'Each section is scored on its own, so a strong half never rescues a weak one.'}</p>`;
   } else {
     const p=total?Math.round(right/total*100):0;
     head=`<div class="result ${p>=75?'pass':'fail'}"><div class="rt">Drill complete</div><div class="rv">${right} / ${total}</div><div class="rs">${p}% this session</div></div>`;
@@ -1047,7 +1052,7 @@ function finish(){
     <div class="panel"><p class="panel-t">Back in the rotation</p>
       ${wrong.length?wrong.slice(0,8).map(id=>{const it=byId[id];
         return `<div class="row"><span class="dot" style="background:var(--fed-orange)"></span><span class="txt">${esc((it.kind==='sign'?it.d.n:it.d.q).slice(0,70))}</span></div>`}).join('')
-        :'<p class="empty">Nothing missed. Those items moved up a box and will show up less often now.</p>'}
+        :skipped?'<p class="empty">This exam ended before the remaining questions could be scored.</p>':'<p class="empty">Nothing missed. Those items moved up a box and will show up less often now.</p>'}
     </div>
     ${wrong.length?`<button class="btn" data-go="review">Drill the ${wrong.length} you missed</button><div style="height:10px"></div>`:''}
     <button class="btn ghost" data-go="drills">Back to drills</button>
