@@ -8,7 +8,7 @@
 <title>Road Ready Permit Practice</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;500;600;700;800;900&family=Overpass+Mono:wght@600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Overpass:wght@400;500;600;700;800;900&family=Overpass+Mono:wght@600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
 <style>
 :root{
   --asphalt:#191C21; --asphalt-2:#22262D; --asphalt-3:#2C323A; --edge:#3A424C;
@@ -277,8 +277,9 @@ nav .lbl{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppe
 <body>
 <div id="app">
   <header>
-    <div class="plate road-ready-plate">
-      <img src="./public/assets/road-ready-georgia-plate.svg" alt="Road Ready Georgia license plate-style logo">
+    <div class="plate road-ready-plate" role="img" aria-label="Road Ready Georgia license plate-style logo">
+      <img class="road-ready-plate-template" src="./public/assets/georgia-road-ready-plate-template.png" alt="">
+      <span class="road-ready-plate-copy" aria-hidden="true"><span class="road-ready-word-road">ROAD</span><span class="road-ready-word-ready">READY</span></span>
     </div>
     <div class="spacer"></div>
     <div class="chip" id="streak">Day 1</div>
