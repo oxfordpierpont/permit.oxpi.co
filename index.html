@@ -338,6 +338,7 @@ nav .lbl{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppe
   <nav id="nav"></nav>
 </div>
 <script src="./public/assets/ga-drivers-manual.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <script>
 /* ============================================================
    GA PERMIT TRAINER
@@ -760,8 +761,8 @@ assertMockCatalog();
 const rec=id=>P.items[id]||(P.items[id]={box:0,seen:0,right:0,wrong:0,streak:0,last:0});
 function grade(id,ok){
   const r=rec(id); r.seen++; r.last=Date.now();
-  if(ok){ r.right++; r.streak++; r.box=Math.min(5,r.box+1); P.correct++ }
-  else { r.wrong++; r.streak=0; r.box=Math.max(0,r.box-2) }
+  if(ok){ r.right++; r.streak++; r.box=Math.min(5,r.box+1); r.lastOutcome='right'; P.correct++ }
+  else { r.wrong++; r.streak=0; r.box=Math.max(0,r.box-2); r.lastOutcome='wrong'; r.lastWrong=r.last }
   P.answered++;
   recent.push(id); if(recent.length>8) recent.shift();
   save();
@@ -812,6 +813,25 @@ const mastered=pool=>pool.filter(id=>{const r=P.items[id];return r&&r.box>=5&&r.
 function trouble(n){
   return ALL_ITEMS.filter(id=>{const r=P.items[id];return r&&r.wrong>0&&r.box<4})
     .sort((a,b)=>{const x=P.items[a],y=P.items[b];return y.wrong-x.wrong||x.box-y.box}).slice(0,n);
+}
+function homeReviewQueue(n=2){
+  const missed=Object.entries(P.items)
+    .filter(([id,r])=>byId[id]&&r&&r.wrong>0&&(r.lastOutcome? r.lastOutcome==='wrong':true))
+    .sort(([,a],[,b])=>(b.lastWrong||b.last||0)-(a.lastWrong||a.last||0)||b.wrong-a.wrong)
+    .map(([id])=>id).slice(0,n);
+  return missed.length?{ids:missed,missed:true}:{ids:pick(Object.keys(byId),n),missed:false};
+}
+function homeReviewRow(id,missed){
+  const q=toQ(id),r=P.items[id];
+  const visual=q.art
+    ? `<span class="home-v2-review-sign">${q.art}</span>`
+    : '<span class="home-v2-review-sign"><span class="home-v2-review-kind" aria-hidden="true">Q</span></span>';
+  const detail=missed
+    ? `Missed ${r.wrong} time${r.wrong===1?'':'s'} · review it now.`
+    : 'Random question · answer it now.';
+  return `<button class="home-v2-review-row" data-go="review-question:${id}">
+    ${visual}<span class="home-v2-review-copy"><span class="home-v2-review-topic">${esc(q.topic)}</span><b>${esc(q.q)}</b><em>${detail}</em></span><i aria-hidden="true">›</i>
+  </button>`;
 }
 function markDay(){
   const d=new Date(),k=d.toISOString().slice(0,10);
@@ -924,6 +944,25 @@ function gauge(p,label,sub){
     <div class="home-readiness-bar" role="progressbar" aria-label="${label} readiness" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${p}"><i style="width:${p}%;background:${clr(p)}"></i></div>
   </article>`;
 }
+let homeConfettiFrame=0;
+function stopHomeConfetti(){
+  if(homeConfettiFrame) cancelAnimationFrame(homeConfettiFrame);
+  homeConfettiFrame=0;
+  window.confetti?.reset?.();
+}
+function playHomeConfetti(){
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if(typeof window.confetti!=='function') return;
+  stopHomeConfetti();
+  const end=Date.now()+(15*1000);
+  const colors=['#bb0000','#ffffff'];
+  (function frame(){
+    window.confetti({particleCount:2,angle:60,spread:55,origin:{x:0},colors});
+    window.confetti({particleCount:2,angle:120,spread:55,origin:{x:1},colors});
+    if(Date.now()<end) homeConfettiFrame=requestAnimationFrame(frame);
+    else homeConfettiFrame=0;
+  }());
+}
 
 /* ============================================================
    SCREENS
@@ -931,10 +970,7 @@ function gauge(p,label,sub){
 function screenHome(){
   chrome(true,'Road Ready'); $('#topslot').innerHTML=''; TAB='home'; nav();
   const sp=pct(readiness(SIGN_ITEMS)), rp=pct(readiness(RULE_ITEMS));
-  const tr=trouble(5);
-  const acc=P.answered?Math.round(P.correct/P.answered*100):0;
-  const featured=tr.filter(id=>byId[id].kind==='sign').slice(0,2);
-  if(!featured.length) featured.push('s:stop','s:schoolzone');
+  const review=homeReviewQueue();
   view().innerHTML=`<div class="screen home-v2">
     <section class="home-v2-intro" aria-labelledby="home-v2-title">
       <p class="eyebrow">Georgia permit prep</p><h1 id="home-v2-title">Test-ready starts here.</h1>
@@ -948,12 +984,12 @@ function screenHome(){
     </section>
     <button class="btn home-v2-cta" data-go="auto"><span><em>Continue learning</em><b>Start today’s drill</b></span><i aria-hidden="true">→</i></button>
     <section class="home-v2-review" aria-labelledby="home-v2-review-title">
-      <div class="home-v2-review-head"><p class="eyebrow">Review queue</p><h2 id="home-v2-review-title">Keep these close</h2></div>
-      ${featured.map(id=>{const s=byId[id].d,r=P.items[id];return `<button class="home-v2-review-row" data-sign="${s.id}"><span class="home-v2-review-sign">${s.s}</span><span><b>${s.n}</b><em>${r&&r.wrong?'Missed '+r.wrong+' question'+(r.wrong===1?'':'s')+' · review again.':'A quick review will keep this familiar.'}</em></span><i aria-hidden="true">›</i></button>`}).join('')}
-      ${tr.length?'<button class="home-v2-focus" data-go="focus">Practice this review queue <i aria-hidden="true">→</i></button>':''}
+      <div class="home-v2-review-head"><p class="eyebrow">Review queue</p><h2 id="home-v2-review-title">${review.missed?'Recently missed':'Suggested questions'}</h2></div>
+      ${review.ids.map(id=>homeReviewRow(id,review.missed)).join('')}
     </section>
   </div>`;
   milepost($('#home-milepost'));
+  playHomeConfetti();
 }
 
 function screenDrills(){
@@ -1428,7 +1464,12 @@ function finish(){
    ROUTER + EVENTS
    ============================================================ */
 function go(k){
+  if(k!=='home') stopHomeConfetti();
   if(k!=='next') $('#main').scrollTop=0;
+  if(k.startsWith('review-question:')){
+    const id=k.slice('review-question:'.length);
+    return byId[id]?startMC([id],false,'Question Review'):screenHome();
+  }
   if(k.startsWith('topic:')){
     const topic=decodeURIComponent(k.slice('topic:'.length));
     const pool=ALL_ITEMS.filter(id=>byId[id].t===topic);
