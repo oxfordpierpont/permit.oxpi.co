@@ -272,7 +272,7 @@ nav .lbl{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppe
 .hidden{display:none!important}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
-<link rel="stylesheet" href="facelift.css?v=albert-sans-3">
+<link rel="stylesheet" href="facelift.css?v=ux-route-1">
 </head>
 <body>
 <div id="app">
@@ -750,7 +750,7 @@ function milepost(target=$('#topslot')){
 }
 function gauge(p,label,sub){
   return `<article class="mock-gauge">
-    <h2>${label}</h2><div class="mock-ring" style="--value:${p}"><strong>${p}%</strong><i>✓</i></div>
+    <h2>${label}</h2><div class="mock-ring" style="--value:${p}" role="img" aria-label="${label} readiness: ${p} percent, ${sub}"><strong>${p}%</strong><i>✓</i></div>
     <p>${p>=75?'PASS':'BUILD'}</p><small>${sub}</small></article>`;
 }
 
@@ -796,11 +796,13 @@ function screenDrills(){
     ['source-train',ICO.mc,'PDF Test Trainer','The same ten source questions with immediate coaching and review.','10 exact questions']
   ];
   view().innerHTML=`<div class="screen">
-    <p class="eyebrow">Practice</p><h2>Pick a drill</h2>
+    <p class="eyebrow">Practice routes</p><h2>Pick a drill</h2>
+    <p class="route-lede">Choose the format that will move you forward today.</p>
+    <div class="route-note"><span>5 study routes</span><span>Short sessions · clear feedback</span></div>
     ${tiles.map(([k,i,n,d,c])=>`<button class="tile" data-go="${k}">
       <span class="tile-ico">${i}</span>
-      <span style="flex:1"><span class="tile-n">${n}</span><span class="tile-d">${d}</span></span>
-      <span class="meta" style="font-family:var(--mono);font-size:11px;color:var(--concrete-dim)">${c}</span>
+      <span class="tile-copy"><span class="tile-n">${n}</span><span class="tile-d">${d}</span></span>
+      <span class="tile-meta">${c}</span>
     </button>`).join('')}
     <p class="empty" style="margin-top:14px">Every drill draws from what you have not locked in yet, so no two sessions are the same.</p>
   </div>`;
@@ -813,16 +815,19 @@ function screenManual(){
   const list=SIGNS.filter(s=>MFILT==='all'||s.c===MFILT);
   view().innerHTML=`<div class="screen">
     <p class="eyebrow">Reference</p><h2>The manual</h2>
-    <div class="seg">
-      <button data-mtab="signs" class="${MTAB==='signs'?'on':''}">Signs</button>
-      <button data-mtab="rules" class="${MTAB==='rules'?'on':''}">Rules</button>
+    <p class="route-lede manual-lede">Use official sign art and clear rules to prepare for the road, not just the test.</p>
+    <div class="seg" aria-label="Manual reference type">
+      <button aria-pressed="${MTAB==='signs'}" data-mtab="signs" class="${MTAB==='signs'?'on':''}">Signs</button>
+      <button aria-pressed="${MTAB==='rules'}" data-mtab="rules" class="${MTAB==='rules'?'on':''}">Rules</button>
     </div>
     ${MTAB==='signs'?`
-      <div class="filters">${cats.map(([k,l])=>`<button data-filt="${k}" class="${MFILT===k?'on':''}">${l}</button>`).join('')}</div>
+      <div class="manual-filter-head"><span>Browse by sign family</span><span>${list.length} shown</span></div>
+      <div class="filters" aria-label="Filter signs by family">${cats.map(([k,l])=>`<button aria-pressed="${MFILT===k}" data-filt="${k}" class="${MFILT===k?'on':''}">${l}</button>`).join('')}</div>
       <div class="gal">${list.map(s=>{const r=P.items['s:'+s.id];
         const c=!r||!r.box?'var(--edge)':r.box>=5?'var(--green-lit)':r.box>=3?'var(--fed-yellow)':'var(--fed-orange)';
         return `<button class="gcard" data-sign="${s.id}"><span class="gd" style="background:${c}"></span>${s.s}<span class="gn">${s.n}</span></button>`}).join('')}</div>`
-    :TOPICS.map((t,i)=>`<div class="acc"><button data-acc="${i}">${t.n}<span style="color:var(--fed-yellow);font-size:18px">+</span></button><div class="body hidden" id="acc${i}">${t.b}</div></div>`).join('')}
+    :`<p class="manual-rule-note">Open a topic for the facts most likely to affect your permit test and real driving decisions.</p>${TOPICS.map((t,i)=>`<div class="acc"><button data-acc="${i}" aria-expanded="false" aria-controls="acc${i}">${t.n}<span style="color:var(--fed-yellow);font-size:18px">+</span></button><div class="body hidden" id="acc${i}">${t.b}</div></div>`).join('')}`}
+    ${MTAB==='signs'?'<p class="manual-study-key"><i aria-hidden="true"></i>The dot on a sign shows its current review level.</p>':''}
   </div>`;
 }
 function signSheet(id){
@@ -844,14 +849,22 @@ function screenProgress(){
   const topics={};
   ALL_ITEMS.forEach(id=>{const t=byId[id].t;(topics[t]=topics[t]||[]).push(id)});
   const rows=Object.entries(topics).map(([t,ids])=>({t,p:pct(readiness(ids)),n:ids.length})).sort((a,b)=>a.p-b.p);
+  const nextTopic=rows[0]||{t:'Road rules',p:0,n:10};
+  const nextTitle=P.answered?`Build ${nextTopic.t}`:`Start with ${nextTopic.t}`;
+  const nextCopy=P.answered?`${nextTopic.p}% ready across ${nextTopic.n} items. A focused drill will bring the lowest-confidence material back first.`:`Start a focused ten-question route and let the trainer build your review plan from there.`;
   const boxes=[0,0,0,0,0,0];
   ALL_ITEMS.forEach(id=>{const r=P.items[id];boxes[r?r.box:0]++});
   const acc=P.answered?Math.round(P.correct/P.answered*100):0;
   view().innerHTML=`<div class="screen">
     <p class="eyebrow">Retention</p><h2>Progress</h2>
-    <div class="panel"><p class="panel-t">By topic, weakest first</p>
-      ${rows.map(r=>`<div style="margin-bottom:14px">
-        <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:600">
+    <section class="next-mile" aria-label="Recommended next practice route">
+      <div class="next-mile-marker"><span>Next mile</span><b>${nextTopic.p}%</b></div>
+      <div class="next-mile-copy"><p>${nextTitle}</p><span>${nextCopy}</span></div>
+      <button class="route-action" data-go="topic:${encodeURIComponent(nextTopic.t)}">Practice this topic <i aria-hidden="true">›</i></button>
+    </section>
+    <div class="panel progress-map"><p class="panel-t">By topic, weakest first</p>
+      ${rows.map(r=>`<div class="topic-row">
+        <div class="topic-row-head">
           <span>${r.t}</span><span class="meta">${r.p}%</span></div>
         <div class="bar"><i style="width:${r.p}%;background:${clr(r.p)}"></i></div></div>`).join('')}
     </div>
@@ -1096,6 +1109,11 @@ function finish(){
    ROUTER + EVENTS
    ============================================================ */
 function go(k){
+  if(k.startsWith('topic:')){
+    const topic=decodeURIComponent(k.slice('topic:'.length));
+    const pool=ALL_ITEMS.filter(id=>byId[id].t===topic);
+    return startMC(pick(pool,Math.min(10,pool.length)));
+  }
   switch(k){
     case 'home': S=null; return screenHome();
     case 'drills': S=null; return screenDrills();
@@ -1141,7 +1159,9 @@ document.addEventListener('click',e=>{
   if(b.dataset.sign) return signSheet(b.dataset.sign);
   if(b.dataset.acc!==undefined){
     const body=$('#acc'+b.dataset.acc); body.classList.toggle('hidden');
-    b.lastElementChild.textContent=body.classList.contains('hidden')?'+':'\u2013';
+    const closed=body.classList.contains('hidden');
+    b.setAttribute('aria-expanded',String(!closed));
+    b.lastElementChild.textContent=closed?'+':'\u2013';
   }
 });
 document.addEventListener('keydown',e=>{
