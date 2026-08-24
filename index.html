@@ -944,24 +944,26 @@ function gauge(p,label,sub){
     <div class="home-readiness-bar" role="progressbar" aria-label="${label} readiness" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${p}"><i style="width:${p}%;background:${clr(p)}"></i></div>
   </article>`;
 }
-let homeConfettiFrame=0;
+let homeConfettiFrame=0,homeConfettiTimeout=0;
 function stopHomeConfetti(){
   if(homeConfettiFrame) cancelAnimationFrame(homeConfettiFrame);
-  homeConfettiFrame=0;
+  if(homeConfettiTimeout) clearTimeout(homeConfettiTimeout);
+  homeConfettiFrame=0; homeConfettiTimeout=0;
   window.confetti?.reset?.();
 }
 function playHomeConfetti(){
   if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   if(typeof window.confetti!=='function') return;
   stopHomeConfetti();
-  const end=Date.now()+(15*1000);
-  const colors=['#bb0000','#ffffff'];
+  const duration=3*1000, end=Date.now()+duration;
+  const colors=['#ff3b8d','#ffd60a','#32d7ff','#8e5cff','#2ed573','#ff7a3d'];
   (function frame(){
     window.confetti({particleCount:2,angle:60,spread:55,origin:{x:0},colors});
     window.confetti({particleCount:2,angle:120,spread:55,origin:{x:1},colors});
     if(Date.now()<end) homeConfettiFrame=requestAnimationFrame(frame);
     else homeConfettiFrame=0;
   }());
+  homeConfettiTimeout=setTimeout(stopHomeConfetti,duration);
 }
 
 /* ============================================================
