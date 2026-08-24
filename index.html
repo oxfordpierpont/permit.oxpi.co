@@ -272,7 +272,7 @@ nav .lbl{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppe
 .hidden{display:none!important}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
-<link rel="stylesheet" href="facelift.css?v=road-ready-logo-1">
+<link rel="stylesheet" href="facelift.css?v=mobile-chrome-2">
 </head>
 <body>
 <div id="app">
@@ -816,7 +816,7 @@ function setMenu(open){
   else toggle.focus();
 }
 function nav(){
-  const items=[['home','Home',ICO.home],['drills','Drills',ICO.drills],['manual','Manual',ICO.manual],['read-manual','Read Manual',ICO.manual,"Read the GA Driver's Manual"],['prog','Progress',ICO.prog]];
+  const items=[['home','Home',ICO.home],['drills','Drills',ICO.drills],['manual','Manual',ICO.manual],['prog','Progress',ICO.prog]];
   $('#nav').innerHTML=items.map(([k,l,i,a])=>`<button data-tab="${k}" class="${TAB===k?'on':''}" aria-label="${a||l}">${i}<span class="lbl">${l}</span></button>`).join('');
   syncMenuLinks();
 }
@@ -916,6 +916,7 @@ function screenManual(){
   view().innerHTML=`<div class="screen">
     <p class="eyebrow">Reference</p><h2>The manual</h2>
     <p class="route-lede manual-lede">Use official sign art and clear rules to prepare for the road, not just the test.</p>
+    <button class="manual-read-link" type="button" data-tab="read-manual"><span><small>Official DDS text</small><b>Read the GA Driver's Manual</b></span><i aria-hidden="true">↗</i></button>
     <div class="seg" aria-label="Manual reference type">
       <button aria-pressed="${MTAB==='signs'}" data-mtab="signs" class="${MTAB==='signs'?'on':''}">Signs</button>
       <button aria-pressed="${MTAB==='rules'}" data-mtab="rules" class="${MTAB==='rules'?'on':''}">Rules</button>
@@ -945,19 +946,23 @@ function screenDriversManual(){
   view().innerHTML=`<div class="screen ga-manual">
     <header class="ga-manual-hero">
       <p class="eyebrow">Official DDS source</p><h2>Read the GA Driver's Manual</h2>
-      <p>This reader preserves the official text and organizes it by the State’s chapter headings.</p>
-      <a class="ga-manual-source" href="${esc(manual.sourceUrl)}" target="_blank" rel="noreferrer">View the current DDS source <span aria-hidden="true">↗</span></a>
+      <p>This reader preserves the official text in a quieter, chapter-by-chapter study view.</p>
+      <a class="ga-manual-source" href="${esc(manual.sourceUrl)}" target="_blank" rel="noreferrer"><span class="ga-manual-source-copy"><small>Georgia Department of Driver Services</small><b>Open the official manual</b></span><span class="ga-manual-source-arrow" aria-hidden="true">↗</span></a>
     </header>
     <div class="ga-manual-tools">
       <label class="ga-manual-search"><span>Find in the manual</span><input type="search" data-ga-manual-search placeholder="Search official text" autocomplete="off"></label>
       <button class="ga-manual-expand" type="button" data-ga-manual-expand aria-pressed="false">Expand all</button>
     </div>
-    <nav class="ga-manual-index" aria-label="Georgia Driver's Manual contents">
-      ${sections.map(section=>`<button type="button" data-ga-manual-jump="${esc(section.id)}">${esc(section.title)}</button>`).join('')}
-    </nav>
+    <details class="ga-manual-jump">
+      <summary><span>Browse chapters</span><small>${sections.length} chapters</small><i aria-hidden="true">+</i></summary>
+      <nav class="ga-manual-index" aria-label="Georgia Driver's Manual contents">
+        ${sections.map(section=>`<button type="button" data-ga-manual-jump="${esc(section.id)}">${esc(section.title)}<span aria-hidden="true">→</span></button>`).join('')}
+      </nav>
+    </details>
     <p class="ga-manual-search-result" data-ga-manual-result hidden aria-live="polite">No official manual section matches that search.</p>
+    <div class="ga-manual-section-head"><span>Official text by chapter</span><small>${sections.length} chapters</small></div>
     <div class="ga-manual-sections">
-      ${sections.map((section,index)=>`<details class="ga-manual-section" id="${esc(section.id)}" data-ga-manual-section ${index<2?'open':''}>
+      ${sections.map((section,index)=>`<details class="ga-manual-section" id="${esc(section.id)}" data-ga-manual-section ${index===0?'open':''}>
         <summary><span class="ga-manual-section-number">${String(index+1).padStart(2,'0')}</span><span>${esc(section.title)}</span><i aria-hidden="true">+</i></summary>
         <div class="ga-manual-body">${section.html}</div>
       </details>`).join('')}
