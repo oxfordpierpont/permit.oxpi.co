@@ -8,7 +8,7 @@
 <title>Road Ready Permit Practice</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Overpass:wght@400;500;600;700;800;900&family=Overpass+Mono:wght@600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 <style>
 :root{
   --asphalt:#191C21; --asphalt-2:#22262D; --asphalt-3:#2C323A; --edge:#3A424C;
@@ -16,9 +16,9 @@
   --fed-yellow:#FFCC00; --fed-red:#AF1E2D; --fed-green:#00794A; --fed-orange:#F58220; --fed-blue:#0B5EA8;
   --green-lit:#12A365; --red-lit:#E0394A;
   --sign-white:#FFFFFF;
-  --ui:'Overpass',system-ui,-apple-system,'Segoe UI',sans-serif;
-  --mono:'Overpass Mono',ui-monospace,'SFMono-Regular',monospace;
-  --serif:'Newsreader',Georgia,'Times New Roman',serif;
+  --ui:'Albert Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'Albert Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --serif:'Albert Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
   --r-btn:8px; --r-panel:16px; --r-sign:4px;
   --sh1:inset 0 1px 0 rgba(255,255,255,.04);
   --sh2:0 6px 20px rgba(0,0,0,.38);
@@ -272,7 +272,7 @@ nav .lbl{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppe
 .hidden{display:none!important}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
-<link rel="stylesheet" href="facelift.css?v=home-layout-3">
+<link rel="stylesheet" href="facelift.css?v=albert-sans-1">
 </head>
 <body>
 <div id="app">
@@ -312,7 +312,7 @@ const K='stroke="#111" stroke-width="3" stroke-linejoin="round" stroke-linecap="
 const NS='xmlns="http://www.w3.org/2000/svg"';
 const svg=b=>`<svg viewBox="0 0 100 100" ${NS} role="img">${b}</svg>`;
 // centred text
-const t=(y,s,str,w,f,ls)=>`<text x="50" y="${y}" text-anchor="middle" font-family="Overpass,sans-serif" font-size="${s}" font-weight="${w||800}" fill="${f||'#111'}" letter-spacing="${ls||0}">${str}</text>`;
+const t=(y,s,str,w,f,ls)=>`<text x="50" y="${y}" text-anchor="middle" font-family="Albert Sans,sans-serif" font-size="${s}" font-weight="${w||800}" fill="${f||'#111'}" letter-spacing="${ls||0}">${str}</text>`;
 const diamond=(inner,fill)=>svg(`<rect x="15" y="15" width="70" height="70" rx="7" transform="rotate(45 50 50)" fill="${fill||'#FFCC00'}" ${K}/>${inner}`);
 const vrect=inner=>svg(`<rect x="18" y="5" width="64" height="90" rx="4" fill="#fff" ${K}/>${inner}`);
 const hrect=(inner,fill,stroke)=>svg(`<rect x="4" y="24" width="92" height="52" rx="4" fill="${fill||'#00794A'}" stroke="${stroke||'#fff'}" stroke-width="2.5"/>${inner}`);
@@ -405,7 +405,7 @@ const SIGNS=[
 {id:'schoolzone',c:'warn',n:'School Zone',m:'You are approaching a school zone or school crossing.',
  s:svg(`<polygon points="50,4 95,38 78,94 22,94 5,38" fill="#C6E62E" ${K}/><circle cx="42" cy="42" r="5" fill="#111"/><circle cx="60" cy="46" r="5.5" fill="#111"/><path d="M42 48 V62 M42 54 L34 60 M60 52 V66 M60 58 L68 64 M42 62 L36 78 M42 62 L48 78 M60 66 L54 80 M60 66 L66 80" stroke="#111" stroke-width="4.5" fill="none" stroke-linecap="round"/>`)},
 {id:'rradvance',c:'warn',n:'Railroad Crossing Ahead',m:'A railroad crossing is a few hundred feet ahead. Slow, look, listen, and be ready to stop.',
- s:svg(`<circle cx="50" cy="50" r="45" fill="#FFCC00" ${K}/><path d="M18 18 L82 82 M82 18 L18 82" stroke="#111" stroke-width="7"/><text x="27" y="59" text-anchor="middle" font-family="Overpass,sans-serif" font-size="22" font-weight="800" fill="#111">R</text><text x="73" y="59" text-anchor="middle" font-family="Overpass,sans-serif" font-size="22" font-weight="800" fill="#111">R</text>`)},
+ s:svg(`<circle cx="50" cy="50" r="45" fill="#FFCC00" ${K}/><path d="M18 18 L82 82 M82 18 L18 82" stroke="#111" stroke-width="7"/><text x="27" y="59" text-anchor="middle" font-family="Albert Sans,sans-serif" font-size="22" font-weight="800" fill="#111">R</text><text x="73" y="59" text-anchor="middle" font-family="Albert Sans,sans-serif" font-size="22" font-weight="800" fill="#111">R</text>`)},
 {id:'nopassing',c:'warn',n:'No Passing Zone',m:'A no-passing zone begins here. Any pass must already be complete.',
  s:svg(`<polygon points="8,12 92,12 50,92" fill="#FFCC00" ${K}/>${t(33,11,'NO')}${t(46,10,'PASSING')}${t(59,10,'ZONE')}`)},
 /* ---- WORK ZONE ---- */
@@ -419,7 +419,7 @@ const SIGNS=[
  s:svg(`<polygon points="50,8 92,84 8,84" fill="#F58220" stroke="#AF1E2D" stroke-width="9" stroke-linejoin="round"/>`)},
 /* ---- GUIDE + SERVICE ---- */
 {id:'crossbuck',c:'guide',n:'Railroad Crossbuck',m:'You are at the tracks. Yield to any approaching train. A red flashing light means a full stop.',
- s:svg(`<g transform="rotate(-45 50 50)"><rect x="4" y="42" width="92" height="16" rx="2" fill="#fff" stroke="#111" stroke-width="1.6"/><text x="50" y="53.5" text-anchor="middle" font-family="Overpass,sans-serif" font-size="11" font-weight="800" fill="#111">RAILROAD</text></g><g transform="rotate(45 50 50)"><rect x="4" y="42" width="92" height="16" rx="2" fill="#fff" stroke="#111" stroke-width="1.6"/><text x="50" y="53.5" text-anchor="middle" font-family="Overpass,sans-serif" font-size="11" font-weight="800" fill="#111">CROSSING</text></g>`)},
+ s:svg(`<g transform="rotate(-45 50 50)"><rect x="4" y="42" width="92" height="16" rx="2" fill="#fff" stroke="#111" stroke-width="1.6"/><text x="50" y="53.5" text-anchor="middle" font-family="Albert Sans,sans-serif" font-size="11" font-weight="800" fill="#111">RAILROAD</text></g><g transform="rotate(45 50 50)"><rect x="4" y="42" width="92" height="16" rx="2" fill="#fff" stroke="#111" stroke-width="1.6"/><text x="50" y="53.5" text-anchor="middle" font-family="Albert Sans,sans-serif" font-size="11" font-weight="800" fill="#111">CROSSING</text></g>`)},
 {id:'exit',c:'guide',n:'Exit Sign',m:'A guide sign. The number identifies the exit and the arrow shows which side it leaves from.',
  s:hrect(`${t(46,17,'EXIT',800,'#fff')}${t(66,17,'44',800,'#fff')}`)},
 {id:'milemarker',c:'guide',n:'Mile Marker',m:'Distance in miles from where the route begins at the south or west state line.',
