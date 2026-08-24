@@ -60,3 +60,9 @@ body{background-image:radial-gradient(circle at 50% -10%,#39523a33,transparent 3
 
 /* Albert Sans is the single typography system for all application UI. */
 #app,#app *{font-family:'Albert Sans',system-ui,-apple-system,'Segoe UI',sans-serif!important}
+
+/* Preserve the two-part tag layout after replacing the former condensed display face. */
+.road-ready-plate-copy span{font-size:22px!important;font-weight:800!important;letter-spacing:-.045em!important}
+.road-ready-plate-copy .road-ready-word-road{left:10%!important;transform:translateY(-50%) scaleX(.78)!important}
+.road-ready-plate-copy .road-ready-word-ready{right:9%!important;transform:translateY(-50%) scaleX(.65)!important}
+@media(max-width:600px){.road-ready-plate-copy span{font-size:19px!important}}
