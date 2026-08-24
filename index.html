@@ -272,7 +272,7 @@ nav .lbl{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppe
 .hidden{display:none!important}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
-<link rel="stylesheet" href="facelift.css?v=mobile-first-3">
+<link rel="stylesheet" href="facelift.css?v=road-ready-logo-1">
 </head>
 <body>
 <div id="app">
@@ -280,26 +280,62 @@ nav .lbl{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppe
     <button class="menu-toggle" type="button" data-menu-toggle aria-label="Open primary navigation" aria-controls="app-menu" aria-expanded="false">
       <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
     </button>
-    <div class="chip" id="streak">Day 1</div>
+    <div class="header-logo"><img src="./public/assets/road-ready-logo.png" alt="Road Ready GA License Test Prep"></div>
   </header>
   <button class="menu-scrim" type="button" data-menu-close aria-label="Close navigation menu" tabindex="-1"></button>
   <aside class="app-menu" id="app-menu" aria-label="Primary navigation" aria-hidden="true" inert>
+    <div class="app-menu-plate-wrap">
+      <div class="plate road-ready-plate app-menu-plate" role="img" aria-label="Road Ready Georgia license plate-style logo">
+        <img class="road-ready-plate-template" src="./public/assets/georgia-road-ready-plate-template.png" alt="">
+        <img class="app-menu-plate-text" src="./public/assets/road-ready-license-plate-text.png" alt="">
+      </div>
+    </div>
     <div class="app-menu-head">
-      <div><p class="app-menu-kicker">Road Ready</p><p class="app-menu-title">Permit Practice</p></div>
+      <div class="app-menu-brand">
+        <p class="app-menu-kicker">Daily route</p>
+        <h2 class="app-menu-title">Study route</h2>
+        <p class="app-menu-subtitle">Georgia learner permit practice</p>
+      </div>
       <button class="menu-close" type="button" data-menu-close aria-label="Close navigation menu">×</button>
     </div>
-    <p class="app-menu-copy">Choose where to continue your preparation.</p>
-    <div class="app-menu-links">
-      <button type="button" data-menu-go="home"><span>Home</span><i aria-hidden="true">›</i></button>
-      <button type="button" data-menu-go="drills"><span>Drills</span><i aria-hidden="true">›</i></button>
-      <button type="button" data-menu-go="manual"><span>The Manual</span><i aria-hidden="true">›</i></button>
-      <button type="button" data-menu-go="prog"><span>Progress</span><i aria-hidden="true">›</i></button>
-    </div>
+    <div class="app-menu-streak-row"><span>Daily streak</span><div class="chip" id="streak">Day 1</div></div>
+    <section class="app-menu-route" aria-label="Current study route">
+      <div class="app-menu-route-head"><span>Current mile</span><b><span data-menu-mile>0</span><small>/ 100</small></b></div>
+      <div class="app-menu-route-track" role="progressbar" aria-label="Progress toward test-ready" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i data-menu-progress-fill></i></div>
+      <p data-menu-route-copy>Start a short drill to establish your route.</p>
+    </section>
+    <nav class="app-menu-nav" aria-labelledby="app-menu-nav-title">
+      <p class="app-menu-nav-label" id="app-menu-nav-title">Study paths</p>
+      <div class="app-menu-links">
+        <button type="button" data-menu-go="home">
+          <span class="app-menu-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 19V9l7-5 7 5v10"/><path d="M9 19v-5h6v5"/></svg></span>
+          <span class="app-menu-link-copy"><b>Home</b><small>Route overview</small></span><span class="app-menu-link-indicator" aria-hidden="true"></span>
+        </button>
+        <button type="button" data-menu-go="drills">
+          <span class="app-menu-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m6 4 12 8-12 8z"/><path d="M4 4v16"/></svg></span>
+          <span class="app-menu-link-copy"><b>Drills</b><small>Build recall by mode</small></span><span class="app-menu-link-indicator" aria-hidden="true"></span>
+        </button>
+        <button type="button" data-menu-go="manual">
+          <span class="app-menu-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 4h6a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H5z"/><path d="M19 4h-6a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h6z"/></svg></span>
+          <span class="app-menu-link-copy"><b>The Manual</b><small>Signs and road rules</small></span><span class="app-menu-link-indicator" aria-hidden="true"></span>
+        </button>
+        <button type="button" data-menu-go="read-manual">
+          <span class="app-menu-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 4h6a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H5z"/><path d="M19 4h-6a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h6z"/><path d="M12 6v12"/></svg></span>
+          <span class="app-menu-link-copy"><b>Read the GA Driver's Manual</b><small>Official DDS text</small></span><span class="app-menu-link-indicator" aria-hidden="true"></span>
+        </button>
+        <button type="button" data-menu-go="prog">
+          <span class="app-menu-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 18a8 8 0 1 1 16 0"/><path d="m12 18 4-7"/><path d="M12 5v2M5 12h2M17 12h2"/></svg></span>
+          <span class="app-menu-link-copy"><b>Progress</b><small>Mastery and weak spots</small></span><span class="app-menu-link-indicator" aria-hidden="true"></span>
+        </button>
+      </div>
+    </nav>
+    <button class="app-menu-next" type="button" data-menu-go="auto"><span>Recommended next</span><b>Start a focused drill</b><i aria-hidden="true">→</i></button>
   </aside>
   <div id="topslot"></div>
   <main id="main"><div id="view"></div></main>
   <nav id="nav"></nav>
 </div>
+<script src="./public/assets/ga-drivers-manual.js"></script>
 <script>
 /* ============================================================
    GA PERMIT TRAINER
@@ -619,7 +655,7 @@ const store={
     try{ localStorage.setItem(KEY,s) }catch(e){}
   }
 };
-let P={items:{},drills:0,lastDay:null,streak:0,answered:0,correct:0};
+let P={items:{},drills:0,lastDay:null,streak:0,answered:0,correct:0,mockExam:null,mockPractice:{passed:{},missed:{}}};
 let recent=[];
 let saveT=null;
 const save=()=>{clearTimeout(saveT);saveT=setTimeout(()=>store.set(P),400)};
@@ -628,6 +664,9 @@ const SIGN_ITEMS=SIGNS.map(s=>'s:'+s.id);
 const RULE_ITEMS=[...MC.map(q=>'m:'+q.id),...TF.map(q=>'t:'+q.id)];
 const SOURCE_ITEMS=SOURCE_TEST.map(q=>'p:'+q.id);
 const ALL_ITEMS=[...SIGN_ITEMS,...RULE_ITEMS];
+const MOCK_SIGN_ITEMS=SIGN_ITEMS.slice(0,20);
+const MOCK_RULE_ITEMS=MC.slice(0,20).map(q=>'m:'+q.id);
+const MOCK_ITEMS=[...MOCK_SIGN_ITEMS,...MOCK_RULE_ITEMS];
 const byId={};
 SIGNS.forEach(s=>byId['s:'+s.id]={kind:'sign',t:'Road Signs',d:s});
 MC.forEach(q=>byId['m:'+q.id]={kind:'mc',t:q.t,d:q});
@@ -641,6 +680,29 @@ function grade(id,ok){
   else { r.wrong++; r.streak=0; r.box=Math.max(0,r.box-2) }
   P.answered++;
   recent.push(id); if(recent.length>8) recent.shift();
+  save();
+}
+function mockPracticeState(){
+  if(!P.mockPractice||typeof P.mockPractice!=='object') P.mockPractice={passed:{},missed:{}};
+  if(!P.mockPractice.passed||typeof P.mockPractice.passed!=='object') P.mockPractice.passed={};
+  if(!P.mockPractice.missed||typeof P.mockPractice.missed!=='object') P.mockPractice.missed={};
+  return P.mockPractice;
+}
+function mockPracticePending(){
+  const state=mockPracticeState();
+  return MOCK_ITEMS.filter(id=>!state.passed[id]);
+}
+function updateMockPractice(id,ok){
+  if(!MOCK_ITEMS.includes(id)) return;
+  const state=mockPracticeState();
+  if(ok){ state.passed[id]=true; delete state.missed[id] }
+  else { delete state.passed[id]; state.missed[id]=true }
+  save();
+}
+function returnMockQuestionToPractice(id){
+  if(!MOCK_ITEMS.includes(id)) return;
+  const state=mockPracticeState();
+  delete state.passed[id]; state.missed[id]=true;
   save();
 }
 function pick(pool,n){
@@ -721,7 +783,24 @@ const ICO={
 /* ---------- chrome ---------- */
 let TAB='home';
 function syncMenuLinks(){
-  document.querySelectorAll('[data-menu-go]').forEach(b=>b.classList.toggle('on',b.dataset.menuGo===TAB));
+  document.querySelectorAll('[data-menu-go]').forEach(b=>{
+    const active=b.dataset.menuGo===TAB;
+    b.classList.toggle('on',active);
+    if(active) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
+  });
+  syncMenuSummary();
+}
+function syncMenuSummary(){
+  const mile=pct((readiness(SIGN_ITEMS)+readiness(RULE_ITEMS))/2);
+  const progress=Math.max(0,Math.min(100,mile));
+  const questions=P.answered||0;
+  const routeCopy=questions
+    ? `${questions} question${questions===1?'':'s'} answered · keep the route moving.`
+    : 'Start a short drill to establish your route.';
+  document.querySelectorAll('[data-menu-mile]').forEach(el=>el.textContent=progress);
+  document.querySelectorAll('[data-menu-route-copy]').forEach(el=>el.textContent=routeCopy);
+  document.querySelectorAll('[data-menu-progress-fill]').forEach(el=>el.style.width=`${progress}%`);
+  document.querySelectorAll('.app-menu-route-track').forEach(el=>el.setAttribute('aria-valuenow',String(progress)));
 }
 function setMenu(open){
   const menu=$('#app-menu'),toggle=$('[data-menu-toggle]');
@@ -737,82 +816,101 @@ function setMenu(open){
   else toggle.focus();
 }
 function nav(){
-  const items=[['home','Home',ICO.home],['drills','Drills',ICO.drills],['manual','Manual',ICO.manual],['prog','Progress',ICO.prog]];
-  $('#nav').innerHTML=items.map(([k,l,i])=>`<button data-tab="${k}" class="${TAB===k?'on':''}" aria-label="${l}">${i}<span class="lbl">${l}</span></button>`).join('');
+  const items=[['home','Home',ICO.home],['drills','Drills',ICO.drills],['manual','Manual',ICO.manual],['read-manual','Read Manual',ICO.manual,"Read the GA Driver's Manual"],['prog','Progress',ICO.prog]];
+  $('#nav').innerHTML=items.map(([k,l,i,a])=>`<button data-tab="${k}" class="${TAB===k?'on':''}" aria-label="${a||l}">${i}<span class="lbl">${l}</span></button>`).join('');
   syncMenuLinks();
 }
-function chrome(show){ $('#nav').classList.toggle('hidden',!show) }
+function chrome(show){
+  $('#nav').classList.toggle('hidden',!show);
+}
 function milepost(target=$('#topslot')){
   const raw=pct((readiness(SIGN_ITEMS)+readiness(RULE_ITEMS))/2);
   const m=raw;
-  target.innerHTML=`<div class="milepost">
-    <div class="mp-label"><span>Route to test-ready</span><b>MILE ${m} OF 100 TO TEST-READY</b></div>
-    <div class="road" style="--mile:${m}"><b class="mile-pin">${m}</b><div class="road-fill" style="width:${m}%"></div><div class="road-line"></div>
-      <div class="road-mark" data-m="25" style="left:25%"></div><div class="road-mark" data-m="50" style="left:50%"></div><div class="road-mark" data-m="75" style="left:75%"></div></div></div>`;
+  const pin=Math.max(8,Math.min(92,m));
+  target.innerHTML=`<section class="milepost home-route-card" aria-label="Current route: mile ${m} of 100 to test-ready">
+    <div class="home-route-card-head"><span>Current mile</span><strong>${m}<small>/ 100</small></strong><span>Test-ready</span></div>
+    <div class="road" style="--pin:${pin}%"><b class="mile-pin" aria-hidden="true">${m}</b><div class="road-fill" style="width:${m}%"></div><div class="road-line"></div></div>
+    <p>One focused route at a time.</p>
+  </section>`;
 }
 function gauge(p,label,sub){
-  return `<article class="mock-gauge">
-    <h2>${label}</h2><div class="mock-ring" style="--value:${p}" role="img" aria-label="${label} readiness: ${p} percent, ${sub}"><strong>${p}%</strong><i>✓</i></div>
-    <p>${p>=75?'PASS':'BUILD'}</p><small>${sub}</small></article>`;
+  return `<article class="home-readiness-row">
+    <div class="home-readiness-copy"><b>${label}</b><span>${sub}</span></div><strong>${p}%</strong>
+    <div class="home-readiness-bar" role="progressbar" aria-label="${label} readiness" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${p}"><i style="width:${p}%;background:${clr(p)}"></i></div>
+  </article>`;
 }
 
 /* ============================================================
    SCREENS
    ============================================================ */
 function screenHome(){
-  chrome(true); $('#topslot').innerHTML=''; TAB='home'; nav();
+  chrome(true,'Road Ready'); $('#topslot').innerHTML=''; TAB='home'; nav();
   const sp=pct(readiness(SIGN_ITEMS)), rp=pct(readiness(RULE_ITEMS));
   const tr=trouble(5);
   const acc=P.answered?Math.round(P.correct/P.answered*100):0;
   const featured=tr.filter(id=>byId[id].kind==='sign').slice(0,2);
   if(!featured.length) featured.push('s:stop','s:schoolzone');
-  view().innerHTML=`<div class="screen mock-home">
-    <div class="home-brand">
+  view().innerHTML=`<div class="screen home-v2">
+    <div class="home-v2-brand">
       <div class="plate road-ready-plate" role="img" aria-label="Road Ready Georgia license plate-style logo">
         <img class="road-ready-plate-template" src="./public/assets/georgia-road-ready-plate-template.png" alt="">
         <span class="road-ready-plate-copy" aria-hidden="true"><span class="road-ready-word-road">ROAD</span><span class="road-ready-word-ready">READY</span></span>
       </div>
     </div>
+    <section class="home-v2-intro" aria-labelledby="home-v2-title">
+      <p class="eyebrow">Georgia permit prep</p><h1 id="home-v2-title">Test-ready starts here.</h1>
+      <p>One focused drill moves your route forward.</p>
+    </section>
     <div id="home-milepost"></div>
-    <div class="gauges">
+    <section class="home-v2-readiness" aria-label="Current readiness">
+      <div class="home-v2-section-head"><span>Readiness</span><small>Built from your practice</small></div>
       ${gauge(sp,'Road Signs',mastered(SIGN_ITEMS)+' of '+SIGN_ITEMS.length+' locked')}
       ${gauge(rp,'Road Rules',mastered(RULE_ITEMS)+' of '+RULE_ITEMS.length+' locked')}
-    </div>
-    <button class="btn mock-cta" data-go="auto"><b>›</b> START TODAY’S DRILL</button>
-    <div class="panel mock-trouble">
-      <p class="panel-t">Trouble spots</p>
-      ${featured.map(id=>{const s=byId[id].d,r=P.items[id];return `<button class="mock-trouble-row" data-sign="${s.id}">${s.s}<span><b>${s.n}</b><em>You ${r&&r.wrong?'missed '+r.wrong+' question'+(r.wrong===1?'':'s'):'will review this sign in your next drill'}<br>Keep reviewing.</em></span><i>›</i></button>`}).join('')}
-      ${tr.length?'<button class="mock-focus" data-go="focus">Drill these only</button>':''}
-    </div>
+    </section>
+    <button class="btn home-v2-cta" data-go="auto"><span><em>Continue learning</em><b>Start today’s drill</b></span><i aria-hidden="true">→</i></button>
+    <section class="home-v2-review" aria-labelledby="home-v2-review-title">
+      <div class="home-v2-review-head"><p class="eyebrow">Review queue</p><h2 id="home-v2-review-title">Keep these close</h2></div>
+      ${featured.map(id=>{const s=byId[id].d,r=P.items[id];return `<button class="home-v2-review-row" data-sign="${s.id}"><span class="home-v2-review-sign">${s.s}</span><span><b>${s.n}</b><em>${r&&r.wrong?'Missed '+r.wrong+' question'+(r.wrong===1?'':'s')+' · review again.':'A quick review will keep this familiar.'}</em></span><i aria-hidden="true">›</i></button>`}).join('')}
+      ${tr.length?'<button class="home-v2-focus" data-go="focus">Practice this review queue <i aria-hidden="true">→</i></button>':''}
+    </section>
   </div>`;
   milepost($('#home-milepost'));
 }
 
 function screenDrills(){
-  chrome(true); $('#topslot').innerHTML=''; TAB='drills'; nav();
+  chrome(true,'Practice Routes'); $('#topslot').innerHTML=''; TAB='drills'; nav();
+  const practiceRemaining=mockPracticePending().length;
+  const practiceState=practiceRemaining?`${practiceRemaining} remaining · 10 per set`:'All 40 passed';
   const tiles=[
     ['match',ICO.match,'Sign Match','Pair each sign with its meaning. Four at a time.',SIGNS.length+' signs'],
     ['swipe',ICO.swipe,'True or False','Swipe right for true, left for false.',TF.length+' statements'],
     ['mc',ICO.mc,'Multiple Choice','Four options, instant feedback, manual citation.',(MC.length+SIGNS.length)+' questions'],
-    ['exam',ICO.exam,'Source Practice Test','The ten questions and choices from your supplied practice-test PDF.','10 questions · 8 to pass'],
-    ['source-train',ICO.trainer,'PDF Test Trainer','The same ten source questions with immediate coaching and review.','10 exact questions']
+    ['mock-train',ICO.trainer,'Mock Test Trainer','Practice the full mock’s 20 signs and 20 road rules with answer-by-answer coaching.','40 questions · coached'],
+    ['mock-practice',ICO.exam,'Mock Practice Test','Take ten mock questions at a time. Pass each one to clear it from practice.',practiceState]
   ];
-  view().innerHTML=`<div class="screen">
-    <p class="eyebrow">Practice routes</p><h2>Pick a drill</h2>
-    <p class="route-lede">Choose the format that will move you forward today.</p>
-    <div class="route-note"><span>5 study routes</span><span>Short sessions · clear feedback</span></div>
-    ${tiles.map(([k,i,n,d,c])=>`<button class="tile" data-go="${k}">
+  const savedScore=P.mockExam&&Number(P.mockExam.percent);
+  const mockScore=Number.isFinite(savedScore)?Math.max(0,Math.min(100,Math.round(savedScore))):0;
+  const mockTone=mockScore<70?'red':mockScore<80?'yellow':'green';
+  const mockState=Number.isFinite(savedScore)?`Latest mock score · ${mockScore}%`:'Not attempted · 0%';
+  const tile=([k,i,n,d,c],className='')=>`<button class="tile ${className}" data-go="${k}">
       <span class="tile-ico">${i}</span>
       <span class="tile-copy"><span class="tile-n">${n}</span><span class="tile-d">${d}</span></span>
       <span class="tile-meta">${c}</span>
-    </button>`).join('')}
+    </button>`;
+  view().innerHTML=`<div class="screen">
+    <p class="eyebrow">Practice routes</p><h2>Pick a drill</h2>
+    <p class="route-lede">Choose the format that will move you forward today.</p>
+    <div class="route-note"><span>6 study routes</span><span>Short sessions · clear feedback</span></div>
+    ${tiles.map(tile).join('')}
+    <div class="mock-exam-divider" role="separator" aria-label="Full mock permit test"><span>Full permit simulation</span></div>
+    ${tile(['mock-exam',ICO.exam,'Mock Permit Test','Georgia-style exam: 20 road signs and 20 road rules.',`${mockState} · 40 questions · 30 to pass`],`mock-exam-tile mock-exam-${mockTone}`)}
     <p class="empty" style="margin-top:14px">Every drill draws from what you have not locked in yet, so no two sessions are the same.</p>
   </div>`;
 }
 
 let MTAB='signs',MFILT='all';
 function screenManual(){
-  chrome(true); $('#topslot').innerHTML=''; TAB='manual'; nav();
+  chrome(true,'The Manual'); $('#topslot').innerHTML=''; TAB='manual'; nav();
   const cats=[['all','All'],['reg','Regulatory'],['warn','Warning'],['work','Work zone'],['guide','Guide']];
   const list=SIGNS.filter(s=>MFILT==='all'||s.c===MFILT);
   view().innerHTML=`<div class="screen">
@@ -832,8 +930,72 @@ function screenManual(){
     ${MTAB==='signs'?'<p class="manual-study-key"><i aria-hidden="true"></i>The dot on a sign shows its current review level.</p>':''}
   </div>`;
 }
+
+function screenDriversManual(){
+  chrome(true,"GA Driver's Manual"); $('#topslot').innerHTML=''; TAB='read-manual'; nav();
+  const manual=window.GA_DRIVER_MANUAL;
+  if(!manual||!Array.isArray(manual.sections)||!manual.sections.length){
+    view().innerHTML=`<div class="screen ga-manual">
+      <p class="eyebrow">Official source</p><h2>Read the GA Driver's Manual</h2>
+      <div class="panel"><p class="lede">The local manual reader could not load.</p><a class="ga-manual-source" href="https://dds.georgia.gov/drivers-manual" target="_blank" rel="noreferrer">Open the official DDS manual <span aria-hidden="true">↗</span></a></div>
+    </div>`;
+    return;
+  }
+  const sections=manual.sections;
+  view().innerHTML=`<div class="screen ga-manual">
+    <header class="ga-manual-hero">
+      <p class="eyebrow">Official DDS source</p><h2>Read the GA Driver's Manual</h2>
+      <p>This reader preserves the official text and organizes it by the State’s chapter headings.</p>
+      <a class="ga-manual-source" href="${esc(manual.sourceUrl)}" target="_blank" rel="noreferrer">View the current DDS source <span aria-hidden="true">↗</span></a>
+    </header>
+    <div class="ga-manual-tools">
+      <label class="ga-manual-search"><span>Find in the manual</span><input type="search" data-ga-manual-search placeholder="Search official text" autocomplete="off"></label>
+      <button class="ga-manual-expand" type="button" data-ga-manual-expand aria-pressed="false">Expand all</button>
+    </div>
+    <nav class="ga-manual-index" aria-label="Georgia Driver's Manual contents">
+      ${sections.map(section=>`<button type="button" data-ga-manual-jump="${esc(section.id)}">${esc(section.title)}</button>`).join('')}
+    </nav>
+    <p class="ga-manual-search-result" data-ga-manual-result hidden aria-live="polite">No official manual section matches that search.</p>
+    <div class="ga-manual-sections">
+      ${sections.map((section,index)=>`<details class="ga-manual-section" id="${esc(section.id)}" data-ga-manual-section ${index<2?'open':''}>
+        <summary><span class="ga-manual-section-number">${String(index+1).padStart(2,'0')}</span><span>${esc(section.title)}</span><i aria-hidden="true">+</i></summary>
+        <div class="ga-manual-body">${section.html}</div>
+      </details>`).join('')}
+    </div>
+  </div>`;
+  bindDriversManualReader();
+}
+
+function bindDriversManualReader(){
+  const root=view(),search=root.querySelector('[data-ga-manual-search]'),result=root.querySelector('[data-ga-manual-result]'),expand=root.querySelector('[data-ga-manual-expand]');
+  const sections=[...root.querySelectorAll('[data-ga-manual-section]')];
+  search.addEventListener('input',()=>{
+    const query=search.value.trim().toLocaleLowerCase();
+    let shown=0;
+    sections.forEach(section=>{
+      const match=!query||section.textContent.toLocaleLowerCase().includes(query);
+      section.hidden=!match;
+      if(query&&match) section.open=true;
+      if(match) shown++;
+    });
+    result.hidden=shown!==0;
+  });
+  expand.addEventListener('click',()=>{
+    const open=expand.getAttribute('aria-pressed')!=='true';
+    sections.filter(section=>!section.hidden).forEach(section=>section.open=open);
+    expand.setAttribute('aria-pressed',String(open));
+    expand.textContent=open?'Collapse all':'Expand all';
+  });
+  root.querySelectorAll('[data-ga-manual-jump]').forEach(button=>button.addEventListener('click',()=>{
+    const section=root.querySelector('#'+CSS.escape(button.dataset.gaManualJump));
+    if(!section||section.hidden) return;
+    section.open=true;
+    section.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+  }));
+}
 function signSheet(id){
   const s=SIGNS.find(x=>x.id===id),r=P.items['s:'+id];
+  chrome(true,s.n);
   view().innerHTML=`<div class="screen">
     <button class="xbtn" data-go="manual" style="margin-bottom:12px">\u2190 Back to manual</button>
     <div class="signbox" style="margin-bottom:18px;padding:26px">${s.s}</div>
@@ -847,7 +1009,7 @@ function signSheet(id){
 }
 
 function screenProgress(){
-  chrome(true); $('#topslot').innerHTML=''; TAB='prog'; nav();
+  chrome(true,'Progress'); $('#topslot').innerHTML=''; TAB='prog'; nav();
   const topics={};
   ALL_ITEMS.forEach(id=>{const t=byId[id].t;(topics[t]=topics[t]||[]).push(id)});
   const rows=Object.entries(topics).map(([t,ids])=>({t,p:pct(readiness(ids)),n:ids.length})).sort((a,b)=>a.p-b.p);
@@ -870,7 +1032,7 @@ function screenProgress(){
           <span>${r.t}</span><span class="meta">${r.p}%</span></div>
         <div class="bar"><i style="width:${r.p}%;background:${clr(r.p)}"></i></div></div>`).join('')}
     </div>
-    <div class="panel"><p class="panel-t">Leitner boxes</p>
+    <div class="panel"><p class="panel-t">Mastery Chart</p>
       <div style="display:flex;gap:6px;align-items:flex-end;height:90px">
         ${boxes.map((c,i)=>{const h=Math.max(4,Math.round(c/Math.max(1,ALL_ITEMS.length)*100*1.6));
           return `<div style="flex:1;text-align:center">
@@ -905,16 +1067,16 @@ function drillBar(){
     ${S.exam?'':`<span class="ct" style="color:var(--green-lit)">${S.right}\u2713</span>`}
   </div>`;
 }
-function startMC(ids,exam){
-  S={mode:'mc',queue:ids,i:0,right:0,answered:false,exam:!!exam,wrongIds:[],sec:null};
-  chrome(false); renderMC();
+function startMC(ids,exam,title='Multiple Choice'){
+  S={mode:'mc',queue:ids,i:0,right:0,answered:false,exam:!!exam,wrongIds:[],sec:null,title};
+  chrome(false,title); renderMC();
 }
 function renderMC(){
   if(S.i>=S.queue.length) return finish();
   drillBar();
   const q=toQ(S.queue[S.i]); S.q=q;
   view().innerHTML=`<div class="screen">
-    <p class="eyebrow">${S.sourceExam?'Supplied PDF · question '+(S.i+1)+' of '+S.queue.length:S.sourceTrainer?'PDF trainer · question '+(S.i+1)+' of '+S.queue.length:S.exam?(q.sec==='signs'?'Road signs \u00b7 part 1':'Road rules \u00b7 part 2'):q.topic}</p>
+    <p class="eyebrow">${S.mockPractice?'Mock practice · question '+(S.i+1)+' of '+S.queue.length:S.mockTrainer?'Mock test trainer · question '+(S.i+1)+' of '+S.queue.length:S.exam?(q.sec==='signs'?'Road signs \u00b7 part 1':'Road rules \u00b7 part 2'):q.topic}</p>
     <div class="qcard" id="card">
       ${q.art?`<div class="signbox" style="margin-bottom:16px">${q.art}</div>`:''}
       <p class="qtext">${esc(q.q)}</p>
@@ -927,6 +1089,8 @@ function answerMC(i){
   if(S.answered) return; S.answered=true;
   const q=S.q,ok=i===q.a;
   if(ok) S.right++; else S.wrongIds.push(q.id);
+  if(S.mockPractice) updateMockPractice(q.id,ok);
+  else if(S.exam&&!ok) returnMockQuestionToPractice(q.id);
   grade(q.id,ok);
   const opts=[...document.querySelectorAll('.opt')];
   opts.forEach((b,k)=>{b.disabled=true;
@@ -949,19 +1113,26 @@ function next(){ S.i++; S.answered=false; S.mode==='swipe'?renderSwipe():renderM
 
 /* ---------- swipe ---------- */
 function startSwipe(){
-  S={mode:'swipe',queue:pick(RULE_ITEMS.filter(id=>id[0]==='t'),12),i:0,right:0,answered:false,wrongIds:[]};
-  chrome(false); renderSwipe();
+  S={mode:'swipe',queue:pick(RULE_ITEMS.filter(id=>id[0]==='t'),12),i:0,right:0,answered:false,wrongIds:[],title:'True or False'};
+  chrome(false,S.title); renderSwipe();
 }
 function renderSwipe(){
   if(S.i>=S.queue.length) return finish();
   drillBar();
   const q=byId[S.queue[S.i]].d; S.q=q;
-  const nx=S.i+1<S.queue.length?byId[S.queue[S.i+1]].d:null;
+  const remaining=S.queue.length-S.i;
+  const backing=Math.min(3,Math.max(0,remaining-1));
+  const spread=8+Math.min(remaining,9)*.75;
+  const stack=Array.from({length:backing},(_,index)=>{
+    const layer=backing-index;
+    return `<div class="swipe stack-card" style="--stack-layer:${layer};--stack-y:${layer*spread}px;--stack-scale:${1-layer*.025};--stack-opacity:${.88-layer*.12};--stack-shadow-y:${layer*5}px" aria-hidden="true"><span>Flash card</span><b>${S.i+1+layer}</b></div>`;
+  }).join('');
   view().innerHTML=`<div class="screen">
-    <div class="swipehint"><span>\u2190 False</span><span>True \u2192</span></div>
-    <div class="deck">
-      ${nx?`<div class="swipe under"><div class="st">${esc(nx.t)}</div><div class="sq">${esc(nx.q)}</div></div>`:''}
-      <div class="swipe" id="top">
+    <p class="swipe-instruction" role="note">Swipe right for true, swipe left for false.</p>
+    <div class="deck flash-deck" style="--stack-spread:${spread}px" aria-label="${remaining} flash card${remaining===1?'':'s'} remaining">
+      ${stack}
+      <div class="deck-count" aria-hidden="true"><b>${remaining}</b><span>cards left</span></div>
+      <div class="swipe top-card" id="top">
         <div class="stamp t" id="stt">TRUE</div><div class="stamp f" id="stf">FALSE</div>
         <div class="st">${esc(q.t)}</div><div class="sq">${esc(q.q)}</div>
       </div>
@@ -1004,8 +1175,8 @@ function answerTF(v){
 
 /* ---------- sign match ---------- */
 function startMatch(){
-  S={mode:'match',queue:pick(SIGN_ITEMS,12),i:0,right:0,round:0,wrongIds:[]};
-  chrome(false); renderMatch();
+  S={mode:'match',queue:pick(SIGN_ITEMS,12),i:0,right:0,round:0,wrongIds:[],title:'Sign Match'};
+  chrome(false,S.title); renderMatch();
 }
 function renderMatch(){
   const slice=S.queue.slice(S.round*4,S.round*4+4);
@@ -1053,30 +1224,78 @@ function tryPair(signId,nameId){
   }
 }
 
-/* ---------- supplied practice test ---------- */
-function startExam(){
-  S={mode:'mc',queue:SOURCE_ITEMS.slice(),i:0,right:0,answered:false,exam:true,sourceExam:true,wrongIds:[]};
-  chrome(false); renderMC();
+/* ---------- shared mock test catalog, trainer, and practice ---------- */
+function buildMockQueue(){
+  return {queue:MOCK_ITEMS.slice(),nSign:MOCK_SIGN_ITEMS.length};
 }
-function startSourceTrainer(){
-  S={mode:'mc',queue:SOURCE_ITEMS.slice(),i:0,right:0,answered:false,exam:false,sourceTrainer:true,wrongIds:[]};
-  chrome(false); renderMC();
+function startMockExam(){
+  const {queue,nSign}=buildMockQueue();
+  S={mode:'mc',queue,i:0,right:0,answered:false,exam:true,nSign,wrongIds:[],title:'Mock Permit Test'};
+  chrome(false,S.title); renderMC();
+}
+function startMockTrainer(){
+  const {queue}=buildMockQueue();
+  S={mode:'mc',queue,i:0,right:0,answered:false,exam:false,mockTrainer:true,wrongIds:[],title:'Mock Test Trainer'};
+  chrome(false,S.title); renderMC();
+}
+function buildMockPracticeQueue(){
+  const state=mockPracticeState();
+  const pending=mockPracticePending();
+  const missed=pending.filter(id=>state.missed[id]);
+  const fresh=pending.filter(id=>!state.missed[id]);
+  const missedSet=pick(missed,Math.min(10,missed.length));
+  return [...missedSet,...pick(fresh,10-missedSet.length)];
+}
+function startMockPractice(){
+  const queue=buildMockPracticeQueue();
+  if(!queue.length) return screenMockPracticeMastery();
+  S={mode:'mc',queue,i:0,right:0,answered:false,exam:false,mockPractice:true,wrongIds:[],title:'Mock Practice Test'};
+  chrome(false,S.title); renderMC();
+}
+function screenMockPracticeMastery(){
+  S=null; chrome(true,'Mock Practice Test'); $('#topslot').innerHTML=''; TAB='drills'; nav();
+  view().innerHTML=`<div class="screen mock-practice-mastery">
+    <p class="eyebrow">Mock practice</p><h2>All 40 questions passed</h2>
+    <div class="result pass"><div class="rt">Practice pool cleared</div><div class="rv">40 / 40</div><div class="rs">Every mock question is passed</div></div>
+    <p class="lede">A missed question on a future Mock Permit Test will return here for another pass.</p>
+    <button class="btn" data-go="mock-exam">Take the Mock Permit Test</button>
+    <div style="height:10px"></div><button class="btn ghost" data-go="drills">Back to drills</button>
+  </div>`;
 }
 
 /* ---------- finish ---------- */
+function mockPracticeReview(id){
+  const q=toQ(id);
+  return `<article class="mock-practice-review">
+    <div class="mock-practice-review-head">${q.art?`<div class="signbox mock-practice-review-art">${q.art}</div>`:''}<div><p class="eyebrow">${esc(q.topic)}</p><h3>${esc(q.q)}</h3></div></div>
+    <div class="mock-practice-trainer"><b>Trainer explanation</b><p>${esc(q.w)}</p><span class="src">${esc(q.src||'Mock Test Trainer')}</span></div>
+  </article>`;
+}
+function finishMockPractice(total,right,wrong){
+  const remaining=mockPracticePending().length;
+  const passedSet=right===total;
+  const fullSet=total===10;
+  const headline=remaining===0?'All mock questions passed':passedSet?(fullSet?'You passed all 10 questions':'You passed this final set'):'Practice set scored';
+  const detail=remaining===0?'Every question in the 40-question mock pool is now passed.':passedSet?'Those questions are cleared. Continue to the next set when you are ready.':`${wrong.length} question${wrong.length===1?' was':'s were'} returned to your practice list.`;
+  chrome(true,'Mock Practice Results'); $('#topslot').innerHTML='';
+  view().innerHTML=`<div class="screen mock-practice-results">
+    <p class="eyebrow">Mock practice results</p><h2>${headline}</h2>
+    <div class="result ${passedSet?'pass':'fail'}"><div class="rt">This set</div><div class="rv">${right} / ${total}</div><div class="rs">${remaining} of 40 still in practice</div></div>
+    <p class="lede">${detail}</p>
+    ${wrong.length?`<section class="panel mock-practice-review-list"><p class="panel-t">Review missed questions</p>${wrong.map(mockPracticeReview).join('')}</section>`:`<div class="panel mock-practice-celebration"><p class="panel-t">${fullSet?'Clean set':'Final set cleared'}</p><p>${fullSet?'You passed all 10 questions. Start the next set to keep clearing the mock pool.':'You passed every remaining mock question.'}</p></div>`}
+    ${remaining?`<button class="btn" data-go="mock-practice">${passedSet&&fullSet?'Start the next 10 questions':'Continue with the next set'}</button><div style="height:10px"></div>`:`<button class="btn" data-go="mock-exam">Take the Mock Permit Test</button><div style="height:10px"></div>`}
+    <button class="btn ghost" data-go="drills">Back to drills</button>
+  </div>`;
+  S.lastWrong=wrong.slice();
+}
 function finish(){
-  P.drills++; markDay(); save(); chrome(true); $('#topslot').innerHTML='';
   const total=S.queue.length,right=S.right,wrong=S.wrongIds;
+  if(S.exam) P.mockExam={percent:total?Math.round(right/total*100):0,right,total,finishedAt:Date.now()};
+  P.drills++; markDay(); save();
+  if(S.mockPractice) return finishMockPractice(total,right,wrong);
+  chrome(true,'Session Results'); $('#topslot').innerHTML='';
   let head='',skipped=0;
-  if(S.sourceExam){
-    const answered=Math.min(total,S.i+(S.answered?1:0));
-    const remaining=total-answered;
-    const need=Math.ceil(total*.75);
-    const pass=remaining===0&&right>=need;
-    skipped=remaining;
-    head=`<div class="result ${pass?'pass':'fail'}"><div class="rt">Source practice test</div><div class="rv">${right} / ${total}</div><div class="rs">${pass?'Pass':'Keep training'} · need ${need}</div></div>
-      <p class="lede">${remaining?`Test ended early. ${remaining} unanswered question${remaining===1?'':'s'} count as incorrect.`:pass?'You cleared the 75% study benchmark for this ten-question source test.':'Review the missed questions, then rerun the same source test in order.'}</p>`;
-  } else if(S.exam){
+  if(S.exam){
     const answered=S.queue.slice(0,Math.min(total,S.i+(S.answered?1:0)));
     const answeredSigns=answered.slice(0,S.nSign);
     const answeredRules=answered.slice(S.nSign);
@@ -1094,7 +1313,7 @@ function finish(){
     head=`<div class="result ${p>=75?'pass':'fail'}"><div class="rt">Drill complete</div><div class="rv">${right} / ${total}</div><div class="rs">${p}% this session</div></div>`;
   }
   view().innerHTML=`<div class="screen">
-    <p class="eyebrow">Results</p><h2>${S.sourceExam?'Source practice test':S.sourceTrainer?'PDF test training':S.exam?'Mock exam':'Session'} scored</h2>
+    <p class="eyebrow">Results</p><h2>${S.mockTrainer?'Mock test training':S.exam?'Mock exam':'Session'} scored</h2>
     ${head}
     <div class="panel"><p class="panel-t">Back in the rotation</p>
       ${wrong.length?wrong.slice(0,8).map(id=>{const it=byId[id];
@@ -1115,26 +1334,28 @@ function go(k){
   if(k.startsWith('topic:')){
     const topic=decodeURIComponent(k.slice('topic:'.length));
     const pool=ALL_ITEMS.filter(id=>byId[id].t===topic);
-    return startMC(pick(pool,Math.min(10,pool.length)));
+    return startMC(pick(pool,Math.min(10,pool.length)),false,topic);
   }
   switch(k){
     case 'home': S=null; return screenHome();
     case 'drills': S=null; return screenDrills();
     case 'manual': S=null; return screenManual();
+    case 'read-manual': S=null; return screenDriversManual();
     case 'prog': S=null; return screenProgress();
     case 'match': return startMatch();
     case 'swipe': return startSwipe();
-    case 'mc': return startMC(pick(ALL_ITEMS,10));
-    case 'exam': return startExam();
-    case 'source-train': return startSourceTrainer();
+    case 'mc': return startMC(pick(ALL_ITEMS,10),false,'Multiple Choice');
+    case 'mock-exam': return startMockExam();
+    case 'mock-practice': return startMockPractice();
+    case 'mock-train': return startMockTrainer();
     case 'auto': {
       const sp=readiness(SIGN_ITEMS),rp=readiness(RULE_ITEMS);
       const t=trouble(10);
-      if(t.length>=6) return startMC(t);
-      return sp<=rp?startMatch():startMC(pick(RULE_ITEMS,10));
+      if(t.length>=6) return startMC(t,false,'Trouble Spots');
+      return sp<=rp?startMatch():startMC(pick(RULE_ITEMS,10),false,'Road Rules');
     }
-    case 'focus': { const t=trouble(10); return t.length?startMC(t):screenDrills() }
-    case 'review': { const w=(S&&S.lastWrong)||[]; return w.length?startMC(w):screenDrills() }
+    case 'focus': { const t=trouble(10); return t.length?startMC(t,false,'Focused Review'):screenDrills() }
+    case 'review': { const w=(S&&S.lastWrong)||[]; return w.length?startMC(w,false,'Missed Questions'):screenDrills() }
     case 'next': return next();
     case 'end': {
       if(S&&S.i>0){ P.drills++; markDay(); save(); return finish() }
@@ -1142,7 +1363,7 @@ function go(k){
     }
     case 'reset': {
       if(!confirm('Erase every box level, streak, and score? This cannot be undone.')) return;
-      P={items:{},drills:0,lastDay:null,streak:0,answered:0,correct:0}; recent=[]; save(); return screenProgress();
+      P={items:{},drills:0,lastDay:null,streak:0,answered:0,correct:0,mockExam:null,mockPractice:{passed:{},missed:{}}}; recent=[]; save(); return screenProgress();
     }
   }
 }
