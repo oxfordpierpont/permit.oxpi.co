@@ -272,7 +272,7 @@ nav .lbl{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppe
 .hidden{display:none!important}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
-<link rel="stylesheet" href="facelift.css?v=ux-route-1">
+<link rel="stylesheet" href="facelift.css?v=audit-fixes-1">
 </head>
 <body>
 <div id="app">
@@ -713,7 +713,9 @@ const ICO={
  match:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--fed-yellow)" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 7.5h7M14 17.5h7"/></svg>',
  swipe:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--fed-yellow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M2 12h2M20 12h2"/></svg>',
  mc:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--fed-yellow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/><path d="M17 17l2 2 3.5-4" stroke="var(--green-lit)"/></svg>',
- exam:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--fed-yellow)" stroke-width="2" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h4"/></svg>'
+ exam:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--fed-yellow)" stroke-width="2" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h4"/></svg>',
+ trainer:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--fed-yellow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5M9 12h6M9 16h3"/><path d="m15 17 1.5 1.5L20 15" stroke="var(--green-lit)"/></svg>',
+ flame:'<svg class="streak-flame" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M13.6 2.7c.5 3.5-1.7 4.7-3 6.6-1.1-1-1.1-2.5-.8-3.6C6.5 7.9 5 10.8 5 14.1A7 7 0 0 0 12 21a7 7 0 0 0 7-6.9c0-4.1-2.3-7.5-5.4-11.4Zm-.4 15.9a3.1 3.1 0 0 0 1.9-2.9c0-1.6-.8-2.8-2.1-4.3.1 1.2-.6 1.9-1.2 2.7-.5-.4-.6-1-.5-1.5-1.2.9-1.8 2.1-1.8 3.5a3 3 0 0 0 3.7 2.5Z"/></svg>'
 };
 
 /* ---------- chrome ---------- */
@@ -742,7 +744,7 @@ function nav(){
 function chrome(show){ $('#nav').classList.toggle('hidden',!show) }
 function milepost(target=$('#topslot')){
   const raw=pct((readiness(SIGN_ITEMS)+readiness(RULE_ITEMS))/2);
-  const m=raw||68;
+  const m=raw;
   target.innerHTML=`<div class="milepost">
     <div class="mp-label"><span>Route to test-ready</span><b>MILE ${m} OF 100 TO TEST-READY</b></div>
     <div class="road" style="--mile:${m}"><b class="mile-pin">${m}</b><div class="road-fill" style="width:${m}%"></div><div class="road-line"></div>
@@ -759,7 +761,7 @@ function gauge(p,label,sub){
    ============================================================ */
 function screenHome(){
   chrome(true); $('#topslot').innerHTML=''; TAB='home'; nav();
-  const sp=pct(readiness(SIGN_ITEMS))||75, rp=pct(readiness(RULE_ITEMS))||75;
+  const sp=pct(readiness(SIGN_ITEMS)), rp=pct(readiness(RULE_ITEMS));
   const tr=trouble(5);
   const acc=P.answered?Math.round(P.correct/P.answered*100):0;
   const featured=tr.filter(id=>byId[id].kind==='sign').slice(0,2);
@@ -793,7 +795,7 @@ function screenDrills(){
     ['swipe',ICO.swipe,'True or False','Swipe right for true, left for false.',TF.length+' statements'],
     ['mc',ICO.mc,'Multiple Choice','Four options, instant feedback, manual citation.',(MC.length+SIGNS.length)+' questions'],
     ['exam',ICO.exam,'Source Practice Test','The ten questions and choices from your supplied practice-test PDF.','10 questions · 8 to pass'],
-    ['source-train',ICO.mc,'PDF Test Trainer','The same ten source questions with immediate coaching and review.','10 exact questions']
+    ['source-train',ICO.trainer,'PDF Test Trainer','The same ten source questions with immediate coaching and review.','10 exact questions']
   ];
   view().innerHTML=`<div class="screen">
     <p class="eyebrow">Practice routes</p><h2>Pick a drill</h2>
@@ -1186,7 +1188,7 @@ document.addEventListener('keydown',e=>{
   const d=new Date().toISOString().slice(0,10);
   const y=new Date(Date.now()-864e5).toISOString().slice(0,10);
   if(P.lastDay&&P.lastDay!==d&&P.lastDay!==y) P.streak=0;
-  $('#streak').textContent=P.streak>0?`${P.streak} day streak`:'Day 1';
+  $('#streak').innerHTML=`${ICO.flame}<span>${P.streak>0?`${P.streak} day streak`:'Day 1'}</span>`;
   $('#streak').className='chip'+(P.streak>1?' hot':'');
   go('home');
 })();
