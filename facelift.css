@@ -66,3 +66,10 @@ body{background-image:radial-gradient(circle at 50% -10%,#39523a33,transparent 3
 .road-ready-plate-copy .road-ready-word-road{left:10%!important;transform:translateY(-50%) scaleX(.78)!important}
 .road-ready-plate-copy .road-ready-word-ready{right:9%!important;transform:translateY(-50%) scaleX(.65)!important}
 @media(max-width:600px){.road-ready-plate-copy span{font-size:19px!important}}
+
+@media(max-width:600px){
+  .mock-home .road:before,.mock-home .road:after{font-size:18px!important;letter-spacing:-.05em!important}
+  .mock-gauge h2{font-size:24px!important;letter-spacing:.03em!important}
+  .mock-cta{font-size:25px!important;letter-spacing:.015em!important}
+  .mock-cta b{font-size:36px!important;margin-right:9px!important;vertical-align:-4px!important}
+}
