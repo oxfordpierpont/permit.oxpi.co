@@ -124,11 +124,12 @@ body{background-image:radial-gradient(circle at 50% -10%,#39523a33,transparent 3
   .home-brand .road-ready-plate{width:104px!important;height:59px!important;border-radius:14px!important}
   .road-ready-plate-copy span{font-size:17px!important}
   .mock-home .milepost{padding:0!important}
-  .mock-home .mp-label b{font-size:11px!important;line-height:1.25!important;letter-spacing:.08em!important}
-  .mock-home .road{height:36px!important;margin:10px 38px 0!important;border-width:2px!important;border-radius:12px!important}
+  .mock-home .mp-label{display:block!important;margin-bottom:0!important;text-align:center!important}
+  .mock-home .mp-label b{display:block!important;width:100%!important;font-size:11px!important;line-height:1.25!important;letter-spacing:.08em!important}
+  .mock-home .road{height:36px!important;margin:16px 38px 0!important;border-width:2px!important;border-radius:12px!important}
   .mock-home .road:before,.mock-home .road:after{top:-7px!important;width:34px!important;height:50px!important;padding-top:7px!important;border-width:2px!important;border-radius:11px 11px 15px 15px!important;font-size:15px!important;line-height:.95!important}
   .mock-home .road:before{left:-40px!important}.mock-home .road:after{right:-40px!important}
-  .mock-home .mile-pin{top:-18px!important;left:calc(var(--mile) * 1% - 17px)!important;width:34px!important;height:40px!important;padding-top:5px!important;border-width:2px!important;border-radius:12px 12px 17px 17px!important;font-size:23px!important;line-height:1!important}
+  .mock-home .mile-pin{top:-13px!important;left:calc(var(--mile) * 1% - 17px)!important;width:34px!important;height:40px!important;padding-top:5px!important;border-width:2px!important;border-radius:12px 12px 17px 17px!important;font-size:23px!important;line-height:1!important}
   .mock-home .mile-pin:after{bottom:-11px!important;left:8px!important;width:14px!important;height:14px!important;border-width:2px!important}
   .mock-home .road-line{height:3px!important;background:repeating-linear-gradient(90deg,#ffd400 0 15px,transparent 15px 31px)!important}
   .mock-home .gauges{gap:10px!important;margin:22px 0 18px!important}
