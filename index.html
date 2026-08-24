@@ -266,13 +266,12 @@ nav{
 }
 nav button{flex:1;padding:10px 4px 11px;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--concrete-dim);position:relative}
 nav button.on{color:var(--fed-yellow)}
-nav button.on::before{content:"";position:absolute;top:0;left:22%;right:22%;height:3px;background:var(--fed-yellow);border-radius:0 0 3px 3px}
 nav .lbl{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
 
 .hidden{display:none!important}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
-<link rel="stylesheet" href="facelift.css?v=mobile-chrome-2">
+<link rel="stylesheet" href="facelift.css?v=mock-permit-88">
 </head>
 <body>
 <div id="app">
@@ -280,7 +279,7 @@ nav .lbl{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppe
     <button class="menu-toggle" type="button" data-menu-toggle aria-label="Open primary navigation" aria-controls="app-menu" aria-expanded="false">
       <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
     </button>
-    <div class="header-logo"><img src="./public/assets/road-ready-logo.png" alt="Road Ready GA License Test Prep"></div>
+    <button class="header-logo" type="button" data-go="home" aria-label="Return to home"><img src="./public/assets/road-ready-logo.png" alt="Road Ready GA License Test Prep"></button>
   </header>
   <button class="menu-scrim" type="button" data-menu-close aria-label="Close navigation menu" tabindex="-1"></button>
   <aside class="app-menu" id="app-menu" aria-label="Primary navigation" aria-hidden="true" inert>
@@ -332,7 +331,10 @@ nav .lbl{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppe
     <button class="app-menu-next" type="button" data-menu-go="auto"><span>Recommended next</span><b>Start a focused drill</b><i aria-hidden="true">→</i></button>
   </aside>
   <div id="topslot"></div>
-  <main id="main"><div id="view"></div></main>
+  <main id="main">
+    <div id="view"></div>
+    <footer class="app-credit"><a href="https://oxfordpierpont.com/links" target="_blank" rel="noreferrer">Made With ❤️ By Oxford Pierpont, In Atlanta, GA</a></footer>
+  </main>
   <nav id="nav"></nav>
 </div>
 <script src="./public/assets/ga-drivers-manual.js"></script>
@@ -552,6 +554,61 @@ const MC=[
 {id:'m80',t:'Testing & Permits',q:'An applicant under 18 must present which document at the DDS?',o:['A Certificate of School Enrollment, diploma, or GED','A birth certificate only','A school report card','A letter from a teacher'],a:0,w:'Proof of school enrollment is required, along with identity documents, Social Security number, two proofs of Georgia residency, and a responsible adult\u2019s signature.',src:'Manual, Section 6'}
 ];
 
+/* ---------- official Georgia DDS practice-test additions ---------- */
+const DDS_OFFICIAL_RULES=[
+{id:'dds1',t:'Safe Driving',q:'When must you lower high beams at night?',o:['At every intersection','When meeting or following another vehicle','Only after another driver flashes their lights'],a:1,w:'Dim high beams when meeting or following another vehicle so you do not create glare.',src:'Official GA DDS Practice Test · question 1'},
+{id:'dds2',t:'Georgia Laws',q:'Who must obey Georgia’s Hands-Free Law?',o:['Every driver, regardless of age','Only drivers under 21','Only drivers under 18','Only commercial drivers'],a:0,w:'Georgia’s Hands-Free Law applies to every driver, regardless of age.',src:'Official GA DDS Practice Test · question 2'},
+{id:'dds3',t:'Georgia Laws',q:'What should you do when approaching a stopped emergency vehicle with flashing lights?',o:['Move over one lane when safe, or slow below the limit if you cannot','Stop in your lane until it leaves','Sound your horn and continue at the posted speed'],a:0,w:'Georgia’s Move Over Law requires a lane change when safe. If you cannot move over, slow below the posted limit and be ready to stop.',src:'Official GA DDS Practice Test · question 3'},
+{id:'dds4',t:'Safe Driving',q:'After a crash, what is one of your immediate responsibilities?',o:['Give reasonable aid to anyone who is injured','Leave to find a police station','Move on if the damage looks minor'],a:0,w:'Stop, exchange required information, and give reasonable aid to injured people after a crash.',src:'Official GA DDS Practice Test · question 4'},
+{id:'dds5',t:'Signs & Signals',q:'What does a flashing yellow traffic signal mean?',o:['Slow down and proceed with caution','Stop and wait for a green light','Speed up before the signal changes'],a:0,w:'A flashing yellow signal warns you to slow down and proceed carefully.',src:'Official GA DDS Practice Test · question 5'},
+{id:'dds6',t:'Testing & Permits',q:'Where must the supervising licensed driver sit when you drive with an instructional permit?',o:['In the front passenger seat','In any seat in the vehicle','In the back seat directly behind you'],a:0,w:'The supervising licensed driver must sit in the front passenger seat.',src:'Official GA DDS Practice Test · question 6'},
+{id:'dds7',t:'Passing',q:'How should you pass a motorcycle?',o:['Use the full adjacent lane to the left','Share the motorcycle’s lane briefly','Pass on the shoulder if it is clear'],a:0,w:'A motorcycle has the full width of its lane. Pass in an adjacent lane; never share the lane.',src:'Official GA DDS Practice Test · question 7'},
+{id:'dds8',t:'Safe Driving',q:'Which passengers must be protected by a seat belt or child restraint?',o:['Passengers ages 8 through 18','Only passengers under age 8','Only front-seat passengers over age 8'],a:0,w:'Georgia requires occupants ages 8 through 18 to use a safety belt; younger children need the appropriate restraint system.',src:'Official GA DDS Practice Test · question 8'},
+{id:'dds9',t:'Safe Driving',q:'True or false: Driving requires your full attention.',o:['True','False'],a:0,w:'True. Safe driving requires your full attention at all times.',src:'Official GA DDS Practice Test · question 9'},
+{id:'dds10',t:'Safe Driving',q:'What is a major nighttime driving hazard?',o:['Reduced visibility of the road ahead','More room to stop than during daylight','Traffic signals being unavailable'],a:0,w:'At night you can see less of the road ahead, so speed and following distance need more care.',src:'Official GA DDS Practice Test · question 10'},
+{id:'dds11',t:'Pavement Markings',q:'What do double solid yellow center lines mean?',o:['Passing is prohibited in both directions','Passing is allowed after signaling','Only trucks may not pass'],a:0,w:'Double solid yellow lines separate opposing traffic and prohibit passing in both directions.',src:'Official GA DDS Practice Test · question 11'},
+{id:'dds12',t:'Safe Driving',q:'Your right wheels leave the pavement. What is the safest response?',o:['Hold the wheel firmly, ease off the gas, and brake gently','Jerk the wheel back onto the pavement','Accelerate to regain the lane quickly'],a:0,w:'Keep control by holding the steering wheel firmly, easing off the accelerator, and braking gently before returning to the road.',src:'Official GA DDS Practice Test · question 12'},
+{id:'dds13',t:'Georgia Laws',q:'What can a first Hands-Free Law conviction include?',o:['A fine and one point against your license','A warning with no penalty','Automatic jail time'],a:0,w:'A first Hands-Free Law conviction can bring a fine and one point against your license.',src:'Official GA DDS Practice Test · question 13'},
+{id:'dds14',t:'Right of Way',q:'Before making a right turn at a red light, what must you do?',o:['Come to a full stop and yield to traffic and pedestrians','Slow down and turn if no vehicle is close','Wait only for a green arrow'],a:0,w:'A right turn on red requires a full stop and yielding to traffic and pedestrians, unless a sign prohibits the turn.',src:'Official GA DDS Practice Test · question 14'},
+{id:'dds15',t:'Signs & Signals',q:'What is the correct response to a flashing yellow signal?',o:['Slow down and use caution','Stop until it turns green','Treat it as a stop sign'],a:0,w:'Flashing yellow means slow down and proceed with caution.',src:'Official GA DDS Practice Test · question 15'},
+{id:'dds16',t:'Expressway Driving',q:'When entering an expressway, how should you adjust your speed?',o:['Match the speed of traffic already on the expressway','Enter at the lowest possible speed','Stop at the end of the acceleration lane'],a:0,w:'Use the acceleration lane to match the speed of traffic before merging.',src:'Official GA DDS Practice Test · question 16'},
+{id:'dds17',t:'Safe Driving',q:'Which headlights should you use in heavy fog?',o:['Low beams','High beams','Parking lights only'],a:0,w:'Use low beams in fog. High beams reflect off fog and reduce visibility.',src:'Official GA DDS Practice Test · question 17'},
+{id:'dds18',t:'Safe Driving',q:'What should you do if a tire suddenly blows out?',o:['Hold the wheel firmly and lift your foot from the accelerator','Brake hard immediately','Turn sharply toward the shoulder'],a:0,w:'Hold the steering wheel firmly and lift your foot from the accelerator while the vehicle slows.',src:'Official GA DDS Practice Test · question 18'},
+{id:'dds19',t:'Signs & Signals',q:'What must be true before you enter an intersection on a green light?',o:['The intersection and crosswalk must be clear','No vehicle may be behind you','You must be in the right lane'],a:0,w:'A green light does not let you block an intersection. Wait until cross traffic and pedestrians are clear.',src:'Official GA DDS Practice Test · question 19'},
+{id:'dds20',t:'Alcohol & Penalties',q:'What can happen to your driving privilege after a DUI conviction?',o:['It can be suspended','It can only receive a warning','It cannot be affected until a second conviction'],a:0,w:'A DUI conviction can suspend your driving privilege.',src:'Official GA DDS Practice Test · question 20'},
+{id:'dds21',t:'Work Zones & Rail',q:'What is required when you drive through a construction or maintenance zone?',o:['Yield to workers and maintenance vehicles','Keep the same speed unless a flagger stops you','Drive on the shoulder to avoid delays'],a:0,w:'Yield to workers and maintenance vehicles in construction zones.',src:'Official GA DDS Practice Test · question 21'},
+{id:'dds22',t:'Sharing the Road',q:'A school bus is stopped with red lights flashing on an undivided road. What must you do?',o:['Stop until the red lights stop flashing and passengers are clear','Pass slowly if no child is visible','Stop only when traveling behind the bus'],a:0,w:'On an undivided roadway, traffic in both directions must stop for a school bus displaying flashing red lights.',src:'Official GA DDS Practice Test · question 22'},
+{id:'dds23',t:'Right of Way',q:'Where should you position your vehicle to make a left turn?',o:['As close as practical to the far-left edge or in the center turn lane','At the far-right edge of the roadway','In the center of the through lane'],a:0,w:'Approach a left turn near the far-left edge of your lane or from the marked center turn lane.',src:'Official GA DDS Practice Test · question 23'},
+{id:'dds24',t:'Alcohol & Penalties',q:'What can result from leaving the scene of a crash?',o:['Suspension of your driver’s license','A parking citation only','No penalty if nobody was injured'],a:0,w:'Leaving the scene of a crash can result in a driver’s license suspension.',src:'Official GA DDS Practice Test · question 24'},
+{id:'dds25',t:'Safe Driving',q:'True or false: Parking lights alone are enough when driving at night.',o:['True','False'],a:1,w:'False. Parking lights are not a substitute for headlights while driving at night.',src:'Official GA DDS Practice Test · question 25'},
+{id:'dds26',t:'Georgia Laws',q:'When possible, what does the Move Over Law require near a stopped emergency vehicle?',o:['Move into the next lane away from the vehicle','Stop beside the vehicle','Move into the lane closest to the vehicle'],a:0,w:'When it is safe to do so, move one lane away from a stopped emergency vehicle.',src:'Official GA DDS Practice Test · question 26'},
+{id:'dds27',t:'Georgia Laws',q:'What does Georgia’s Implied Consent Law mean for a driver arrested for DUI?',o:['The driver must submit to requested chemical tests','The driver may refuse every test without consequence','Only a judge may request a chemical test'],a:0,w:'Under Implied Consent, a driver arrested for DUI must submit to requested tests of breath, blood, or urine.',src:'Official GA DDS Practice Test · question 27'},
+{id:'dds28',t:'Safe Driving',q:'What signal should you use before changing lanes?',o:['The corresponding turn signal','Your hazard lights','A hand signal only'],a:0,w:'Use the turn signal that matches the direction of your lane change.',src:'Official GA DDS Practice Test · question 28'},
+{id:'dds29',t:'Safe Driving',q:'What headlights should you use in fog?',o:['Low beams','High beams','No headlights until visibility is very low'],a:0,w:'Low beams work better in fog because high beams reflect light back toward the driver.',src:'Official GA DDS Practice Test · question 29'},
+{id:'dds30',t:'Right of Way',q:'What does a yield sign require?',o:['Give the right of way to all traffic','Stop for five seconds before continuing','Maintain speed through the intersection'],a:0,w:'A yield sign requires you to give the right of way to traffic already on or approaching the roadway.',src:'Official GA DDS Practice Test · question 30'},
+{id:'dds31',t:'Georgia Laws',q:'Which behavior is aggressive driving?',o:['Driving with intent to annoy, harass, intimidate, injure, or obstruct another person','Driving under the speed limit in rain','Using a turn signal early'],a:0,w:'Aggressive driving includes operating a vehicle with intent to annoy, harass, intimidate, injure, or obstruct another person.',src:'Official GA DDS Practice Test · question 31'},
+{id:'dds32',t:'Safe Driving',q:'If you must stop on the shoulder of an expressway because of an emergency, what should you do?',o:['Turn on hazard lights and raise the hood','Stand in the travel lane to flag drivers','Leave the vehicle parked without warning'],a:0,w:'Use hazard lights and raise the hood to signal that an emergency has stopped your vehicle.',src:'Official GA DDS Practice Test · question 32'},
+{id:'dds33',t:'Signs & Signals',q:'You enter an intersection as the light changes from green to yellow. What should you do?',o:['Slow down and proceed with caution','Accelerate to clear the next intersection','Stop in the intersection immediately'],a:0,w:'A yellow signal warns the light is changing to red. Slow down and proceed with caution if you are already entering safely.',src:'Official GA DDS Practice Test · question 33'},
+{id:'dds34',t:'Sharing the Road',q:'True or false: Bicyclists may use arm signals to communicate turns and stops.',o:['True','False'],a:0,w:'True. Bicyclists may use hand and arm signals to show turns and stops.',src:'Official GA DDS Practice Test · question 34'},
+{id:'dds35',t:'Pavement Markings',q:'What does a solid yellow line on your side of the road mean?',o:['Do not pass','Passing is allowed after signaling','Only motorcycles may pass'],a:0,w:'A solid yellow line on your side of the centerline means passing is prohibited.',src:'Official GA DDS Practice Test · question 35'},
+{id:'dds36',t:'Expressway Driving',q:'Is it ever legal to back up on an expressway?',o:['No, never','Only when traffic is stopped','Only if you miss an exit'],a:0,w:'Never back up on an expressway, even if you miss an exit or encounter a backup.',src:'Official GA DDS Practice Test · question 36'},
+{id:'dds37',t:'Work Zones & Rail',q:'What should you do when railroad crossing gates are lowered?',o:['Stop and wait until the gates rise and the tracks are clear','Drive around the gates if no train is visible','Follow the vehicle ahead through the gates'],a:0,w:'Stop at lowered railroad gates and wait until they rise and the tracks are clear.',src:'Official GA DDS Practice Test · question 37'},
+{id:'dds38',t:'Safe Driving',q:'When are headlights required in Georgia?',o:['From 30 minutes after sunset until 30 minutes before sunrise and whenever visibility is poor','Only after midnight','Only on rural roads'],a:0,w:'Use headlights from 30 minutes after sunset to 30 minutes before sunrise and whenever visibility is limited.',src:'Official GA DDS Practice Test · question 38'},
+{id:'dds39',t:'Work Zones & Rail',q:'True or false: You may never drive through, around, or under a railroad crossing gate.',o:['True','False'],a:0,w:'True. Never drive through, around, or under a lowered railroad crossing gate.',src:'Official GA DDS Practice Test · question 39'},
+{id:'dds40',t:'Safe Driving',q:'What should you do before pulling into traffic from a parking space?',o:['Signal and proceed only when it is safe','Enter quickly before another driver arrives','Use hazard lights and pull out without checking'],a:0,w:'Signal and enter traffic only when you can do so safely.',src:'Official GA DDS Practice Test · question 40'},
+{id:'dds41',t:'Georgia Laws',q:'Who may be liable if litter is thrown from a motor vehicle?',o:['The driver','Only a passenger who is identified','No one if the vehicle is moving'],a:0,w:'The driver can be held responsible for litter thrown from a motor vehicle.',src:'Official GA DDS Practice Test · question 41'},
+{id:'dds43',t:'Georgia Laws',q:'Which action is prohibited by Georgia’s Hands-Free Law while driving?',o:['Watching or broadcasting video','Holding or supporting a wireless device','Writing, sending, or reading a text or email','All of these actions'],a:3,w:'Georgia’s Hands-Free Law prohibits all of these actions while operating a motor vehicle.',src:'Official GA DDS Practice Test · question 43'},
+{id:'dds44',t:'Safe Driving',q:'What affects how far it takes a vehicle to stop?',o:['Driver reaction, vehicle condition, wind, and road conditions','Only the vehicle’s model year','Only the posted speed limit'],a:0,w:'Stopping distance depends on the driver, vehicle condition, wind, and road conditions.',src:'Official GA DDS Practice Test · question 44'},
+{id:'dds45',t:'Safe Driving',q:'True or false: You may wear the shoulder belt behind your back or under your arm.',o:['False','True'],a:0,w:'False. Wear the shoulder belt across your chest and shoulder, never behind your back or under your arm.',src:'Official GA DDS Practice Test · question 45'}
+];
+
+const DDS_OFFICIAL_SIGNS=[
+{id:'dds46',t:'Road Signs',q:'What should you do when you see this sign?',o:['Be ready for traffic merging into your lane','Prepare to turn right immediately','Stop at a railroad crossing'],a:0,sign:'merge',w:'This Merge sign warns that traffic may enter your lane. Adjust speed and space to merge safely.',src:'Official GA DDS Practice Test · question 46'},
+{id:'dds48',t:'Road Signs',q:'What does this sign warn you about?',o:['A road that may be slippery when wet','A steep downgrade','A school crossing'],a:0,sign:'slippery',w:'The Slippery When Wet sign warns that the road surface may lose traction in wet conditions.',src:'Official GA DDS Practice Test · question 48'},
+{id:'dds49',t:'Road Signs',q:'What does this sign identify?',o:['A pedestrian-only crossing','A school zone or school crossing','A bicycle route'],a:1,sign:'schoolzone',w:'This sign warns of a school zone or school crossing. Slow down and watch for children.',src:'Official GA DDS Practice Test · question 49'},
+{id:'dds50',t:'Road Signs',q:'What does this sign warn you about?',o:['A steep hill or downgrade ahead','A dip in the road','A sharp right turn'],a:0,sign:'hill',w:'This sign warns of a steep hill or downgrade ahead. Slow down and use an appropriate gear.',src:'Official GA DDS Practice Test · question 50'}
+];
+
 /* ---------- supplied practice-test PDF ---------- */
 const SOURCE_TEST=[
 {id:'p1',t:'Supplied Practice Test',q:'A diamond-shaped sign is a:',o:['No Passing Zone sign.','Warning sign.','School Crossing sign.'],a:1,w:'A diamond shape is used for warning signs that alert drivers to conditions or hazards ahead.',src:'Supplied practice-test PDF · question 1'},
@@ -661,17 +718,44 @@ let saveT=null;
 const save=()=>{clearTimeout(saveT);saveT=setTimeout(()=>store.set(P),400)};
 
 const SIGN_ITEMS=SIGNS.map(s=>'s:'+s.id);
-const RULE_ITEMS=[...MC.map(q=>'m:'+q.id),...TF.map(q=>'t:'+q.id)];
+const DDS_RULE_ITEMS=DDS_OFFICIAL_RULES.map(q=>'d:'+q.id);
+const DDS_SIGN_ITEMS=DDS_OFFICIAL_SIGNS.map(q=>'d:'+q.id);
+const RULE_ITEMS=[...MC.map(q=>'m:'+q.id),...DDS_RULE_ITEMS,...TF.map(q=>'t:'+q.id)];
 const SOURCE_ITEMS=SOURCE_TEST.map(q=>'p:'+q.id);
 const ALL_ITEMS=[...SIGN_ITEMS,...RULE_ITEMS];
-const MOCK_SIGN_ITEMS=SIGN_ITEMS.slice(0,20);
-const MOCK_RULE_ITEMS=MC.slice(0,20).map(q=>'m:'+q.id);
+const MOCK_SIGN_ITEMS=[...SIGN_ITEMS.slice(0,20),...DDS_SIGN_ITEMS];
+const MOCK_RULE_ITEMS=[...MC.slice(0,20).map(q=>'m:'+q.id),...DDS_RULE_ITEMS];
 const MOCK_ITEMS=[...MOCK_SIGN_ITEMS,...MOCK_RULE_ITEMS];
+const MOCK_BANK_TOTAL=88;
+const MOCK_SIGN_BANK_TOTAL=24;
+const MOCK_RULE_BANK_TOTAL=64;
+const MOCK_EXAM_SIGN_COUNT=MOCK_SIGN_BANK_TOTAL;
+const MOCK_EXAM_RULE_COUNT=MOCK_RULE_BANK_TOTAL;
+const MOCK_EXAM_SIGN_PASSING_SCORE=Math.ceil(MOCK_EXAM_SIGN_COUNT*.75);
+const MOCK_EXAM_RULE_PASSING_SCORE=Math.ceil(MOCK_EXAM_RULE_COUNT*.75);
 const byId={};
 SIGNS.forEach(s=>byId['s:'+s.id]={kind:'sign',t:'Road Signs',d:s});
 MC.forEach(q=>byId['m:'+q.id]={kind:'mc',t:q.t,d:q});
+DDS_OFFICIAL_RULES.forEach(q=>byId['d:'+q.id]={kind:'dds',t:q.t,d:q});
+DDS_OFFICIAL_SIGNS.forEach(q=>byId['d:'+q.id]={kind:'dds',t:'Road Signs',d:q});
 TF.forEach(q=>byId['t:'+q.id]={kind:'tf',t:q.t,d:q});
 SOURCE_TEST.forEach(q=>byId['p:'+q.id]={kind:'source',t:q.t,d:q});
+
+function assertMockCatalog(){
+  const dds=[...DDS_OFFICIAL_RULES,...DDS_OFFICIAL_SIGNS];
+  const expected=new Set([...Array.from({length:41},(_,i)=>'dds'+(i+1)),'dds43','dds44','dds45','dds46','dds48','dds49','dds50']);
+  const ids=new Set(dds.map(q=>q.id));
+  const malformed=dds.some(q=>!q.q||!q.w||!q.src||!Array.isArray(q.o)||q.o.length<2||!Number.isInteger(q.a)||q.a<0||q.a>=q.o.length);
+  const missingSign=DDS_OFFICIAL_SIGNS.some(q=>!SIGNS.some(s=>s.id===q.sign));
+  if(
+    dds.length!==48||ids.size!==48||expected.size!==48||[...expected].some(id=>!ids.has(id))||malformed||missingSign||
+    MOCK_ITEMS.length!==MOCK_BANK_TOTAL||MOCK_SIGN_ITEMS.length!==MOCK_SIGN_BANK_TOTAL||MOCK_RULE_ITEMS.length!==MOCK_RULE_BANK_TOTAL||
+    new Set(MOCK_ITEMS).size!==MOCK_BANK_TOTAL||MOCK_ITEMS.some(id=>!byId[id])||
+    MOCK_EXAM_SIGN_COUNT!==MOCK_SIGN_BANK_TOTAL||MOCK_EXAM_RULE_COUNT!==MOCK_RULE_BANK_TOTAL||
+    MOCK_EXAM_SIGN_PASSING_SCORE!==Math.ceil(MOCK_EXAM_SIGN_COUNT*.75)||MOCK_EXAM_RULE_PASSING_SCORE!==Math.ceil(MOCK_EXAM_RULE_COUNT*.75)
+  ) throw new Error('Invalid mock catalog: expected 88 unique answerable items.');
+}
+assertMockCatalog();
 
 const rec=id=>P.items[id]||(P.items[id]={box:0,seen:0,right:0,wrong:0,streak:0,last:0});
 function grade(id,ok){
@@ -756,9 +840,10 @@ function toQ(id){
     return{id,sec:'signs',topic:'Road Signs',art:s.s,q:'What does this sign mean?',
       o:opts.map(x=>x.n),a:opts.indexOf(s),w:s.m,src:'Manual, Section 7'};
   }
-  if(it.kind==='mc'){const q=it.d;
+  if(it.kind==='mc'||it.kind==='dds'){const q=it.d;
+    const sign=q.sign?SIGNS.find(s=>s.id===q.sign):null;
     const idx=shuffle(q.o.map((_,i)=>i));
-    return{id,sec:'rules',topic:q.t,art:null,q:q.q,o:idx.map(i=>q.o[i]),a:idx.indexOf(q.a),w:q.w,src:q.src};}
+    return{id,sec:sign?'signs':'rules',topic:sign?'Road Signs':q.t,art:sign?sign.s:null,q:q.q,o:idx.map(i=>q.o[i]),a:idx.indexOf(q.a),w:q.w,src:q.src};}
   if(it.kind==='source'){const q=it.d;
     const sign=q.sign?SIGNS.find(s=>s.id===q.sign):null;
     return{id,sec:'source',topic:q.t,art:sign?sign.s:null,q:q.q,o:q.o,a:q.a,w:q.w,src:q.src};}
@@ -851,12 +936,6 @@ function screenHome(){
   const featured=tr.filter(id=>byId[id].kind==='sign').slice(0,2);
   if(!featured.length) featured.push('s:stop','s:schoolzone');
   view().innerHTML=`<div class="screen home-v2">
-    <div class="home-v2-brand">
-      <div class="plate road-ready-plate" role="img" aria-label="Road Ready Georgia license plate-style logo">
-        <img class="road-ready-plate-template" src="./public/assets/georgia-road-ready-plate-template.png" alt="">
-        <span class="road-ready-plate-copy" aria-hidden="true"><span class="road-ready-word-road">ROAD</span><span class="road-ready-word-ready">READY</span></span>
-      </div>
-    </div>
     <section class="home-v2-intro" aria-labelledby="home-v2-title">
       <p class="eyebrow">Georgia permit prep</p><h1 id="home-v2-title">Test-ready starts here.</h1>
       <p>One focused drill moves your route forward.</p>
@@ -880,15 +959,15 @@ function screenHome(){
 function screenDrills(){
   chrome(true,'Practice Routes'); $('#topslot').innerHTML=''; TAB='drills'; nav();
   const practiceRemaining=mockPracticePending().length;
-  const practiceState=practiceRemaining?`${practiceRemaining} remaining · 10 per set`:'All 40 passed';
+  const practiceState=practiceRemaining?`${practiceRemaining} remaining · 10 per set`:`All ${MOCK_BANK_TOTAL} passed`;
   const tiles=[
     ['match',ICO.match,'Sign Match','Pair each sign with its meaning. Four at a time.',SIGNS.length+' signs'],
     ['swipe',ICO.swipe,'True or False','Swipe right for true, left for false.',TF.length+' statements'],
-    ['mc',ICO.mc,'Multiple Choice','Four options, instant feedback, manual citation.',(MC.length+SIGNS.length)+' questions'],
-    ['mock-train',ICO.trainer,'Mock Test Trainer','Practice the full mock’s 20 signs and 20 road rules with answer-by-answer coaching.','40 questions · coached'],
-    ['mock-practice',ICO.exam,'Mock Practice Test','Take ten mock questions at a time. Pass each one to clear it from practice.',practiceState]
+    ['mc',ICO.mc,'Multiple Choice','Four options, instant feedback, manual citation.',ALL_ITEMS.length+' questions'],
+    ['mock-train',ICO.trainer,'Mock Test Trainer',`Practice the full ${MOCK_BANK_TOTAL}-question Georgia practice bank with answer-by-answer coaching.`,MOCK_BANK_TOTAL+' questions · coached'],
+    ['mock-practice',ICO.exam,'Mock Practice Test',`Take ten questions at a time from the complete ${MOCK_BANK_TOTAL}-question mock bank. Pass each one to clear it from practice.`,practiceState]
   ];
-  const savedScore=P.mockExam&&Number(P.mockExam.percent);
+  const savedScore=Number(P.mockExam?.total)===MOCK_BANK_TOTAL?Number(P.mockExam.percent):NaN;
   const mockScore=Number.isFinite(savedScore)?Math.max(0,Math.min(100,Math.round(savedScore))):0;
   const mockTone=mockScore<70?'red':mockScore<80?'yellow':'green';
   const mockState=Number.isFinite(savedScore)?`Latest mock score · ${mockScore}%`:'Not attempted · 0%';
@@ -902,8 +981,8 @@ function screenDrills(){
     <p class="route-lede">Choose the format that will move you forward today.</p>
     <div class="route-note"><span>6 study routes</span><span>Short sessions · clear feedback</span></div>
     ${tiles.map(tile).join('')}
-    <div class="mock-exam-divider" role="separator" aria-label="Full mock permit test"><span>Full permit simulation</span></div>
-    ${tile(['mock-exam',ICO.exam,'Mock Permit Test','Georgia-style exam: 20 road signs and 20 road rules.',`${mockState} · 40 questions · 30 to pass`],`mock-exam-tile mock-exam-${mockTone}`)}
+    <div class="mock-exam-divider" role="separator" aria-label="Full mock permit test"><span>Full mock assessment</span></div>
+    ${tile(['mock-exam',ICO.exam,'Mock Permit Test',`Full ${MOCK_BANK_TOTAL}-question assessment: ${MOCK_EXAM_SIGN_COUNT} road signs and ${MOCK_EXAM_RULE_COUNT} road rules.`,`${mockState} · ${MOCK_BANK_TOTAL} questions · ${MOCK_EXAM_SIGN_PASSING_SCORE}/${MOCK_EXAM_SIGN_COUNT} signs · ${MOCK_EXAM_RULE_PASSING_SCORE}/${MOCK_EXAM_RULE_COUNT} rules to pass`],`mock-exam-tile mock-exam-${mockTone}`)}
     <p class="empty" style="margin-top:14px">Every drill draws from what you have not locked in yet, so no two sessions are the same.</p>
   </div>`;
 }
@@ -1231,16 +1310,28 @@ function tryPair(signId,nameId){
 
 /* ---------- shared mock test catalog, trainer, and practice ---------- */
 function buildMockQueue(){
-  return {queue:MOCK_ITEMS.slice(),nSign:MOCK_SIGN_ITEMS.length};
+  const signs=shuffle(MOCK_SIGN_ITEMS);
+  const rules=shuffle(MOCK_RULE_ITEMS);
+  return {queue:[...signs,...rules],nSign:signs.length,signPassing:MOCK_EXAM_SIGN_PASSING_SCORE,rulePassing:MOCK_EXAM_RULE_PASSING_SCORE};
 }
+function assertMockExamQueue(){
+  const mock=buildMockQueue();
+  const signs=mock.queue.slice(0,mock.nSign);
+  const rules=mock.queue.slice(mock.nSign);
+  if(
+    mock.queue.length!==MOCK_BANK_TOTAL||new Set(mock.queue).size!==MOCK_BANK_TOTAL||mock.nSign!==MOCK_EXAM_SIGN_COUNT||
+    mock.signPassing!==MOCK_EXAM_SIGN_PASSING_SCORE||mock.rulePassing!==MOCK_EXAM_RULE_PASSING_SCORE||
+    signs.some(id=>!MOCK_SIGN_ITEMS.includes(id))||rules.some(id=>!MOCK_RULE_ITEMS.includes(id))
+  ) throw new Error('Invalid Mock Permit Test: expected all 88 questions with section pass thresholds.');
+}
+assertMockExamQueue();
 function startMockExam(){
-  const {queue,nSign}=buildMockQueue();
-  S={mode:'mc',queue,i:0,right:0,answered:false,exam:true,nSign,wrongIds:[],title:'Mock Permit Test'};
+  const {queue,nSign,signPassing,rulePassing}=buildMockQueue();
+  S={mode:'mc',queue,i:0,right:0,answered:false,exam:true,nSign,signPassing,rulePassing,wrongIds:[],title:'Mock Permit Test'};
   chrome(false,S.title); renderMC();
 }
 function startMockTrainer(){
-  const {queue}=buildMockQueue();
-  S={mode:'mc',queue,i:0,right:0,answered:false,exam:false,mockTrainer:true,wrongIds:[],title:'Mock Test Trainer'};
+  S={mode:'mc',queue:MOCK_ITEMS.slice(),i:0,right:0,answered:false,exam:false,mockTrainer:true,wrongIds:[],title:'Mock Test Trainer'};
   chrome(false,S.title); renderMC();
 }
 function buildMockPracticeQueue(){
@@ -1260,8 +1351,8 @@ function startMockPractice(){
 function screenMockPracticeMastery(){
   S=null; chrome(true,'Mock Practice Test'); $('#topslot').innerHTML=''; TAB='drills'; nav();
   view().innerHTML=`<div class="screen mock-practice-mastery">
-    <p class="eyebrow">Mock practice</p><h2>All 40 questions passed</h2>
-    <div class="result pass"><div class="rt">Practice pool cleared</div><div class="rv">40 / 40</div><div class="rs">Every mock question is passed</div></div>
+    <p class="eyebrow">Mock practice</p><h2>All ${MOCK_BANK_TOTAL} questions passed</h2>
+    <div class="result pass"><div class="rt">Practice pool cleared</div><div class="rv">${MOCK_BANK_TOTAL} / ${MOCK_BANK_TOTAL}</div><div class="rs">Every mock question is passed</div></div>
     <p class="lede">A missed question on a future Mock Permit Test will return here for another pass.</p>
     <button class="btn" data-go="mock-exam">Take the Mock Permit Test</button>
     <div style="height:10px"></div><button class="btn ghost" data-go="drills">Back to drills</button>
@@ -1281,11 +1372,11 @@ function finishMockPractice(total,right,wrong){
   const passedSet=right===total;
   const fullSet=total===10;
   const headline=remaining===0?'All mock questions passed':passedSet?(fullSet?'You passed all 10 questions':'You passed this final set'):'Practice set scored';
-  const detail=remaining===0?'Every question in the 40-question mock pool is now passed.':passedSet?'Those questions are cleared. Continue to the next set when you are ready.':`${wrong.length} question${wrong.length===1?' was':'s were'} returned to your practice list.`;
+  const detail=remaining===0?`Every question in the ${MOCK_BANK_TOTAL}-question mock pool is now passed.`:passedSet?'Those questions are cleared. Continue to the next set when you are ready.':`${wrong.length} question${wrong.length===1?' was':'s were'} returned to your practice list.`;
   chrome(true,'Mock Practice Results'); $('#topslot').innerHTML='';
   view().innerHTML=`<div class="screen mock-practice-results">
     <p class="eyebrow">Mock practice results</p><h2>${headline}</h2>
-    <div class="result ${passedSet?'pass':'fail'}"><div class="rt">This set</div><div class="rv">${right} / ${total}</div><div class="rs">${remaining} of 40 still in practice</div></div>
+    <div class="result ${passedSet?'pass':'fail'}"><div class="rt">This set</div><div class="rv">${right} / ${total}</div><div class="rs">${remaining} of ${MOCK_BANK_TOTAL} still in practice</div></div>
     <p class="lede">${detail}</p>
     ${wrong.length?`<section class="panel mock-practice-review-list"><p class="panel-t">Review missed questions</p>${wrong.map(mockPracticeReview).join('')}</section>`:`<div class="panel mock-practice-celebration"><p class="panel-t">${fullSet?'Clean set':'Final set cleared'}</p><p>${fullSet?'You passed all 10 questions. Start the next set to keep clearing the mock pool.':'You passed every remaining mock question.'}</p></div>`}
     ${remaining?`<button class="btn" data-go="mock-practice">${passedSet&&fullSet?'Start the next 10 questions':'Continue with the next set'}</button><div style="height:10px"></div>`:`<button class="btn" data-go="mock-exam">Take the Mock Permit Test</button><div style="height:10px"></div>`}
@@ -1307,11 +1398,13 @@ function finish(){
     const sr=answeredSigns.filter(id=>!S.wrongIds.includes(id)).length;
     const rr=answeredRules.filter(id=>!S.wrongIds.includes(id)).length;
     const nr=total-S.nSign;
-    const sp=sr>=15,rp=rr>=15;
+    const signNeed=S.signPassing||MOCK_EXAM_SIGN_PASSING_SCORE;
+    const ruleNeed=S.rulePassing||MOCK_EXAM_RULE_PASSING_SCORE;
+    const sp=sr>=signNeed,rp=rr>=ruleNeed;
     const remaining=total-answered.length;
     skipped=remaining;
-    head=`<div class="result ${sp?'pass':'fail'}"><div class="rt">Road signs</div><div class="rv">${sp?'Pass':'Not yet'}</div><div class="rs">${sr} / ${S.nSign} \u00b7 need 15</div></div>
-      <div class="result ${rp?'pass':'fail'}"><div class="rt">Road rules</div><div class="rv">${rp?'Pass':'Not yet'}</div><div class="rs">${rr} / ${nr} \u00b7 need 15</div></div>
+    head=`<div class="result ${sp?'pass':'fail'}"><div class="rt">Road signs</div><div class="rv">${sp?'Pass':'Not yet'}</div><div class="rs">${sr} / ${S.nSign} \u00b7 need ${signNeed}</div></div>
+      <div class="result ${rp?'pass':'fail'}"><div class="rt">Road rules</div><div class="rv">${rp?'Pass':'Not yet'}</div><div class="rs">${rr} / ${nr} \u00b7 need ${ruleNeed}</div></div>
       <p class="lede">${remaining?`Exam ended early. ${remaining} unanswered question${remaining===1?'':'s'} count as incorrect.`:sp&&rp?'Both sections cleared. Keep running mock exams until this is repeatable, not lucky.':'Each section is scored on its own, so a strong half never rescues a weak one.'}</p>`;
   } else {
     const p=total?Math.round(right/total*100):0;
