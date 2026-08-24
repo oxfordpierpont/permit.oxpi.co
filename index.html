@@ -1231,7 +1231,7 @@ function answerMC(i){
     <button class="btn" data-go="next">${S.i+1>=S.queue.length?'See results':'Next question'}</button>`;
   $('#after').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
-function next(){ S.i++; S.answered=false; S.mode==='swipe'?renderSwipe():renderMC() }
+function next(){ S.i++; S.answered=false; S.advancing=false; S.mode==='swipe'?renderSwipe():renderMC() }
 
 /* ---------- swipe ---------- */
 function startSwipe(){
@@ -1240,7 +1240,7 @@ function startSwipe(){
 }
 function renderSwipe(){
   if(S.i>=S.queue.length) return finish();
-  drillBar();
+  $('#topslot').innerHTML='';
   const q=byId[S.queue[S.i]].d; S.q=q;
   const remaining=S.queue.length-S.i;
   const backing=Math.min(3,Math.max(0,remaining-1));
@@ -1250,7 +1250,7 @@ function renderSwipe(){
     return `<div class="swipe stack-card" style="--stack-layer:${layer};--stack-y:${layer*spread}px;--stack-scale:${1-layer*.025};--stack-opacity:${.88-layer*.12};--stack-shadow-y:${layer*5}px" aria-hidden="true"><span>Flash card</span><b>${S.i+1+layer}</b></div>`;
   }).join('');
   view().innerHTML=`<div class="screen">
-    <p class="swipe-instruction" role="note">Swipe right for true, swipe left for false.</p>
+    <p class="swipe-instruction" id="swipe-instruction" role="note">Swipe right for true, swipe left for false.</p>
     <div class="deck flash-deck" style="--stack-spread:${spread}px" aria-label="${remaining} flash card${remaining===1?'':'s'} remaining">
       ${stack}
       <div class="deck-count" aria-hidden="true"><b>${remaining}</b><span>cards left</span></div>
@@ -1269,15 +1269,33 @@ function renderSwipe(){
 }
 function bindSwipe(){
   const c=$('#top'); if(!c) return;
-  let x0=0,dx=0,down=false;
-  const set=v=>{c.style.transform=`translateX(${v}px) rotate(${v/26}deg)`;
+  let x0=0,y0=0,dx=0,dy=0,down=false;
+  const setAnswer=v=>{c.style.transform=`translateX(${v}px) rotate(${v/26}deg)`;
     $('#stt').style.opacity=v>25?Math.min(1,(v-25)/60):0;
     $('#stf').style.opacity=v<-25?Math.min(1,(-v-25)/60):0};
-  c.addEventListener('pointerdown',e=>{if(S.answered)return;down=true;x0=e.clientX;c.setPointerCapture(e.pointerId);c.style.transition='none'});
-  c.addEventListener('pointermove',e=>{if(!down)return;dx=e.clientX-x0;set(dx)});
-  c.addEventListener('pointerup',()=>{if(!down)return;down=false;c.style.transition='transform .26s var(--ease)';
-    if(Math.abs(dx)>78) answerTF(dx>0?1:0); else {set(0);dx=0}});
-  c.addEventListener('pointercancel',()=>{down=false;c.style.transition='transform .26s var(--ease)';set(0);dx=0});
+  const setDismiss=v=>{c.style.transform=`translateY(${v}px) rotate(${v/34}deg)`;c.style.opacity=Math.max(.3,1-Math.abs(v)/360)};
+  const reset=()=>{c.style.transform='translate3d(0,0,0)';c.style.opacity='1';dx=0;dy=0};
+  c.addEventListener('pointerdown',e=>{if(S.advancing)return;down=true;x0=e.clientX;y0=e.clientY;c.setPointerCapture(e.pointerId);c.style.transition='none'});
+  c.addEventListener('pointermove',e=>{
+    if(!down)return;
+    dx=e.clientX-x0;dy=e.clientY-y0;
+    if(S.answered) setDismiss(dy); else setAnswer(dx);
+  });
+  c.addEventListener('pointerup',e=>{
+    if(!down)return;
+    down=false;dy=e.clientY-y0;c.style.transition='transform .26s var(--ease),opacity .26s';
+    if(S.answered){
+      if(Math.abs(dy)>72){
+        S.advancing=true;
+        c.style.transform=`translateY(${dy>0?window.innerHeight:-window.innerHeight}px) rotate(${dy>0?6:-6}deg)`;
+        c.style.opacity='0';
+        setTimeout(()=>{if(S&&S.mode==='swipe'&&S.answered&&S.advancing) next()},240);
+      } else reset();
+      return;
+    }
+    if(Math.abs(dx)>78) answerTF(dx>0?1:0); else reset();
+  });
+  c.addEventListener('pointercancel',()=>{down=false;c.style.transition='transform .26s var(--ease),opacity .26s';reset()});
 }
 function answerTF(v){
   if(S.answered) return; S.answered=true;
@@ -1286,7 +1304,8 @@ function answerTF(v){
   grade('t:'+q.id,ok);
   const c=$('#top');
   c.style.transition='transform .26s var(--ease),opacity .26s';
-  c.style.transform=`translateX(${v?420:-420}px) rotate(${v?14:-14}deg)`; c.style.opacity='0';
+  c.style.transform='translate3d(0,0,0)'; c.style.opacity='1';
+  $('#swipe-instruction').textContent='Swipe up or down to continue.';
   document.querySelectorAll('.tfbtn').forEach(b=>b.disabled=true);
   $('#after').innerHTML=`<div style="height:14px"></div><div class="why">
       <div class="v ${ok?'ok':'no'}">${ok?'Correct':'Not quite'} \u00b7 answer is ${q.a?'True':'False'}</div>
